@@ -3,15 +3,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-
     PlayerInput _playerInput;
     Rigidbody _playerRigidBody;
     InputAction _moveAction;
     InputAction _jumpAction;
-    string _airActionMap = "Air";
-    string _groundActionMap = "Ground";
     public bool _isGrounded = true;
-    
+
+    [SerializeField] float _movementSpeed;
+    [SerializeField] float _jumpHeight;
 
     private void Awake()
     {
@@ -21,16 +20,9 @@ public class PlayerController : MonoBehaviour
         _jumpAction = _playerInput.actions["Jump"];
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Update()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        MovePlayer();
+        //MovePlayer();
     }
 
     private void FixedUpdate()
@@ -42,17 +34,17 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer()
     {
+        print("move");
         Vector2 inputVector = _moveAction.ReadValue<Vector2>();
         Vector3 movementVector = new Vector3(inputVector.x, 0, inputVector.y);
-        if (_playerInput.currentActionMap.name == _groundActionMap)
+        if (_moveAction.IsPressed() && _isGrounded)
         {
-            _playerRigidBody.AddForce(movementVector.normalized * 5f, ForceMode.Force);
+            _playerRigidBody.AddForce(movementVector.normalized * _movementSpeed, ForceMode.Force);
         }
-        else if (_playerInput.currentActionMap.name == _airActionMap)
+        else if (_moveAction.IsPressed() && !_isGrounded)
         {
-            _playerRigidBody.AddForce(movementVector.normalized * 1f, ForceMode.Force);
-        }
-        
+            _playerRigidBody.AddForce(movementVector.normalized * (_movementSpeed /5), ForceMode.Force);
+        }        
     }
 
     void JumpPlayer()
@@ -61,14 +53,15 @@ public class PlayerController : MonoBehaviour
         if (_jumpAction.IsPressed() && _isGrounded)
         {
             Vector3 movementVector = new Vector3(0, 1, 0);
-            _playerRigidBody.AddForce(movementVector.normalized * 2f, ForceMode.Impulse);
+            _playerRigidBody.AddForce(movementVector.normalized * _jumpHeight, ForceMode.Impulse);
             print("jump");
             _isGrounded = false;
         } 
         else if (_jumpAction.IsPressed() && !_isGrounded)
         {
             Vector3 movementVector = new Vector3(inputVector.x, 0, inputVector.y);
-            _playerRigidBody.AddForce(movementVector.normalized * 5f, ForceMode.Impulse);
+            _playerRigidBody.AddForce(movementVector.normalized * (_movementSpeed * 2), ForceMode.Impulse);
+            //needs to stop after a specific distance traveled
         }
     }
 
