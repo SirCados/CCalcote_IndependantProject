@@ -39,28 +39,35 @@ public class PlayerController : MonoBehaviour
         Vector3 movementVector = new Vector3(inputVector.x, 0, inputVector.y);
         if (_moveAction.IsPressed() && _isGrounded)
         {
+            //Vector3 newPosition = transform.position + movementVector * _movementSpeed * Time.deltaTime;
+            //_playerRigidBody.MovePosition(newPosition);
+            _playerRigidBody.velocity = Vector3.zero;
             _playerRigidBody.AddForce(movementVector.normalized * _movementSpeed, ForceMode.Force);
         }
         else if (_moveAction.IsPressed() && !_isGrounded)
         {
-            _playerRigidBody.AddForce(movementVector.normalized * (_movementSpeed /5), ForceMode.Force);
+            //Vector3 newPosition = transform.position + movementVector * (_movementSpeed / 5) * Time.deltaTime;
+            //_playerRigidBody.MovePosition(newPosition);
+            _playerRigidBody.AddForce(movementVector.normalized * (_movementSpeed / 5), ForceMode.Force);
         }        
     }
 
     void JumpPlayer()
     {
         Vector2 inputVector = _moveAction.ReadValue<Vector2>();
-        if (_jumpAction.IsPressed() && _isGrounded)
+        if (_jumpAction.WasPressedThisFrame() && _jumpAction.IsPressed() && _isGrounded)
         {
             Vector3 movementVector = new Vector3(0, 1, 0);
             _playerRigidBody.AddForce(movementVector.normalized * _jumpHeight, ForceMode.Impulse);
             print("jump");
             _isGrounded = false;
         } 
-        else if (_jumpAction.IsPressed() && !_isGrounded)
+        else if (_jumpAction.WasPressedThisFrame() && _jumpAction.IsPressed() && !_isGrounded)
         {
             Vector3 movementVector = new Vector3(inputVector.x, 0, inputVector.y);
-            _playerRigidBody.AddForce(movementVector.normalized * (_movementSpeed * 2), ForceMode.Impulse);
+            Vector3 newPosition = transform.position + movementVector * (_movementSpeed / 5) * Time.deltaTime;
+            _playerRigidBody.MovePosition(newPosition);
+            //_playerRigidBody.AddForce(movementVector.normalized * (_movementSpeed * 2), ForceMode.Impulse);
             //needs to stop after a specific distance traveled
         }
     }
