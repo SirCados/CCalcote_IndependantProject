@@ -3,12 +3,16 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public bool IsGrounded = true;
+
+    [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
+    [SerializeField] int _maxiumAirDashes;    
 
-    public bool IsGrounded = true;
+    int _remainingAirDashes;
     InputAction _jumpAction;
     InputAction _moveAction;
     PlayerInput _playerInput;
@@ -17,10 +21,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        _playerInput = GetComponent<PlayerInput>();
-        _playerRigidBody = GetComponent<Rigidbody>();
-        _moveAction = _playerInput.actions["Move"];
-        _jumpAction = _playerInput.actions["Jump"];
+        SetupCharacterController();
     }
 
     private void OnEnable()
@@ -42,43 +43,60 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 currentVelocity = _playerRigidBody.velocity;
         _inputVector = _moveAction.ReadValue<Vector2>();
-        float fallingMagnitude = (IsGrounded) ? 0 : -_fallRate;
-        Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, fallingMagnitude, _inputVector.y) * _movementSpeed);        
-        
+        float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
+        Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, 0, _inputVector.y) * speed);
+
+        targetVelocity.y = (IsGrounded) ? 0 : -_fallRate;        
+
         Vector3 velocityChange = (targetVelocity - currentVelocity) * _accelerationRate;
 
-        _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);       
+        _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
-    
+
     void JumpPlayer(InputAction.CallbackContext context)
     {
-        Vector3 airVelocity = Vector3.zero; 
+        Vector3 airVelocity = Vector3.zero;
 
-        if (_jumpAction.WasPressedThisFrame() && _jumpAction.IsPressed() && IsGrounded)
+        if (IsGrounded)
         {
             airVelocity = Vector3.up * _jumpForce;
             print("jump");
         }
-        else if (_jumpAction.WasPressedThisFrame() && _jumpAction.IsPressed() && !IsGrounded)
+        else if (_jumpAction.WasPressedThisFrame() && !IsGrounded && _remainingAirDashes !=0)
         {
-            airVelocity = Vector3.ClampMagnitude(new Vector3(_inputVector.x, 0, _inputVector.y) * _movementSpeed, 10);
+            _remainingAirDashes -= 1;
+            airVelocity = Vector3.ClampMagnitude(new Vector3(_inputVector.x, 0, _inputVector.y) * _movementSpeed, _airDashSpeedLimit);
             print("dash");
         }
 
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
     }
 
+    public void ResetAirDashes()
+    {
+        _remainingAirDashes = _maxiumAirDashes;
+    }
+
     void SubscribeToEvents()
     {
         _jumpAction.started += JumpPlayer;
-        _jumpAction.performed += JumpPlayer;
-        _jumpAction.canceled += JumpPlayer;
+        //_jumpAction.performed += JumpPlayer;
+        //_jumpAction.canceled += JumpPlayer;
     }
 
     void UnsubscribeToEvents()
     {
         _jumpAction.started -= JumpPlayer;
-        _jumpAction.performed -= JumpPlayer;
-        _jumpAction.canceled -= JumpPlayer;
+        //_jumpAction.performed -= JumpPlayer;
+        //_jumpAction.canceled -= JumpPlayer;
+    }
+
+    void SetupCharacterController()
+    {
+        _playerInput = GetComponent<PlayerInput>();
+        _playerRigidBody = GetComponent<Rigidbody>();
+        _moveAction = _playerInput.actions["Move"];
+        _jumpAction = _playerInput.actions["Jump"];
+        ResetAirDashes();
     }
 }
