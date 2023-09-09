@@ -3,82 +3,100 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public bool IsGrounded = true;
 
+    [SerializeField] float _airDashSpeedLimit;
+    [SerializeField] float _accelerationRate;
+    [SerializeField] float _jumpForce;
+    [SerializeField] float _movementSpeed;
+    [SerializeField] float _fallRate;
+    [SerializeField] int _maxiumAirDashes;    
+
+    int _remainingAirDashes;
+    InputAction _jumpAction;
+    InputAction _moveAction;
     PlayerInput _playerInput;
     Rigidbody _playerRigidBody;
-    InputAction _moveAction;
-    InputAction _jumpAction;
-    string _airActionMap = "Air";
-    string _groundActionMap = "Ground";
-    public bool _isGrounded = true;
-    
+    Vector2 _inputVector;
 
     private void Awake()
     {
-        _playerInput = GetComponent<PlayerInput>();
-        _playerRigidBody = GetComponent<Rigidbody>();
-        _moveAction = _playerInput.actions["Move"];
-        _jumpAction = _playerInput.actions["Jump"];
+        SetupCharacterController();
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        
+        SubscribeToEvents();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        MovePlayer();
+        UnsubscribeToEvents();
     }
 
     private void FixedUpdate()
     {
         MovePlayer();
-        JumpPlayer();
-        GroundCheck();
     }
 
     void MovePlayer()
     {
-        Vector2 inputVector = _moveAction.ReadValue<Vector2>();
-        Vector3 movementVector = new Vector3(inputVector.x, 0, inputVector.y);
-        if (_playerInput.currentActionMap.name == _groundActionMap)
-        {
-            _playerRigidBody.AddForce(movementVector.normalized * 5f, ForceMode.Force);
-        }
-        else if (_playerInput.currentActionMap.name == _airActionMap)
-        {
-            _playerRigidBody.AddForce(movementVector.normalized * 1f, ForceMode.Force);
-        }
-        
+        Vector3 currentVelocity = _playerRigidBody.velocity;
+        _inputVector = _moveAction.ReadValue<Vector2>();
+        float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
+        Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, 0, _inputVector.y) * speed);
+
+        targetVelocity.y = (IsGrounded) ? 0 : -_fallRate;        
+
+        Vector3 velocityChange = (targetVelocity - currentVelocity) * _accelerationRate;
+
+        _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
 
-    void JumpPlayer()
+    void JumpPlayer(InputAction.CallbackContext context)
     {
-        Vector2 inputVector = _moveAction.ReadValue<Vector2>();
-        if (_jumpAction.IsPressed() && _isGrounded)
+        Vector3 airVelocity = Vector3.zero;
+
+        if (IsGrounded)
         {
-            Vector3 movementVector = new Vector3(0, 1, 0);
-            _playerRigidBody.AddForce(movementVector.normalized * 2f, ForceMode.Impulse);
+            airVelocity = Vector3.up * _jumpForce;
             print("jump");
-            _isGrounded = false;
-        } 
-        else if (_jumpAction.IsPressed() && !_isGrounded)
-        {
-            Vector3 movementVector = new Vector3(inputVector.x, 0, inputVector.y);
-            _playerRigidBody.AddForce(movementVector.normalized * 5f, ForceMode.Impulse);
         }
+        else if (_jumpAction.WasPressedThisFrame() && !IsGrounded && _remainingAirDashes !=0)
+        {
+            _remainingAirDashes -= 1;
+            airVelocity = Vector3.ClampMagnitude(new Vector3(_inputVector.x, 0, _inputVector.y) * _movementSpeed, _airDashSpeedLimit);
+            print("dash");
+        }
+
+        _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
     }
 
-    void GroundCheck()
+    public void ResetAirDashes()
     {
-        float groundCheckDistance = (GetComponent<CapsuleCollider>().height / 2) + 0.1f;
-        RaycastHit hit;
-        if(Physics.Raycast(transform.position, -transform.up, out hit, groundCheckDistance))
-        {
-            _isGrounded = true;
-        }
+        _remainingAirDashes = _maxiumAirDashes;
+    }
+
+    void SubscribeToEvents()
+    {
+        _jumpAction.started += JumpPlayer;
+        //_jumpAction.performed += JumpPlayer;
+        //_jumpAction.canceled += JumpPlayer;
+    }
+
+    void UnsubscribeToEvents()
+    {
+        _jumpAction.started -= JumpPlayer;
+        //_jumpAction.performed -= JumpPlayer;
+        //_jumpAction.canceled -= JumpPlayer;
+    }
+
+    void SetupCharacterController()
+    {
+        _playerInput = GetComponent<PlayerInput>();
+        _playerRigidBody = GetComponent<Rigidbody>();
+        _moveAction = _playerInput.actions["Move"];
+        _jumpAction = _playerInput.actions["Jump"];
+        ResetAirDashes();
     }
 }
