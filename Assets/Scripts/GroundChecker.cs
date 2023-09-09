@@ -14,6 +14,7 @@ public class GroundChecker : MonoBehaviour
         if (other.CompareTag("Ground"))
         {
             _player.IsGrounded = true;
+            _player.ResetAirDashes();
         }
     }
 

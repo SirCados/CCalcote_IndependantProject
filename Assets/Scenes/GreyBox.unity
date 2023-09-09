@@ -396,6 +396,10 @@ PrefabInstance:
       propertyPath: _accelerationRate
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7791483632954375950, guid: b4c54612a2f679f4ea296ac05af991de, type: 3}
+      propertyPath: _maximumAirDashes
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b4c54612a2f679f4ea296ac05af991de, type: 3}
 --- !u!1 &186644945
@@ -625,7 +629,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 10, z: 1}
-  m_Center: {x: 0, y: 5, z: 0}
+  m_Center: {x: 0, y: 4.5, z: 0}
 --- !u!23 &342755301
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -863,7 +867,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 10, z: 1}
-  m_Center: {x: 0, y: 5, z: 0}
+  m_Center: {x: 0, y: 4.5, z: 0}
 --- !u!23 &802063857
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1252,7 +1256,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 10, z: 1}
-  m_Center: {x: 0, y: 5, z: 0}
+  m_Center: {x: 0, y: 4.5, z: 0}
 --- !u!23 &1304543583
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1734,7 +1738,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 10, z: 1}
-  m_Center: {x: 0, y: 5, z: 0}
+  m_Center: {x: 0, y: 4.5, z: 0}
 --- !u!23 &1998078778
 MeshRenderer:
   m_ObjectHideFlags: 0

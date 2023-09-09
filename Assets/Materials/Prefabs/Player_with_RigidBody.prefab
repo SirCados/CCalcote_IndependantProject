@@ -44,8 +44,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
-  m_Center: {x: 0, y: -1, z: 0}
+  m_Size: {x: 0.1, y: 0.2, z: 0.1}
+  m_Center: {x: 0, y: -1.11, z: 0}
 --- !u!114 &5177059174413367725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,11 +67,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7791483632954375948}
+  - component: {fileID: 7791483632954375950}
   - component: {fileID: 7791483632954375949}
   - component: {fileID: 7791483632954375938}
   - component: {fileID: 7791483632954375939}
   - component: {fileID: 7791483632954375936}
-  - component: {fileID: 7791483632954375950}
   - component: {fileID: 7791483632954375951}
   m_Layer: 0
   m_Name: Player_with_RigidBody
@@ -96,6 +96,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7791483632954375950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7791483632954375937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61c9a927376566469755522e7cf7b7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsGrounded: 1
+  _accelerationRate: 2
+  _jumpForce: 10
+  _movementSpeed: 30
+  _fallRate: 2
+  _maximumAirDashes: 1
 --- !u!33 &7791483632954375949
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -176,22 +194,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &7791483632954375950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7791483632954375937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d61c9a927376566469755522e7cf7b7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _accelerationRate: 2.5
-  _jumpForce: 0
-  _movementSpeed: 30
-  IsGrounded: 1
 --- !u!114 &7791483632954375951
 MonoBehaviour:
   m_ObjectHideFlags: 0
