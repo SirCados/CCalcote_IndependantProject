@@ -4,13 +4,15 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public bool IsGrounded = true;
+    public GameObject CurrentTarget;
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
-    [SerializeField] int _maxiumAirDashes;    
+    [SerializeField] int _maxiumAirDashes;
+    [SerializeField] GameObject _facingIndicator;
 
     int _remainingAirDashes;
     InputAction _jumpAction;
@@ -37,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+        RotateCharacter();
     }
 
     void MovePlayer()
@@ -70,6 +73,14 @@ public class PlayerController : MonoBehaviour
         }
 
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
+    }
+
+    void RotateCharacter()
+    {
+        if (CurrentTarget)
+        {
+            _facingIndicator.transform.LookAt(CurrentTarget.transform);
+        }
     }
 
     public void ResetAirDashes()
