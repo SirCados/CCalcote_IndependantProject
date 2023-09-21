@@ -6,10 +6,12 @@ using UnityEngine;
 public class BarrageProjectile: MonoBehaviour
 {
     Rigidbody _projectileRigidBody;
+    public float ProjectileSpeed = 20f;
 
     private void Awake()
     {
         _projectileRigidBody = GetComponent<Rigidbody>();
+        
     }
 
     private void FixedUpdate()
@@ -19,12 +21,12 @@ public class BarrageProjectile: MonoBehaviour
 
     void MoveProjectile()
     {
-        _projectileRigidBody.AddForce(Vector3.forward, ForceMode.VelocityChange);
+        _projectileRigidBody.velocity = transform.forward * ProjectileSpeed;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        print("impact");
+        print("impact with " + collision.gameObject.name);
         Destroy(gameObject);
     }
 }
