@@ -127,3 +127,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a09f707d1b794749ab5fde0e1ef28d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  TargetRigidBody: {fileID: 0}
+  ProjectileSpeed: 20
+  ProjectileAgility: 20
+  _speed: 15
+  _rotateSpeed: 25
+  _maxDistancePredict: 100
+  _minDistancePredict: 5
+  _maxTimePrediction: 5
