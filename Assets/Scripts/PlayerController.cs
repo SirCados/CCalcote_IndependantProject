@@ -90,9 +90,10 @@ public class PlayerController : MonoBehaviour
 
     void Barrage(InputAction.CallbackContext context)
     {
-        print("barrage");
-        Instantiate(BarrageProjectile, BarrageEmmissionPoint.transform);
-        BarrageEmmissionPoint.transform.DetachChildren();
+       print("barrage");
+       BarrageProjectile projectile = Instantiate(BarrageProjectile, BarrageEmmissionPoint.transform).GetComponent<BarrageProjectile>();
+       projectile.Target = CurrentTarget.transform;        
+       BarrageEmmissionPoint.transform.DetachChildren();
     }
 
     public void ResetAirDashes()

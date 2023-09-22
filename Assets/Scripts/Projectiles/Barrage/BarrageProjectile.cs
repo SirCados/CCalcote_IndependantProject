@@ -1,17 +1,17 @@
 using UnityEngine;
 
-
 //Need to make Projectile baseclass?
-//
+
 public class BarrageProjectile: MonoBehaviour
 {
-    Rigidbody _projectileRigidBody;
+    public Transform Target;
     public float ProjectileSpeed = 20f;
+
+    Rigidbody _projectileRigidBody;    
 
     private void Awake()
     {
-        _projectileRigidBody = GetComponent<Rigidbody>();
-        
+        _projectileRigidBody = GetComponent<Rigidbody>();        
     }
 
     private void FixedUpdate()
@@ -21,6 +21,7 @@ public class BarrageProjectile: MonoBehaviour
 
     void MoveProjectile()
     {
+        transform.LookAt(Target);
         _projectileRigidBody.velocity = transform.forward * ProjectileSpeed;
     }
 
