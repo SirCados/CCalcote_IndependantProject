@@ -4,17 +4,24 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public bool IsGrounded = true;
+    public GameObject CurrentTarget;
+    public GameObject BarrageProjectile;
+    public GameObject BarrageEmmissionPoint;
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
-    [SerializeField] int _maxiumAirDashes;    
+    [SerializeField] int _maxiumAirDashes;
+    [SerializeField] GameObject _facingIndicator;
+
+    
 
     int _remainingAirDashes;
     InputAction _jumpAction;
     InputAction _moveAction;
+    InputAction _barrageAction;
     PlayerInput _playerInput;
     Rigidbody _playerRigidBody;
     Vector2 _inputVector;
@@ -37,6 +44,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+        RotateCharacter();
     }
 
     void MovePlayer()
@@ -72,6 +80,23 @@ public class PlayerController : MonoBehaviour
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
     }
 
+    void RotateCharacter()
+    {
+        if (CurrentTarget)
+        {
+            _facingIndicator.transform.LookAt(CurrentTarget.transform);
+        }
+    }
+
+    void Barrage(InputAction.CallbackContext context)
+    {
+        print("barrage");
+        BarrageProjectile projectile = Instantiate(BarrageProjectile, BarrageEmmissionPoint.transform).GetComponent<BarrageProjectile>();
+        projectile.Target = CurrentTarget.transform;
+        projectile.TargetRigidBody = CurrentTarget.GetComponent<Rigidbody>();
+        BarrageEmmissionPoint.transform.DetachChildren();
+    }
+
     public void ResetAirDashes()
     {
         _remainingAirDashes = _maxiumAirDashes;
@@ -79,6 +104,10 @@ public class PlayerController : MonoBehaviour
 
     void SubscribeToEvents()
     {
+        _barrageAction.started += Barrage;
+        //_barrageAction.performed += Barrage;
+        //_barrageAction.canceled += Barrage;
+
         _jumpAction.started += JumpPlayer;
         //_jumpAction.performed += JumpPlayer;
         //_jumpAction.canceled += JumpPlayer;
@@ -86,6 +115,11 @@ public class PlayerController : MonoBehaviour
 
     void UnsubscribeToEvents()
     {
+
+        _barrageAction.started -= Barrage;
+        //_barrageAction.performed -= Barrage;
+        //_barrageAction.canceled -= Barrage;
+
         _jumpAction.started -= JumpPlayer;
         //_jumpAction.performed -= JumpPlayer;
         //_jumpAction.canceled -= JumpPlayer;
@@ -95,6 +129,9 @@ public class PlayerController : MonoBehaviour
     {
         _playerInput = GetComponent<PlayerInput>();
         _playerRigidBody = GetComponent<Rigidbody>();
+
+        _barrageAction = _playerInput.actions["Barrage"];
+
         _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];
         ResetAirDashes();
