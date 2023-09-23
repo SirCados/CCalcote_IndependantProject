@@ -4,9 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public bool IsGrounded = true;
+    public BarrageAspect ManifestedBarrage;
     public GameObject CurrentTarget;
-    public GameObject BarrageProjectile;
-    public GameObject BarrageEmmissionPoint;
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
@@ -15,9 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _fallRate;
     [SerializeField] int _maxiumAirDashes;
     [SerializeField] GameObject _facingIndicator;
-
     
-
     int _remainingAirDashes;
     InputAction _jumpAction;
     InputAction _moveAction;
@@ -25,6 +22,10 @@ public class PlayerController : MonoBehaviour
     PlayerInput _playerInput;
     Rigidbody _playerRigidBody;
     Vector2 _inputVector;
+
+    BarrageState _barrageState;
+    NeutralState _neutralState;
+    IState _currentState;
 
     private void Awake()
     {
@@ -40,6 +41,10 @@ public class PlayerController : MonoBehaviour
     {
         UnsubscribeToEvents();
     }
+    private void Update()
+    {
+        StateControllerUpdate();
+    }
 
     private void FixedUpdate()
     {
@@ -47,10 +52,35 @@ public class PlayerController : MonoBehaviour
         RotateCharacter();
     }
 
+    public void StateControllerUpdate()
+    {
+        if (_currentState != null)
+        {
+            _currentState.OnUpdateState();
+        }
+
+        if (_currentState.NextState != null && _currentState.IsStateDone)
+        {
+            ChangeState(_currentState.NextState);
+        }
+    }
+
+    public void ChangeState(IState newState)
+    {
+        print("Changing to " + newState);
+        if (_currentState != null)
+        {
+            _currentState.OnExitState();
+        }
+
+        _currentState = newState;
+        _currentState.OnEnterState();
+    }
+
     void MovePlayer()
     {
         Vector3 currentVelocity = _playerRigidBody.velocity;
-        _inputVector = _moveAction.ReadValue<Vector2>();
+        _inputVector = (_currentState == _neutralState)? _moveAction.ReadValue<Vector2>() : Vector2.zero;
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, 0, _inputVector.y) * speed);
 
@@ -67,14 +97,12 @@ public class PlayerController : MonoBehaviour
 
         if (IsGrounded)
         {
-            airVelocity = Vector3.up * _jumpForce;
-            print("jump");
+            airVelocity = Vector3.up * _jumpForce;            
         }
         else if (_jumpAction.WasPressedThisFrame() && !IsGrounded && _remainingAirDashes !=0)
         {
             _remainingAirDashes -= 1;
-            airVelocity = Vector3.ClampMagnitude(new Vector3(_inputVector.x, 0, _inputVector.y) * _movementSpeed, _airDashSpeedLimit);
-            print("dash");
+            airVelocity = Vector3.ClampMagnitude(new Vector3(_inputVector.x, 0, _inputVector.y) * _movementSpeed, _airDashSpeedLimit);            
         }
 
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
@@ -90,11 +118,11 @@ public class PlayerController : MonoBehaviour
 
     void Barrage(InputAction.CallbackContext context)
     {
-        print("barrage");
-        BarrageProjectile projectile = Instantiate(BarrageProjectile, BarrageEmmissionPoint.transform).GetComponent<BarrageProjectile>();
-        projectile.Target = CurrentTarget.transform;
-        projectile.TargetRigidBody = CurrentTarget.GetComponent<Rigidbody>();
-        BarrageEmmissionPoint.transform.DetachChildren();
+        if(_currentState == _neutralState)
+        {
+            print("Press");
+            ChangeState(_barrageState);
+        }
     }
 
     public void ResetAirDashes()
@@ -135,5 +163,10 @@ public class PlayerController : MonoBehaviour
         _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];
         ResetAirDashes();
+
+        _neutralState = new NeutralState();
+        ChangeState(_neutralState);        
+        _barrageState = new BarrageState(ManifestedBarrage);
+        _barrageState.NextState = _neutralState;
     }
 }
