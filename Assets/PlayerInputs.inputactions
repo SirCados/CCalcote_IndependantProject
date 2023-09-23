@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Barrage",
+                    "type": "Button",
+                    "id": "5620f6e3-3ef6-489c-8c57-a4cd716adcb6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -123,129 +132,26 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
-                }
-            ]
-        },
-        {
-            "name": "Air",
-            "id": "32cda552-8671-4f7f-87a8-19d6b933aa8f",
-            "actions": [
-                {
-                    "name": "Move",
-                    "type": "Value",
-                    "id": "4106bfbf-02b7-4860-a084-e8166d5119e4",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 },
                 {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "b1a8e37c-b1a5-4be8-800f-727d398a7fa8",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
                     "name": "",
-                    "id": "a536368e-013c-49d4-b3ee-1a8b12c1869e",
-                    "path": "<HID::Core (Plus) Wired Controller>/stick",
+                    "id": "18255fd4-4aba-4dca-87db-c02bdd8e12e6",
+                    "path": "<HID::Core (Plus) Wired Controller>/button7",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Barrage",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "bbdeaac2-f35e-497b-8e29-99ac2086df99",
-                    "path": "<Joystick>/stick",
+                    "id": "f935c2bd-2da7-48ca-8284-541814a3382f",
+                    "path": "<Keyboard>/h",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "WASD",
-                    "id": "009e6f45-48b7-4f01-87db-8ee4085f2713",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "e355024a-fff1-4bee-a93a-d615d850a209",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "97f1053d-9689-4551-8457-ccb2b0a31458",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "40090b70-1935-460d-808a-162d692974b2",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "9ae50795-6d28-4679-803a-440b70119382",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "3ec390d8-eefb-4b68-8673-a4493ad8fd4e",
-                    "path": "<HID::Core (Plus) Wired Controller>/button3",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7c132e76-e33e-48b4-b779-78f989bc799f",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
+                    "action": "Barrage",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
