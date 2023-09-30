@@ -1,18 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class MoveState : MonoBehaviour
+public class MoveState : IState
 {
-    // Start is called before the first frame update
-    void Start()
+    bool _isStateDone;
+    IState _nextState;
+    public AvatarAspect AvatarBody;
+
+    public void OnEnterState()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnUpdateState()
     {
-        
+
+    }
+
+    public void OnExitState()
+    {
+
+    }
+
+    public bool IsStateDone
+    {
+        get => _isStateDone;
+    }
+
+    public IState NextState
+    {
+        get => _nextState;
+        set => _nextState = value;
     }
 }

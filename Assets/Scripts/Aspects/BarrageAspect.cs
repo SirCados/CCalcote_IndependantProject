@@ -5,9 +5,8 @@ public class BarrageAspect : MonoBehaviour
     public float RepeatTime = 0.1f;
     public GameObject BarrageProjectile;
     public GameObject CurrentTarget;
-    public bool IsBarraging = false;//TODO: gettter?
+    public bool IsBarraging = false;//TODO: getter?
 
-    GameObject _barrageEmmissionPoint;
     int _repeat = 0;//TODO: RENAME!
 
     public void PerformBarrage()

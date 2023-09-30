@@ -2,7 +2,7 @@ public class DashState : IState
 {
     bool _isStateDone;
     IState _nextState;
-    public PlayerController TempBody;
+    public AvatarAspect AvatarBody;
 
     public void OnEnterState()
     {
