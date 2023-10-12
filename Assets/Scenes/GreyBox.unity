@@ -1438,9 +1438,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 194356098875459668, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736836437236737159, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2736836437236737159, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_Constraints
       value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736836437236737159, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3452985218852509492, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_Material
@@ -1492,7 +1504,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7791483632954375948, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7791483632954375948, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1530,8 +1542,32 @@ PrefabInstance:
       propertyPath: CurrentTarget
       value: 
       objectReference: {fileID: 1985652591}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2736836437236737159, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+    - {fileID: 6945988012027062444, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+    - {fileID: -8693281746973458592, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+--- !u!1 &736626520 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1729713671105670700, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+  m_PrefabInstance: {fileID: 625232788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &736626526
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736626520}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
 --- !u!1 &802063854
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,9 +32,9 @@ public class AvatarAspect : MonoBehaviour
     {
         print(inputVector);
         Vector3 currentVelocity = _playerRigidBody.velocity;
-        _inputVector = currentState.Equals(typeof(MoveState)) ? inputVector : Vector2.zero;
+        _inputVector = currentState.Equals(typeof(NeutralState)) ? inputVector : Vector2.zero;
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
-        Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, 0, _inputVector.y) * speed);
+        Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);
 
         targetVelocity.y = currentState.Equals(typeof(DashState)) ? 0 : -_fallRate;
 

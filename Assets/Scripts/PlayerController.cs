@@ -8,12 +8,6 @@ public class PlayerController : MonoBehaviour
 
     public GameObject CurrentTarget;
 
-    [SerializeField] float _airDashSpeedLimit;
-    [SerializeField] float _accelerationRate;
-    [SerializeField] float _jumpForce;
-    [SerializeField] float _movementSpeed;
-    [SerializeField] float _fallRate;
-    [SerializeField] int _maxiumAirDashes;
     [SerializeField] GameObject _facingIndicator;
     
     int _remainingAirDashes;
@@ -27,7 +21,6 @@ public class PlayerController : MonoBehaviour
     AirborneState _airborneState;
     BarrageState _barrageState;
     DashState _dashState;
-    MoveState _moveState;
     NeutralState _neutralState;
     
 
@@ -52,10 +45,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(_currentState == _moveState)
-        {
-            ManifestedAvatar.MoveAvatar(_currentState, _inputVector);
-        }        
+        ManifestedAvatar.MoveAvatar(_currentState, _moveAction.ReadValue<Vector2>());
     }
 
     public void StateControllerUpdate()
@@ -105,11 +95,7 @@ public class PlayerController : MonoBehaviour
 
     void Move(InputAction.CallbackContext context)
     {
-        if (_currentState != _neutralState || _currentState != _airborneState)
-        {
-            ChangeState(_moveState);
-            _inputVector = _moveAction.ReadValue<Vector2>();
-        }
+        _inputVector = _moveAction.ReadValue<Vector2>();      
     }
 
     void SubscribeToEvents()
@@ -121,9 +107,6 @@ public class PlayerController : MonoBehaviour
         _jumpAction.started += Jump;
         //_jumpAction.performed += JumpPlayer;
         //_jumpAction.canceled += JumpPlayer;
-
-        _moveAction.started += Move;
-        _moveAction.performed += Move;
     }
 
     void UnsubscribeToEvents()
@@ -150,7 +133,6 @@ public class PlayerController : MonoBehaviour
 
         _neutralState = new NeutralState();
         ChangeState(_neutralState);
-        _moveState = new MoveState();
         _airborneState = new AirborneState();                
         _dashState = new DashState();
         _dashState.AvatarBody = ManifestedAvatar;
