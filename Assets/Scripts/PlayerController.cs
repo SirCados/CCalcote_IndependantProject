@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        SubscribeToEvents();
+        SubscribeToEvents();        
     }
 
     private void OnDisable()
@@ -48,6 +48,14 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         StateControllerUpdate();
+    }
+
+    private void FixedUpdate()
+    {
+        if(_currentState == _moveState)
+        {
+            ManifestedAvatar.MoveAvatar(_currentState, _inputVector);
+        }        
     }
 
     public void StateControllerUpdate()
@@ -100,6 +108,7 @@ public class PlayerController : MonoBehaviour
         if (_currentState != _neutralState || _currentState != _airborneState)
         {
             ChangeState(_moveState);
+            _inputVector = _moveAction.ReadValue<Vector2>();
         }
     }
 
@@ -112,6 +121,9 @@ public class PlayerController : MonoBehaviour
         _jumpAction.started += Jump;
         //_jumpAction.performed += JumpPlayer;
         //_jumpAction.canceled += JumpPlayer;
+
+        _moveAction.started += Move;
+        _moveAction.performed += Move;
     }
 
     void UnsubscribeToEvents()
@@ -123,6 +135,9 @@ public class PlayerController : MonoBehaviour
         _jumpAction.started -= Jump;
         //_jumpAction.performed -= JumpPlayer;
         //_jumpAction.canceled -= JumpPlayer;
+
+        _moveAction.started -= Move;
+        _moveAction.performed -= Move;
     }
 
     void SetupCharacterController()
@@ -136,8 +151,7 @@ public class PlayerController : MonoBehaviour
         _neutralState = new NeutralState();
         ChangeState(_neutralState);
         _moveState = new MoveState();
-        _airborneState = new AirborneState();
-        _dashState.AvatarBody = ManifestedAvatar; //make constructors
+        _airborneState = new AirborneState();                
         _dashState = new DashState();
         _dashState.AvatarBody = ManifestedAvatar;
         _dashState.NextState = _airborneState; //make constructors

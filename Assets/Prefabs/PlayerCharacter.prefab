@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d61c9a927376566469755522e7cf7b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManifestedAvatar: {fileID: 0}
+  ManifestedAvatar: {fileID: 6945988012027062444}
   ManifestedBarrage: {fileID: 1639562032132263451}
   CurrentTarget: {fileID: 0}
   _airDashSpeedLimit: 0
@@ -368,8 +368,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsGrounded: 1
-  ManifestedBarrage: {fileID: 0}
-  CurrentTarget: {fileID: 0}
   _airDashSpeedLimit: 0
   _accelerationRate: 0
   _jumpForce: 0

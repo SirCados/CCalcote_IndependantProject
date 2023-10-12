@@ -1,7 +1,6 @@
 public class BarrageState : IState
 {
     bool _isStateDone;
-    int _repeat = 0;
     IState _nextState;
     BarrageAspect _barrageAspect;
 
@@ -13,7 +12,7 @@ public class BarrageState : IState
     public void OnEnterState()
     {
         _isStateDone = false;
-        _barrageAspect.PerformBarrage();
+        HandleBarrageInput();
     }
 
     public void OnUpdateState()

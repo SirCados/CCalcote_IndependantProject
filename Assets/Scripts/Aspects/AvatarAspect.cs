@@ -24,14 +24,15 @@ public class AvatarAspect : MonoBehaviour
     }
 
     private void FixedUpdate()
-    {
+    {        
         RotateCharacter();
     }
 
-    public void Move(IState currentState, Vector2 inputVector)
+    public void MoveAvatar(IState currentState, Vector2 inputVector)
     {
+        print(inputVector);
         Vector3 currentVelocity = _playerRigidBody.velocity;
-        _inputVector = currentState.Equals(typeof(NeutralState)) ? inputVector : Vector2.zero;
+        _inputVector = currentState.Equals(typeof(MoveState)) ? inputVector : Vector2.zero;
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, 0, _inputVector.y) * speed);
 
