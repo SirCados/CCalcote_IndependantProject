@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ActiveState : IState
 {
+    public bool IsJumping = false;
+
     bool _isStateDone;
     AvatarAspect _avatarBody;
     Vector2 _inputVector;
@@ -18,12 +20,22 @@ public class ActiveState : IState
 
     public void OnUpdateState()
     {
-        _avatarBody.PerformMove(_inputVector);
+        HandleMovement();
     }
 
     public void OnExitState()
     {
         _isStateDone = true;
+    }
+
+    void HandleMovement()
+    {
+        if (IsJumping)
+        {
+            IsJumping = false;
+            _avatarBody.PerformJump(_inputVector);
+        }
+        _avatarBody.PerformMove(_inputVector);
     }
 
     public void SetInputs(Vector2 inputVector)
@@ -35,6 +47,7 @@ public class ActiveState : IState
     {
         get => _isStateDone;
     }
+
 
     public IState NextState
     {

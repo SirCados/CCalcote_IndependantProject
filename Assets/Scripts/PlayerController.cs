@@ -7,19 +7,15 @@ public class PlayerController : MonoBehaviour
 
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
-    public bool IsGrounded = true;
 
     public GameObject CurrentTarget;
 
     [SerializeField] GameObject _facingIndicator;
-    Rigidbody _playerRigidBody;
-
-    int _remainingAirDashes;
+    
     InputAction _jumpAction;
     InputAction _moveAction;
     InputAction _barrageAction;
     PlayerInput _playerInput;
-    Vector2 _inputVector;
 
     IState _currentState;
     ActiveState _activeState;
@@ -83,7 +79,17 @@ public class PlayerController : MonoBehaviour
 
     void JumpOrAirDash(InputAction.CallbackContext context)
     {
-        
+        if (_currentState == _activeState)
+        {
+            if (!ManifestedAvatar.IsGrounded)
+            {
+                //ChangeState(_dashState);
+            }
+            else
+            {
+                _activeState.IsJumping = true;
+            }            
+        }
     }
 
     void GetInputsForMovement()
@@ -117,7 +123,5 @@ public class PlayerController : MonoBehaviour
         ChangeState(_activeState);               
         _dashState = new DashState(_activeState, ManifestedAvatar);
         _barrageState = new BarrageState(_activeState, ManifestedBarrage);
-
-        _playerRigidBody = GetComponent<Rigidbody>();
     }
 }
