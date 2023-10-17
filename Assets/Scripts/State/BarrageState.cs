@@ -4,8 +4,9 @@ public class BarrageState : IState
     IState _nextState;
     BarrageAspect _barrageAspect;
 
-    public BarrageState(BarrageAspect manifestedBarrage)
+    public BarrageState(IState nextState, BarrageAspect manifestedBarrage)
     {
+        _nextState = nextState;
         _barrageAspect = manifestedBarrage;
     }
 
@@ -41,6 +42,5 @@ public class BarrageState : IState
     public IState NextState
     {
         get => _nextState;
-        set => _nextState = value;
     }
 }

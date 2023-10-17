@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     public GameObject CurrentTarget;
 
     [SerializeField] GameObject _facingIndicator;
-    
+    Rigidbody _playerRigidBody;
+
     int _remainingAirDashes;
     InputAction _jumpAction;
     InputAction _moveAction;
@@ -23,10 +24,7 @@ public class PlayerController : MonoBehaviour
     BarrageState _barrageState;
     DashState _dashState;
     NeutralState _neutralState;
-
-    Rigidbody _playerRigidBody;
-
-
+    MoveState _moveState;
 
     private void Awake()
     {
@@ -50,7 +48,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //ManifestedAvatar.MoveAvatar(_currentState, _inputVector);
-        Move();
+        //Move();
     }
 
     public void StateControllerUpdate()
@@ -98,12 +96,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Move()
+    void Move(InputAction.CallbackContext context)
     {
-        _inputVector = (_currentState == _neutralState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
-        float fallRate = (IsGrounded || _currentState == _dashState) ? 0 : -10;
+        if(_currentState == _neutralState)
+        {
+            ChangeState(_moveState);
+        }
 
-        ManifestedAvatar.MoveAvatar(_inputVector, (_currentState == _dashState));        
+        if(_currentState == _moveState)
+        {
+            print(_moveAction.ReadValue<Vector2>());
+            _moveState.SetInputs(_moveAction.ReadValue<Vector2>());
+        }
+    }
+
+    void Neutral(InputAction.CallbackContext context)
+    {
+        ChangeState(_neutralState);
     }
 
 
@@ -117,7 +126,10 @@ public class PlayerController : MonoBehaviour
         //_jumpAction.performed += JumpPlayer;
         //_jumpAction.canceled += JumpPlayer;
 
-    
+        _moveAction.started += Move;
+        _moveAction.performed += Move;
+        _moveAction.canceled += Neutral;
+
     }
 
     void UnsubscribeToEvents()
@@ -130,6 +142,9 @@ public class PlayerController : MonoBehaviour
         //_jumpAction.performed -= JumpPlayer;
         //_jumpAction.canceled -= JumpPlayer;
 
+        _moveAction.started -= Move;
+        _moveAction.performed -= Move;
+        _moveAction.canceled -= Neutral;
     }
 
     void SetupCharacterController()
@@ -140,15 +155,12 @@ public class PlayerController : MonoBehaviour
         _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];        
 
-        _neutralState = new NeutralState();
+        _neutralState = new NeutralState(ManifestedAvatar);
         ChangeState(_neutralState);
-        _airborneState = new AirborneState();                
-        _dashState = new DashState();
-        _dashState.AvatarBody = ManifestedAvatar;
-        _dashState.NextState = _airborneState; //make constructors
-
-        _barrageState = new BarrageState(ManifestedBarrage);
-        _barrageState.NextState = _neutralState;
+        _moveState = new MoveState(_neutralState, ManifestedAvatar);
+        _airborneState = new AirborneState(_neutralState, ManifestedAvatar);                
+        _dashState = new DashState(_airborneState, ManifestedAvatar);
+        _barrageState = new BarrageState(_neutralState, ManifestedBarrage);
 
         _playerRigidBody = GetComponent<Rigidbody>();
     }

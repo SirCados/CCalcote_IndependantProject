@@ -15,7 +15,7 @@ public class AvatarAspect : MonoBehaviour
 
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;
-    Vector2 _inputVector;
+    public Vector2 InputVector;
     Vector3 _dashTargetPosition;
 
     private void Awake()
@@ -25,38 +25,43 @@ public class AvatarAspect : MonoBehaviour
 
     private void FixedUpdate()
     {        
-        RotateCharacter();
+        //RotateCharacter();
     }
 
-    public void MoveAvatar(Vector2 inputVector, bool isDashing)
+    public void PerformNeutral()
     {
-        print(inputVector);
-        Vector3 currentVelocity = _playerRigidBody.velocity;
-       
+        Vector3 velocityChange = (Vector3.zero - _playerRigidBody.velocity) * _accelerationRate;
+        _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
+    }
+
+    public void PerformMove(Vector2 inputVector)
+    {
+        InputVector = inputVector;
+        Transform parent = GetComponentInParent<Transform>();
+        parent.TransformDirection(Vector3.forward);
+        Vector3 currentVelocity = _playerRigidBody.velocity;       
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);
-
-        targetVelocity.y = (isDashing)? 0 : _fallRate;
-
+        targetVelocity.y = (IsGrounded) ? 0 : -_fallRate;
         Vector3 velocityChange = (targetVelocity - currentVelocity) * _accelerationRate;
 
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
 
-    public void Jump(IState currentState, Vector2 inputVector)
+    public void PerformJump(IState currentState, Vector2 inputVector)
     {
         Vector3 airVelocity = Vector3.up * _jumpForce;
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
     }
 
-    public void AirDash(IState currentState, Vector2 inputVector) //seperate out into Avatar object. Avatar Object will handle all movement. Player Controller will tell avatar to move. 
+    public void PerformAirDash(IState currentState, Vector2 inputVector) //seperate out into Avatar object. Avatar Object will handle all movement. Player Controller will tell avatar to move. 
     {
         if (!currentState.Equals(typeof(DashState)) && _remainingAirDashes != 0)
         {
             Vector3 dashVector = new Vector3(inputVector.x, 0, inputVector.y);
             _dashTargetPosition = transform.position + (dashVector * _movementSpeed * 2);
             _remainingAirDashes -= 1;
-            Vector3 dashVelocity = Vector3.ClampMagnitude(new Vector3(_inputVector.x, 0, _inputVector.y) * _movementSpeed, _airDashSpeedLimit);
+            Vector3 dashVelocity = Vector3.ClampMagnitude(new Vector3(inputVector.x, 0, inputVector.y) * _movementSpeed, _airDashSpeedLimit);
             _playerRigidBody.MovePosition(dashVelocity);
         }
     }

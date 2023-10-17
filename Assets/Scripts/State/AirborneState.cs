@@ -4,7 +4,13 @@ public class AirborneState : IState
 {
     bool _isStateDone;
     IState _nextState;
-    public AvatarAspect AvatarBody;
+    AvatarAspect _avatarBody;
+
+    public AirborneState(IState nextState, AvatarAspect avatar)
+    {
+        _nextState = nextState;
+        _avatarBody = avatar;
+    }
 
     public void OnEnterState()
     {
@@ -29,6 +35,5 @@ public class AirborneState : IState
     public IState NextState
     {
         get => _nextState;
-        set => _nextState = value;
     }
 }
