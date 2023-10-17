@@ -30,27 +30,27 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformNeutral()
     {
-        Vector3 velocityChange = (Vector3.zero - _playerRigidBody.velocity) * _accelerationRate;
+        Vector3 targetVelocity = transform.TransformDirection(Vector3.zero); //unnecessary?
+        targetVelocity.y = (IsGrounded) ? 0 : -_fallRate;
+        Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
+
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
 
     public void PerformMove(Vector2 inputVector)
     {
-        InputVector = inputVector;
-        Transform parent = GetComponentInParent<Transform>();
-        parent.TransformDirection(Vector3.forward);
-        Vector3 currentVelocity = _playerRigidBody.velocity;       
+        InputVector = inputVector;       
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);
         targetVelocity.y = (IsGrounded) ? 0 : -_fallRate;
-        Vector3 velocityChange = (targetVelocity - currentVelocity) * _accelerationRate;
+        Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
 
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
 
-    public void PerformJump(IState currentState, Vector2 inputVector)
+    public void PerformJump(Vector2 inputVector)
     {
-        Vector3 airVelocity = Vector3.up * _jumpForce;
+        Vector3 airVelocity = new Vector3(inputVector.x, _jumpForce, inputVector.y);
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
     }
 

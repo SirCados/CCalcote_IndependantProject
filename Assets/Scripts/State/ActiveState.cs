@@ -1,30 +1,34 @@
+using UnityEngine;
 
-
-public class AirborneState : IState
+public class ActiveState : IState
 {
     bool _isStateDone;
-    IState _nextState;
     AvatarAspect _avatarBody;
+    Vector2 _inputVector;
 
-    public AirborneState(IState nextState, AvatarAspect avatar)
+    public ActiveState(AvatarAspect avatar)
     {
-        _nextState = nextState;
         _avatarBody = avatar;
     }
 
     public void OnEnterState()
     {
-
+        _isStateDone = false;
     }
 
     public void OnUpdateState()
     {
-
+        _avatarBody.PerformMove(_inputVector);
     }
 
     public void OnExitState()
     {
+        _isStateDone = true;
+    }
 
+    public void SetInputs(Vector2 inputVector)
+    {
+        _inputVector = inputVector;
     }
 
     public bool IsStateDone
@@ -34,6 +38,6 @@ public class AirborneState : IState
 
     public IState NextState
     {
-        get => _nextState;
+        get => null;
     }
 }

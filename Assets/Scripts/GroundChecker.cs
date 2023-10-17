@@ -2,18 +2,13 @@ using UnityEngine;
 
 public class GroundChecker : MonoBehaviour
 {
-    PlayerController _avatar;
-
-    private void Awake()
-    {
-        _avatar = GetComponentInParent<PlayerController>();
-    }
+   public AvatarAspect Avatar;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ground"))
         {
-            _avatar.IsGrounded = true;
+            Avatar.IsGrounded = true;
             //_avatar.ResetAirDashes();
         }
     }
@@ -22,7 +17,7 @@ public class GroundChecker : MonoBehaviour
     {
         if (other.CompareTag("Ground"))
         {
-            _avatar.IsGrounded = false;
+            Avatar.IsGrounded = false;
         }
     }
 }
