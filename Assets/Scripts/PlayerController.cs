@@ -100,16 +100,10 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        Vector3 currentVelocity = _playerRigidBody.velocity;
         _inputVector = (_currentState == _neutralState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
-        float speed = (IsGrounded) ? 30 : 3;
-        Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, 0, _inputVector.y) * speed);
+        float fallRate = (IsGrounded || _currentState == _dashState) ? 0 : -10;
 
-        targetVelocity.y = (IsGrounded || _currentState == _dashState) ? 0 : -10;
-
-        Vector3 velocityChange = (targetVelocity - currentVelocity) * 10;
-
-        _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
+        ManifestedAvatar.MoveAvatar(_inputVector, (_currentState == _dashState));        
     }
 
 
