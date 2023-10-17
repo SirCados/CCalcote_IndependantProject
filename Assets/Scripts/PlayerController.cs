@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
+    public bool IsGrounded = true;
 
     public GameObject CurrentTarget;
 
@@ -22,7 +23,10 @@ public class PlayerController : MonoBehaviour
     BarrageState _barrageState;
     DashState _dashState;
     NeutralState _neutralState;
-    
+
+    Rigidbody _playerRigidBody;
+
+
 
     private void Awake()
     {
@@ -45,7 +49,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ManifestedAvatar.MoveAvatar(_currentState, _moveAction.ReadValue<Vector2>());
+        //ManifestedAvatar.MoveAvatar(_currentState, _inputVector);
+        Move();
     }
 
     public void StateControllerUpdate()
@@ -93,10 +98,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Move(InputAction.CallbackContext context)
+    void Move()
     {
-        _inputVector = _moveAction.ReadValue<Vector2>();      
+        Vector3 currentVelocity = _playerRigidBody.velocity;
+        _inputVector = (_currentState == _neutralState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
+        float speed = (IsGrounded) ? 30 : 3;
+        Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, 0, _inputVector.y) * speed);
+
+        targetVelocity.y = (IsGrounded || _currentState == _dashState) ? 0 : -10;
+
+        Vector3 velocityChange = (targetVelocity - currentVelocity) * 10;
+
+        _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
+
 
     void SubscribeToEvents()
     {
@@ -107,6 +122,8 @@ public class PlayerController : MonoBehaviour
         _jumpAction.started += Jump;
         //_jumpAction.performed += JumpPlayer;
         //_jumpAction.canceled += JumpPlayer;
+
+    
     }
 
     void UnsubscribeToEvents()
@@ -119,8 +136,6 @@ public class PlayerController : MonoBehaviour
         //_jumpAction.performed -= JumpPlayer;
         //_jumpAction.canceled -= JumpPlayer;
 
-        _moveAction.started -= Move;
-        _moveAction.performed -= Move;
     }
 
     void SetupCharacterController()
@@ -140,5 +155,7 @@ public class PlayerController : MonoBehaviour
 
         _barrageState = new BarrageState(ManifestedBarrage);
         _barrageState.NextState = _neutralState;
+
+        _playerRigidBody = GetComponent<Rigidbody>();
     }
 }

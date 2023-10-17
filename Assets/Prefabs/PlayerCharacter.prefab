@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 7791483632954375948}
   - component: {fileID: 7791483632954375950}
   - component: {fileID: 7791483632954375951}
-  - component: {fileID: -8693281746973458592}
+  - component: {fileID: 6265440718047805122}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d61c9a927376566469755522e7cf7b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManifestedAvatar: {fileID: 6945988012027062444}
+  ManifestedAvatar: {fileID: 0}
   ManifestedBarrage: {fileID: 1639562032132263451}
   CurrentTarget: {fileID: 0}
   _facingIndicator: {fileID: 3978000635418128621}
@@ -283,7 +283,7 @@ MonoBehaviour:
   m_DefaultActionMap: Ground
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!54 &-8693281746973458592
+--- !u!54 &6265440718047805122
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -354,6 +354,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicAvatarAspect
       objectReference: {fileID: 0}
+    - target: {fileID: 3452985218716242746, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 165f2fc337f8dd941af5a5ee76bbb2a4, type: 2}
+    - target: {fileID: 6011672223368782016, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
+      propertyPath: _facingIndicator
+      value: 
+      objectReference: {fileID: 3978000635418128621}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
 --- !u!4 &194356098875459668 stripped
@@ -361,32 +369,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 194356098739096666, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
   m_PrefabInstance: {fileID: 136397838}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1729713671105670700 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1729713671237708322, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
-  m_PrefabInstance: {fileID: 136397838}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6945988012027062444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1729713671105670700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e17d7454c5708484a8ba427d8febcdd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsGrounded: 1
-  _airDashSpeedLimit: 0
-  _accelerationRate: 0
-  _jumpForce: 0
-  _movementSpeed: 0
-  _fallRate: 0
-  _maxiumAirDashes: 0
-  _remainingAirDashes: 0
-  _facingIndicator: {fileID: 0}
 --- !u!1001 &7818219108278784097
 PrefabInstance:
   m_ObjectHideFlags: 0

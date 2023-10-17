@@ -28,15 +28,15 @@ public class AvatarAspect : MonoBehaviour
         RotateCharacter();
     }
 
-    public void MoveAvatar(IState currentState, Vector2 inputVector)
+    public void MoveAvatar(Vector2 inputVector, bool isDashing)
     {
         print(inputVector);
         Vector3 currentVelocity = _playerRigidBody.velocity;
-        _inputVector = currentState.Equals(typeof(NeutralState)) ? inputVector : Vector2.zero;
+       
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);
 
-        targetVelocity.y = currentState.Equals(typeof(DashState)) ? 0 : -_fallRate;
+        targetVelocity.y = (isDashing)? 0 : _fallRate;
 
         Vector3 velocityChange = (targetVelocity - currentVelocity) * _accelerationRate;
 
@@ -77,7 +77,7 @@ public class AvatarAspect : MonoBehaviour
     void SetupAvatarAspect()
     {
         ResetAirDashes();
-        _playerRigidBody = GetComponent<Rigidbody>();
+        _playerRigidBody = GetComponentInParent<Rigidbody>();
         _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget; //account for target switch in PlayerController
     }
 }
