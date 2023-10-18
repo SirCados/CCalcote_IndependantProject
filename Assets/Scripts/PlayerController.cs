@@ -81,11 +81,14 @@ public class PlayerController : MonoBehaviour
     {
         if (_currentState == _activeState)
         {
-            if (!ManifestedAvatar.IsGrounded)
+            if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)
             {
-                //ChangeState(_dashState);
+                Vector2 inputs = _moveAction.ReadValue<Vector2>();
+                print("input vector: " + inputs);
+                _dashState.SetInputs(inputs);
+                ChangeState(_dashState);
             }
-            else
+            else if(ManifestedAvatar.IsGrounded)
             {
                 _activeState.IsJumping = true;
             }            
@@ -94,8 +97,11 @@ public class PlayerController : MonoBehaviour
 
     void GetInputsForMovement()
     {
-        Vector2 inputs = (_currentState == _activeState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
-        _activeState.SetInputs(inputs);
+        if(_currentState == _activeState)
+        {
+            Vector2 inputs = (_currentState == _activeState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
+            _activeState.SetInputs(inputs);
+        }
     }
 
     void SubscribeToEvents()

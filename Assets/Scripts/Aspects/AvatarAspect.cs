@@ -2,21 +2,24 @@ using UnityEngine;
 
 public class AvatarAspect : MonoBehaviour
 {
-    public bool IsGrounded = true;    
+    public bool IsGrounded = true;
+    public bool IsDashing = false;
+    public int RemainingAirDashes;
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
-    [SerializeField] int _maxiumAirDashes;
-    [SerializeField] int _remainingAirDashes;
+    [SerializeField] int _maxiumAirDashes;    
     [SerializeField] GameObject _facingIndicator;
 
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;
     public Vector2 InputVector;
     Vector3 _dashTargetPosition;
+    Vector3 _dashVelocity;
+    Vector3 _velocityBeforeDash;
 
     private void Awake()
     {
@@ -32,8 +35,7 @@ public class AvatarAspect : MonoBehaviour
     {
         InputVector = inputVector;       
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
-        Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);
-        //targetVelocity.y = (IsGrounded) ? 0 : -_fallRate;
+        Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
         velocityChange.y = (IsGrounded) ? 0 : -_fallRate;
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
@@ -41,20 +43,33 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformJump(Vector2 inputVector)
     {
-        print("JUMP");
         Vector3 airVelocity = new Vector3(inputVector.x, _jumpForce, inputVector.y);
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
     }
 
-    public void PerformAirDash(IState currentState, Vector2 inputVector) //seperate out into Avatar object. Avatar Object will handle all movement. Player Controller will tell avatar to move. 
+    public void PerformAirDash(Vector2 inputVector) 
     {
-        if (_remainingAirDashes != 0)
+        IsDashing = true;
+        _velocityBeforeDash = _playerRigidBody.velocity;
+        _playerRigidBody.velocity = Vector3.zero;
+        Debug.Log("dash input vector: " + inputVector);
+        Vector3 dashVector = (inputVector != Vector2.zero)? new Vector3(inputVector.x, 0, inputVector.y) : Vector3.forward;
+        IsDashing = true;
+        _dashTargetPosition = transform.parent.transform.position + (dashVector * 10);
+        RemainingAirDashes -= 1; 
+        print("Dash! from: " + transform.parent.transform.position + " to " + _dashTargetPosition);
+        transform.parent.transform.position = Vector3.Slerp(transform.parent.transform.position, _dashTargetPosition, .2f);
+    }
+
+    public void CheckIfDashIsDone()
+    {
+        if((transform.parent.transform.position - _dashTargetPosition).magnitude < .5)
         {
-            Vector3 dashVector = new Vector3(inputVector.x, 0, inputVector.y);
-            _dashTargetPosition = transform.position + (dashVector * _movementSpeed * 2);
-            _remainingAirDashes -= 1;
-            Vector3 dashVelocity = Vector3.ClampMagnitude(new Vector3(inputVector.x, 0, inputVector.y) * _movementSpeed, _airDashSpeedLimit);
-            _playerRigidBody.MovePosition(dashVelocity);
+            IsDashing = false;
+        }
+        else
+        {
+            transform.parent.transform.position = Vector3.Slerp(transform.parent.transform.position, _dashTargetPosition, .2f);
         }
     }
 
@@ -64,11 +79,15 @@ public class AvatarAspect : MonoBehaviour
         {
             _facingIndicator.transform.LookAt(_currentTarget.transform);
         }
+        else
+        {
+            transform.parent.transform.position = Vector3.MoveTowards(transform.parent.transform.position, _dashTargetPosition, 2);
+        }
     }
 
     public void ResetAirDashes()
     {
-        _remainingAirDashes = _maxiumAirDashes;
+        RemainingAirDashes = _maxiumAirDashes;
     } 
     
     void SetupAvatarAspect()

@@ -5,12 +5,12 @@ public class ActiveState : IState
     public bool IsJumping = false;
 
     bool _isStateDone;
-    AvatarAspect _avatarBody;
+    AvatarAspect _avatarAspect;
     Vector2 _inputVector;
 
     public ActiveState(AvatarAspect avatar)
     {
-        _avatarBody = avatar;
+        _avatarAspect = avatar;
     }
 
     public void OnEnterState()
@@ -33,9 +33,9 @@ public class ActiveState : IState
         if (IsJumping)
         {
             IsJumping = false;
-            _avatarBody.PerformJump(_inputVector);
+            _avatarAspect.PerformJump(_inputVector);
         }
-        _avatarBody.PerformMove(_inputVector);
+        _avatarAspect.PerformMove(_inputVector);
     }
 
     public void SetInputs(Vector2 inputVector)
