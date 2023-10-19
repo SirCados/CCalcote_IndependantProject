@@ -32,7 +32,6 @@ public class BarrageAspect : MonoBehaviour
             return;
         }
         _counter++;
-        print("Spawn!");
         BarrageProjectile projectile = Instantiate(BarrageProjectile, transform).GetComponent<BarrageProjectile>();
         projectile.Target = CurrentTarget.transform;
         projectile.TargetRigidBody = CurrentTarget.GetComponent<Rigidbody>();
