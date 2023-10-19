@@ -3,32 +3,24 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public bool IsGrounded = true;
+    public string CurrentState;
+
+    public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
+
     public GameObject CurrentTarget;
 
-    [SerializeField] float _airDashSpeedLimit;
-    [SerializeField] float _accelerationRate;
-    [SerializeField] float _jumpForce;
-    [SerializeField] float _movementSpeed;
-    [SerializeField] float _fallRate;
-    [SerializeField] int _maxiumAirDashes;
     [SerializeField] GameObject _facingIndicator;
     
-    int _remainingAirDashes;
     InputAction _jumpAction;
     InputAction _moveAction;
     InputAction _barrageAction;
     PlayerInput _playerInput;
-    Rigidbody _playerRigidBody;
-    Vector2 _inputVector;
 
+    IState _currentState;
+    ActiveState _activeState;
     BarrageState _barrageState;
     DashState _dashState;
-    NeutralState _neutralState;
-    IState _currentState;
-
-    Vector3 _dashTargetPosition;
 
     private void Awake()
     {
@@ -37,22 +29,18 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        SubscribeToEvents();
+        SubscribeToEvents();        
     }
 
     private void OnDisable()
     {
         UnsubscribeToEvents();
     }
-    private void Update()
-    {
-        StateControllerUpdate();
-    }
 
     private void FixedUpdate()
     {
-        Move();
-        RotateCharacter();
+        StateControllerUpdate();
+        GetInputsForMovement();
     }
 
     public void StateControllerUpdate()
@@ -60,6 +48,7 @@ public class PlayerController : MonoBehaviour
         if (_currentState != null)
         {
             _currentState.OnUpdateState();
+            CurrentState = _currentState.ToString();
         }
 
         if (_currentState.NextState != null && _currentState.IsStateDone)
@@ -70,122 +59,74 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeState(IState newState)
     {
-        print("Changing to " + newState);
         if (_currentState != null)
         {
             _currentState.OnExitState();
         }
 
         _currentState = newState;
-        _currentState.OnEnterState();
-    }
-
-    void Move()
-    {
-        Vector3 currentVelocity = _playerRigidBody.velocity;
-        _inputVector = (_currentState == _neutralState)? _moveAction.ReadValue<Vector2>() : Vector2.zero;
-        float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 10;
-        Vector3 targetVelocity = transform.TransformDirection(new Vector3(_inputVector.x, 0, _inputVector.y) * speed);
-
-        targetVelocity.y = (IsGrounded || _currentState == _dashState) ? 0 : -_fallRate;        
-
-        Vector3 velocityChange = (targetVelocity - currentVelocity) * _accelerationRate;
-
-        _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
-    }
-
-    void Jump(InputAction.CallbackContext context)
-    {
-        Vector3 airVelocity = Vector3.zero;
-
-        if (IsGrounded)
-        {
-            airVelocity = Vector3.up * _jumpForce;
-            _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
-        }
-        //else if (_jumpAction.WasPressedThisFrame() && !IsGrounded && _remainingAirDashes !=0)
-        //{
-        //    AirDash();
-        //}
-    }
-
-    void AirDash() //seperate out into Avatar object. Avatar Object will handle all movement. Player Controller will tell avatar to move. 
-    {
-        Vector3 inputVector;
-        if(_currentState != _dashState)
-        {
-            inputVector = new Vector3(_inputVector.x, 0, _inputVector.y);
-            ChangeState(_dashState);
-            _dashTargetPosition = transform.position + (inputVector * _movementSpeed * 2);
-            _remainingAirDashes -= 1;
-        }
-        
-        Vector3 dashVelocity = Vector3.ClampMagnitude(new Vector3(_inputVector.x, 0, _inputVector.y) * _movementSpeed, _airDashSpeedLimit);
-        _playerRigidBody.MovePosition(dashVelocity);
-    }
-
-    void RotateCharacter()
-    {
-        if (CurrentTarget)
-        {
-            _facingIndicator.transform.LookAt(CurrentTarget.transform);
-        }
-    }
+        _currentState.OnEnterState();        
+    }    
 
     void Barrage(InputAction.CallbackContext context)
     {
-        if(_currentState == _neutralState)
+        if(_currentState == _activeState)
         {
-            print("Press");
             ChangeState(_barrageState);
+            ManifestedAvatar.StopJumpVelocity();
         }
     }
 
-    public void ResetAirDashes()
+    void JumpOrAirDash(InputAction.CallbackContext context)
     {
-        _remainingAirDashes = _maxiumAirDashes;
+        if (_currentState == _activeState)
+        {
+            if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)
+            {
+                Vector2 inputs = _moveAction.ReadValue<Vector2>();
+                _dashState.SetInputs(inputs);
+                ChangeState(_dashState);
+            }
+            else if(ManifestedAvatar.IsGrounded)
+            {
+                _activeState.IsJumping = true;
+            }            
+        }
+    }
+
+    void GetInputsForMovement()
+    {
+        if(_currentState == _activeState)
+        {
+            Vector2 inputs = (_currentState == _activeState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
+            _activeState.SetInputs(inputs);
+        }
     }
 
     void SubscribeToEvents()
     {
         _barrageAction.started += Barrage;
-        //_barrageAction.performed += Barrage;
-        //_barrageAction.canceled += Barrage;
-
-        _jumpAction.started += Jump;
-        //_jumpAction.performed += JumpPlayer;
-        //_jumpAction.canceled += JumpPlayer;
+        _jumpAction.started += JumpOrAirDash;
     }
 
     void UnsubscribeToEvents()
     {
-
         _barrageAction.started -= Barrage;
-        //_barrageAction.performed -= Barrage;
-        //_barrageAction.canceled -= Barrage;
 
-        _jumpAction.started -= Jump;
-        //_jumpAction.performed -= JumpPlayer;
-        //_jumpAction.canceled -= JumpPlayer;
+        _jumpAction.started -= JumpOrAirDash;
     }
 
     void SetupCharacterController()
     {
         _playerInput = GetComponent<PlayerInput>();
-        _playerRigidBody = GetComponent<Rigidbody>();
 
         _barrageAction = _playerInput.actions["Barrage"];
-
         _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];
-        ResetAirDashes();
 
-        _neutralState = new NeutralState();
-        ChangeState(_neutralState);        
-        _barrageState = new BarrageState(ManifestedBarrage);
-        _barrageState.NextState = _neutralState;
-        _dashState = new DashState();
-        _dashState.TempBody = this;
-        _dashState.NextState = _neutralState;//make constructors
+        _activeState = new ActiveState(ManifestedAvatar);
+        ChangeState(_activeState);               
+        _dashState = new DashState(_activeState, ManifestedAvatar);
+        _barrageState = new BarrageState(_activeState, ManifestedBarrage);
     }
 }

@@ -5,10 +5,11 @@ public class BarrageAspect : MonoBehaviour
     public float RepeatTime = 0.1f;
     public GameObject BarrageProjectile;
     public GameObject CurrentTarget;
-    public bool IsBarraging = false;//TODO: gettter?
+    public bool IsBarraging = false;//TODO: getter?
 
-    GameObject _barrageEmmissionPoint;
-    int _repeat = 0;//TODO: RENAME!
+    int _counter = 1;
+    [SerializeField] int _recovery; //will always be larger than timesToRepeat. 
+    [SerializeField] int _timesToRepeat; //number of times the barrage will fire on a given press.
 
     public void PerformBarrage()
     {
@@ -18,19 +19,19 @@ public class BarrageAspect : MonoBehaviour
 
     void SpawnBarrageProjectile()
     {
-        if (_repeat > 10)
+        if (_counter > _recovery)
         {
             IsBarraging = false;
-            _repeat = 0;
+            _counter = 1;
             CancelInvoke();
             return;
         }
-        else if (_repeat > 2)
+        else if (_counter > _timesToRepeat)
         {
-            _repeat++;
+            _counter++;
             return;
         }
-        _repeat++;
+        _counter++;
         print("Spawn!");
         BarrageProjectile projectile = Instantiate(BarrageProjectile, transform).GetComponent<BarrageProjectile>();
         projectile.Target = CurrentTarget.transform;
