@@ -7,7 +7,7 @@ public class BarrageAspect : MonoBehaviour
     public GameObject CurrentTarget;
     public bool IsBarraging = false;//TODO: getter?
 
-    int _counter = 0;
+    int _counter = 1;
     [SerializeField] int _recovery; //will always be larger than timesToRepeat. 
     [SerializeField] int _timesToRepeat; //number of times the barrage will fire on a given press.
 
@@ -22,7 +22,7 @@ public class BarrageAspect : MonoBehaviour
         if (_counter > _recovery)
         {
             IsBarraging = false;
-            _counter = 0;
+            _counter = 1;
             CancelInvoke();
             return;
         }

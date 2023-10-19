@@ -26,6 +26,11 @@ public class AvatarAspect : MonoBehaviour
         SetupAvatarAspect();
     }
 
+    private void Update()
+    {
+        RotateCharacter();
+    }
+
     private void FixedUpdate()
     {        
         //RotateCharacter();
@@ -55,10 +60,18 @@ public class AvatarAspect : MonoBehaviour
         Debug.Log("dash input vector: " + inputVector);
         Vector3 dashVector = (inputVector != Vector2.zero)? new Vector3(inputVector.x, 0, inputVector.y) : Vector3.forward;
         IsDashing = true;
-        _dashTargetPosition = transform.parent.transform.position + (dashVector * 10);
+        _dashTargetPosition = transform.parent.transform.position + (dashVector * 8);
         RemainingAirDashes -= 1; 
         print("Dash! from: " + transform.parent.transform.position + " to " + _dashTargetPosition);
-        transform.parent.transform.position = Vector3.Slerp(transform.parent.transform.position, _dashTargetPosition, .2f);
+        transform.parent.transform.position = Vector3.Lerp(transform.parent.transform.position, _dashTargetPosition, .2f);
+    }
+
+    public void StopJumpVelocity()
+    {        
+        if (!IsGrounded)
+        {
+            _playerRigidBody.velocity = Vector3.down;
+        }
     }
 
     public void CheckIfDashIsDone()
@@ -78,10 +91,10 @@ public class AvatarAspect : MonoBehaviour
         if (_currentTarget)
         {
             _facingIndicator.transform.LookAt(_currentTarget.transform);
-        }
-        else
-        {
-            transform.parent.transform.position = Vector3.MoveTowards(transform.parent.transform.position, _dashTargetPosition, 2);
+
+            Quaternion facing = _facingIndicator.transform.rotation;
+
+            //transform.rotation = new Quaternion(0, facing.y, 0, 0);
         }
     }
 

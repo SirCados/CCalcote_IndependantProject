@@ -1438,9 +1438,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1639562032132263451, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: _recovery
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1639562032132263451, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: CurrentTarget
       value: 
       objectReference: {fileID: 1985652591}
+    - target: {fileID: 1639562032132263451, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: _timesToRepeat
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6265440718047805122, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_UseGravity
       value: 0

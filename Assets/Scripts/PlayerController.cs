@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
         if(_currentState == _activeState)
         {
             ChangeState(_barrageState);
+            ManifestedAvatar.StopJumpVelocity();
         }
     }
 
