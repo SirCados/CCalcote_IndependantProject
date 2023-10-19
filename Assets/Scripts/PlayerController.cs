@@ -59,7 +59,6 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeState(IState newState)
     {
-        print("Changing to " + newState);
         if (_currentState != null)
         {
             _currentState.OnExitState();
@@ -85,7 +84,6 @@ public class PlayerController : MonoBehaviour
             if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)
             {
                 Vector2 inputs = _moveAction.ReadValue<Vector2>();
-                print("input vector: " + inputs);
                 _dashState.SetInputs(inputs);
                 ChangeState(_dashState);
             }

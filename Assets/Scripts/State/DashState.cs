@@ -42,8 +42,6 @@ public class DashState : IState
     public void SetInputs(Vector2 inputVector)
     {
         _inputVector = inputVector;
-        Debug.Log("_input vector: " + _inputVector);
-
     }
 
     public bool IsStateDone

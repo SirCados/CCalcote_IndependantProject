@@ -55,15 +55,29 @@ public class AvatarAspect : MonoBehaviour
     public void PerformAirDash(Vector2 inputVector) 
     {
         IsDashing = true;
-        _velocityBeforeDash = _playerRigidBody.velocity;
         _playerRigidBody.velocity = Vector3.zero;
-        Debug.Log("dash input vector: " + inputVector);
         Vector3 dashVector = (inputVector != Vector2.zero)? new Vector3(inputVector.x, 0, inputVector.y) : Vector3.forward;
         IsDashing = true;
-        _dashTargetPosition = transform.parent.transform.position + (dashVector * 8);
-        RemainingAirDashes -= 1; 
-        print("Dash! from: " + transform.parent.transform.position + " to " + _dashTargetPosition);
-        transform.parent.transform.position = Vector3.Lerp(transform.parent.transform.position, _dashTargetPosition, .2f);
+        _dashTargetPosition = _playerRigidBody.position + (dashVector * 8);
+        RemainingAirDashes -= 1;
+
+        //int layerMask = 1 << 8;
+        //RaycastHit hit;
+        //if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 80f, layerMask))
+        //{
+        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+        //    print("HIT: "+hit.transform.position);
+        //    _dashTargetPosition = hit.transform.position;
+        //}
+        //else
+        //{
+        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
+        //    Debug.Log("Did not Hit");
+        //}
+
+        _playerRigidBody.MovePosition(_dashTargetPosition);
+
+        //_playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, .2f);
     }
 
     public void StopJumpVelocity()
