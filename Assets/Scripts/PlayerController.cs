@@ -4,14 +4,11 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public string CurrentState;
-
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
-
     public GameObject CurrentTarget;
 
-    [SerializeField] GameObject _facingIndicator;
-    
+    [SerializeField] GameObject _facingIndicator;    
     InputAction _jumpAction;
     InputAction _moveAction;
     InputAction _barrageAction;

@@ -8,6 +8,8 @@ public class AvatarAspect : MonoBehaviour
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
+    [SerializeField] float _dashDistance = 10f;
+    [SerializeField] float _dashSpeed = .2f;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
@@ -18,8 +20,6 @@ public class AvatarAspect : MonoBehaviour
     Rigidbody _playerRigidBody;
     public Vector2 InputVector;
     Vector3 _dashTargetPosition;
-    Vector3 _dashVelocity;
-    Vector3 _velocityBeforeDash;
 
     private void Awake()
     {
@@ -29,11 +29,6 @@ public class AvatarAspect : MonoBehaviour
     private void Update()
     {
         RotateCharacter();
-    }
-
-    private void FixedUpdate()
-    {        
-        //RotateCharacter();
     }
 
     public void PerformMove(Vector2 inputVector)
@@ -58,26 +53,9 @@ public class AvatarAspect : MonoBehaviour
         _playerRigidBody.velocity = Vector3.zero;
         Vector3 dashVector = (inputVector != Vector2.zero)? new Vector3(inputVector.x, 0, inputVector.y) : Vector3.forward;
         IsDashing = true;
-        _dashTargetPosition = _playerRigidBody.position + (dashVector * 8);
+        _dashTargetPosition = _playerRigidBody.position + (dashVector * _dashDistance);
         RemainingAirDashes -= 1;
-
-        //int layerMask = 1 << 8;
-        //RaycastHit hit;
-        //if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 80f, layerMask))
-        //{
-        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-        //    print("HIT: "+hit.transform.position);
-        //    _dashTargetPosition = hit.transform.position;
-        //}
-        //else
-        //{
-        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
-        //    Debug.Log("Did not Hit");
-        //}
-
-        _playerRigidBody.MovePosition(_dashTargetPosition);
-
-        //_playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, .2f);
+        _playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, _dashSpeed);
     }
 
     public void StopJumpVelocity()
@@ -96,7 +74,7 @@ public class AvatarAspect : MonoBehaviour
         }
         else
         {
-            transform.parent.transform.position = Vector3.Slerp(transform.parent.transform.position, _dashTargetPosition, .2f);
+            _playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, .2f);//Clean up in Dash Rework
         }
     }
 
@@ -105,10 +83,6 @@ public class AvatarAspect : MonoBehaviour
         if (_currentTarget)
         {
             _facingIndicator.transform.LookAt(_currentTarget.transform);
-
-            Quaternion facing = _facingIndicator.transform.rotation;
-
-            //transform.rotation = new Quaternion(0, facing.y, 0, 0);
         }
     }
 

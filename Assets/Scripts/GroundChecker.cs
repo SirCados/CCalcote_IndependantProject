@@ -8,7 +8,6 @@ public class GroundChecker : MonoBehaviour
     {
         if (other.CompareTag("Ground"))
         {
-            print("grounded");
             Avatar.IsGrounded = true;
             Avatar.ResetAirDashes();
         }
@@ -18,7 +17,6 @@ public class GroundChecker : MonoBehaviour
     {
         if (other.CompareTag("Ground"))
         {
-            print("airborne");
             Avatar.IsGrounded = false;
         }
     }
