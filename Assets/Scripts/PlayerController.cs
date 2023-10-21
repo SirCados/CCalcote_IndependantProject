@@ -36,6 +36,19 @@ public class PlayerController : MonoBehaviour
         UnsubscribeToEvents();
     }
 
+    private void Update()
+    {
+        if (!ManifestedAvatar.IsGrounded)
+        {
+            _animator.SetBool("IsFalling", true);
+        }
+        else if (ManifestedAvatar.IsGrounded && _animator.GetBool("IsFalling") && !_activeState.IsJumping)
+        {
+            _animator.SetBool("IsJumping", false);
+            _animator.SetBool("IsFalling", false);
+        }
+    }
+
     private void FixedUpdate()
     {
         StateControllerUpdate();
@@ -78,6 +91,8 @@ public class PlayerController : MonoBehaviour
 
     void JumpOrAirDash(InputAction.CallbackContext context)
     {
+        print("Jump!");
+        _animator.SetBool("IsJumping", true);
         if (_currentState == _activeState)
         {
             if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)
@@ -103,8 +118,7 @@ public class PlayerController : MonoBehaviour
             _animator.SetFloat("xInput", inputs.x);
             _animator.SetFloat("yInput", inputs.y);
             float movement = Mathf.Abs(inputs.magnitude);
-            _animator.SetFloat("Movement", movement);
-
+            _animator.SetFloat("Movement", movement);            
         }
     }
 
