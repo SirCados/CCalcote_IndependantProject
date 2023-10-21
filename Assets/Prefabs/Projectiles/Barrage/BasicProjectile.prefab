@@ -135,6 +135,7 @@ MonoBehaviour:
   _maxDistancePrediction: 100
   _minDistancePrediction: 5
   _maxTimePrediction: 5
+  _hitParticles: {fileID: 4122821944592492203, guid: 210e466c6c5211f45a7890f13a3a59f1, type: 3}
 --- !u!82 &6015284511503206473
 AudioSource:
   m_ObjectHideFlags: 0

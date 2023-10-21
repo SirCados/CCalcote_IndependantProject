@@ -16,19 +16,14 @@ public class BarrageProjectile: MonoBehaviour
     [SerializeField] float _maxDistancePrediction = 100;
     [SerializeField] float _minDistancePrediction = 5;
     [SerializeField] float _maxTimePrediction = 5;
-
-    AudioSource _audioSource;
     Rigidbody _projectileRigidBody;
     Vector3 _standardPrediction;
+
+    [SerializeField] ParticleSystem _hitParticles;
 
     private void Awake()
     {
         _projectileRigidBody = GetComponent<Rigidbody>();        
-    }
-
-    private void Start()
-    {
-        _audioSource.PlayOneShot(_audioSource.clip);
     }
 
     private void FixedUpdate()
@@ -58,6 +53,8 @@ public class BarrageProjectile: MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Instantiate(_hitParticles, transform.position, new Quaternion());
+        transform.DetachChildren();
         Destroy(gameObject);
     }
 }

@@ -45,10 +45,9 @@ public class IKControl : MonoBehaviour
                     _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, .5f);
                     _animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
                     _animator.SetIKPosition(AvatarIKGoal.LeftHand, LeftHandObject.position);
-                    //_animator.SetIKRotation(AvatarIKGoal.LeftHand, LeftHandObject.rotation);
-                    //_animator.SetBoneLocalRotation(HumanBodyBones.Chest, new Quaternion(xRotation, 0, 0, 1));
-
-                    _animator.SetBoneLocalRotation(HumanBodyBones.LeftHand, new Quaternion(xRotation, yRotation, zRotation, 1));
+                    _animator.SetIKRotation(AvatarIKGoal.LeftHand, LeftHandObject.rotation);
+                    _animator.SetBoneLocalRotation(HumanBodyBones.Chest, new Quaternion(xRotation, 0, 0, 1));
+                   // _animator.SetBoneLocalRotation(HumanBodyBones.LeftHand, new Quaternion(xRotation, yRotation, zRotation, 1));
 
                     //EmmissionPoint.LookAt(ObjectToLookAt);
                     //float pivot = EmmissionPoint.localRotation.y;
