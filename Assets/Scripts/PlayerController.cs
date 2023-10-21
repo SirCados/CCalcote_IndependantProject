@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
         if(_currentState == _activeState)
         {
             Vector2 inputs = (_currentState == _activeState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
-            //_animator.transform.forward = transform.forward;
+            _animator.transform.forward = transform.forward;
             _activeState.SetInputs(inputs);
             _animator.SetFloat("xInput", inputs.x);
             _animator.SetFloat("yInput", inputs.y);

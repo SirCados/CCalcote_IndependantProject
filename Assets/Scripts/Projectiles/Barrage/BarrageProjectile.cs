@@ -17,12 +17,18 @@ public class BarrageProjectile: MonoBehaviour
     [SerializeField] float _minDistancePrediction = 5;
     [SerializeField] float _maxTimePrediction = 5;
 
+    AudioSource _audioSource;
     Rigidbody _projectileRigidBody;
     Vector3 _standardPrediction;
 
     private void Awake()
     {
         _projectileRigidBody = GetComponent<Rigidbody>();        
+    }
+
+    private void Start()
+    {
+        _audioSource.PlayOneShot(_audioSource.clip);
     }
 
     private void FixedUpdate()

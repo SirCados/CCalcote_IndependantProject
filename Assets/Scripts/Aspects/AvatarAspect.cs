@@ -24,14 +24,18 @@ public class AvatarAspect : MonoBehaviour
     public Vector2 InputVector;
     Vector3 _dashTargetPosition;
 
+
+
     private void Awake()
     {
         SetupAvatarAspect();
+
     }
 
     private void Update()
     {
         RotateCharacter();
+        Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, 1f);
     }
 
     public void PerformMove(Vector2 inputVector)
@@ -85,7 +89,7 @@ public class AvatarAspect : MonoBehaviour
     {
         if (_currentTarget)
         {
-            _facingIndicator.transform.LookAt(_currentTarget.transform);
+            _facingIndicator.transform.LookAt(_currentTarget.transform);            
             Vector3 look = new Vector3(_currentTarget.transform.position.x, transform.position.y, _currentTarget.transform.position.z);
             _avatarModelTransform.LookAt(look);
         }

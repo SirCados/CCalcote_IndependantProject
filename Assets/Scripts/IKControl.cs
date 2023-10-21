@@ -24,7 +24,8 @@ public class IKControl : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
 
-        InitalRotation = _animator.GetBoneTransform(HumanBodyBones.Chest).rotation;
+        InitalRotation = _animator.GetBoneTransform(HumanBodyBones.Chest).localRotation;
+        print(_animator.GetBoneTransform(HumanBodyBones.Chest).localRotation);
     }
 
     private void OnAnimatorIK(int layerIndex)
@@ -44,13 +45,10 @@ public class IKControl : MonoBehaviour
                     _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, .5f);
                     _animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
                     _animator.SetIKPosition(AvatarIKGoal.LeftHand, LeftHandObject.position);
-                    _animator.SetIKRotation(AvatarIKGoal.LeftHand, LeftHandObject.rotation);
+                    //_animator.SetIKRotation(AvatarIKGoal.LeftHand, LeftHandObject.rotation);
+                    //_animator.SetBoneLocalRotation(HumanBodyBones.Chest, new Quaternion(xRotation, 0, 0, 1));
 
-                    
-
-                    //_animator.SetBoneLocalRotation(HumanBodyBones.Chest, new Quaternion(xRotation, yRotation, zRotation, wRotation));
-                    
-                    
+                    _animator.SetBoneLocalRotation(HumanBodyBones.LeftHand, new Quaternion(xRotation, yRotation, zRotation, 1));
 
                     //EmmissionPoint.LookAt(ObjectToLookAt);
                     //float pivot = EmmissionPoint.localRotation.y;
