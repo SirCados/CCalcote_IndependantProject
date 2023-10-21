@@ -4,35 +4,47 @@ using UnityEngine;
 
 public class MovingTargetDummy : MonoBehaviour
 {
-    public float min = 2f;
-    public float max = 3f;
+    public float Minumum = 2f;
+    public float Maximum = 3f;
     public float Speed = 5f;
-    public GameObject[] EnemyAspects = new GameObject[4];
+    public float StartFiring = 2f;
+    public float RepeatFire = 5f;
 
-   public GameObject _manifestedAspect;
+    public BarrageAspect ManifestedBarrage;
+    public AvatarAspect Target;
+    public Transform FacingIndicator;
 
     // Use this for initialization
     void Start()
     {
-        min = transform.position.x;
-        max = transform.position.x + 10;
-        //ChooseRandomManifestation();
+        Minumum = transform.position.x;
+        Maximum = transform.position.x + 10;
+        FireAtInterval();
     }
 
     // Update is called once per frame
     void Update()
-    {
-        transform.position = new Vector3(Mathf.PingPong(Time.time * Speed, max - min) - min, transform.position.y, transform.position.z);
+    {       
+        if (Target.IsGameOver)
+        {
+            CancelInvoke();
+        }
+        else
+        {
+            FacingIndicator.LookAt(Target.transform);
+            transform.position = new Vector3(Mathf.PingPong(Time.time * Speed, Maximum - Minumum) - Minumum, transform.position.y, transform.position.z);
+        }
     }
 
-    void ChooseRandomManifestation()
+    void FireAtInterval()
     {
-        //In the future this will be moved into the enemy AI class
-        //The enemy will have random attacks and characteristics based on the object that will be loaded
-        //Currently it is just a visual representation
-        MeshFilter filter = _manifestedAspect.GetComponent<MeshFilter>();
-        int randomIndex = Random.Range(0, EnemyAspects.Length);
-        filter.sharedMesh = EnemyAspects[randomIndex].GetComponent<MeshFilter>().sharedMesh;
+        InvokeRepeating("BarrageAttack", StartFiring, RepeatFire);
+    }
+
+    void BarrageAttack()
+    {
+        print("Enemy Barrage!");
+        ManifestedBarrage.PerformBarrage();
     }
 
 }

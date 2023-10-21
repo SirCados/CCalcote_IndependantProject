@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class AvatarAspect : MonoBehaviour
 {
+    public bool IsGameOver = false;
     public bool IsGrounded = true;
     public bool IsDashing = false;
     public int RemainingAirDashes;
 
     public float RotationIntensity;
+
+    [SerializeField] int _maximumHealth = 3;
+    int _currentHealth;
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
@@ -18,24 +22,21 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] int _maxiumAirDashes;    
     [SerializeField] GameObject _facingIndicator;
     [SerializeField] Transform _avatarModelTransform;
-
+    
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;
     public Vector2 InputVector;
     Vector3 _dashTargetPosition;
 
-
-
     private void Awake()
     {
         SetupAvatarAspect();
-
     }
 
     private void Update()
     {
         RotateCharacter();
-        Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, 1f);
+        Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, .2f);
     }
 
     public void PerformMove(Vector2 inputVector)
@@ -63,6 +64,17 @@ public class AvatarAspect : MonoBehaviour
         _dashTargetPosition = _playerRigidBody.position + (dashVector * _dashDistance);
         RemainingAirDashes -= 1;
         _playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, _dashSpeed);
+    }
+
+    public void TakeDamage(int incomingDamage)
+    {
+        _currentHealth -= incomingDamage;
+        if(_currentHealth >= 0)
+        {
+            _currentHealth = 0;
+            IsGameOver = true;
+            print("GAME OVER!!! RESTART!");
+        }
     }
 
     public void StopJumpVelocity()
@@ -102,6 +114,7 @@ public class AvatarAspect : MonoBehaviour
     
     void SetupAvatarAspect()
     {
+        _currentHealth = _maximumHealth;
         ResetAirDashes();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
         _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget; //account for target switch in PlayerController

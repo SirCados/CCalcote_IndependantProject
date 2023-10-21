@@ -45,9 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e17d7454c5708484a8ba427d8febcdd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsGameOver: 0
   IsGrounded: 1
   IsDashing: 0
   RemainingAirDashes: 0
+  RotationIntensity: 0
+  _maximumHealth: 3
   _airDashSpeedLimit: 0
   _accelerationRate: 2
   _dashDistance: 10
@@ -57,6 +60,7 @@ MonoBehaviour:
   _fallRate: 45
   _maxiumAirDashes: 1
   _facingIndicator: {fileID: 0}
+  _avatarModelTransform: {fileID: 0}
   InputVector: {x: 0, y: 0}
 --- !u!1001 &9052394328595116911
 PrefabInstance:
@@ -68,6 +72,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 7fe42354af3b5844dad4a324a2ef3af7, type: 3}
       propertyPath: m_Name
       value: Berserker
+      objectReference: {fileID: 0}
+    - target: {fileID: 177074, guid: 7fe42354af3b5844dad4a324a2ef3af7, type: 3}
+      propertyPath: m_TagString
+      value: Avatar
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7fe42354af3b5844dad4a324a2ef3af7, type: 3}
       propertyPath: m_RootOrder
