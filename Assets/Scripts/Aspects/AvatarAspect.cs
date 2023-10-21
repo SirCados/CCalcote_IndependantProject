@@ -6,6 +6,8 @@ public class AvatarAspect : MonoBehaviour
     public bool IsDashing = false;
     public int RemainingAirDashes;
 
+    public float RotationIntensity;
+
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
     [SerializeField] float _dashDistance = 10f;
@@ -15,6 +17,7 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] float _fallRate;
     [SerializeField] int _maxiumAirDashes;    
     [SerializeField] GameObject _facingIndicator;
+    [SerializeField] Transform _avatarModelTransform;
 
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;
@@ -83,6 +86,8 @@ public class AvatarAspect : MonoBehaviour
         if (_currentTarget)
         {
             _facingIndicator.transform.LookAt(_currentTarget.transform);
+            Vector3 look = new Vector3(_currentTarget.transform.position.x, transform.position.y, _currentTarget.transform.position.z);
+            _avatarModelTransform.LookAt(look);
         }
     }
 

@@ -16,7 +16,7 @@ public class MovingTargetDummy : MonoBehaviour
     {
         min = transform.position.x;
         max = transform.position.x + 10;
-        ChooseRandomManifestation();
+        //ChooseRandomManifestation();
     }
 
     // Update is called once per frame
