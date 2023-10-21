@@ -2,9 +2,15 @@ using UnityEngine;
 
 public class AvatarAspect : MonoBehaviour
 {
+    public bool IsGameOver = false;
     public bool IsGrounded = true;
     public bool IsDashing = false;
     public int RemainingAirDashes;
+
+    public float RotationIntensity;
+
+    [SerializeField] int _maximumHealth = 3;
+    int _currentHealth;
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
@@ -15,7 +21,8 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] float _fallRate;
     [SerializeField] int _maxiumAirDashes;    
     [SerializeField] GameObject _facingIndicator;
-
+    [SerializeField] Transform _avatarModelTransform;
+    
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;
     public Vector2 InputVector;
@@ -29,6 +36,7 @@ public class AvatarAspect : MonoBehaviour
     private void Update()
     {
         RotateCharacter();
+        Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, .2f);
     }
 
     public void PerformMove(Vector2 inputVector)
@@ -58,6 +66,17 @@ public class AvatarAspect : MonoBehaviour
         _playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, _dashSpeed);
     }
 
+    public void TakeDamage(int incomingDamage)
+    {
+        _currentHealth -= incomingDamage;
+        if(_currentHealth >= 0)
+        {
+            _currentHealth = 0;
+            IsGameOver = true;
+            print("GAME OVER!!! RESTART!");
+        }
+    }
+
     public void StopJumpVelocity()
     {        
         if (!IsGrounded)
@@ -82,7 +101,9 @@ public class AvatarAspect : MonoBehaviour
     {
         if (_currentTarget)
         {
-            _facingIndicator.transform.LookAt(_currentTarget.transform);
+            _facingIndicator.transform.LookAt(_currentTarget.transform);            
+            Vector3 look = new Vector3(_currentTarget.transform.position.x, transform.position.y, _currentTarget.transform.position.z);
+            _avatarModelTransform.LookAt(look);
         }
     }
 
@@ -93,6 +114,7 @@ public class AvatarAspect : MonoBehaviour
     
     void SetupAvatarAspect()
     {
+        _currentHealth = _maximumHealth;
         ResetAirDashes();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
         _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget; //account for target switch in PlayerController

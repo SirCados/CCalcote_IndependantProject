@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour
     public BarrageAspect ManifestedBarrage;
     public GameObject CurrentTarget;
 
-    [SerializeField] GameObject _facingIndicator;    
+    [SerializeField] Animator _animator;
+    [SerializeField] GameObject _facingIndicator;
+    
     InputAction _jumpAction;
     InputAction _moveAction;
     InputAction _barrageAction;
@@ -34,10 +36,26 @@ public class PlayerController : MonoBehaviour
         UnsubscribeToEvents();
     }
 
+    private void Update()
+    {
+        if (!ManifestedAvatar.IsGrounded)
+        {
+            _animator.SetBool("IsFalling", true);
+        }
+        else if (ManifestedAvatar.IsGrounded && _animator.GetBool("IsFalling") && !_activeState.IsJumping)
+        {
+            _animator.SetBool("IsJumping", false);
+            _animator.SetBool("IsFalling", false);
+        }
+    }
+
     private void FixedUpdate()
     {
-        StateControllerUpdate();
-        GetInputsForMovement();
+        if (!ManifestedAvatar.IsGameOver)
+        {
+            StateControllerUpdate();
+            GetInputsForMovement();
+        }
     }
 
     public void StateControllerUpdate()
@@ -76,6 +94,8 @@ public class PlayerController : MonoBehaviour
 
     void JumpOrAirDash(InputAction.CallbackContext context)
     {
+        print("Jump!");
+        _animator.SetBool("IsJumping", true);
         if (_currentState == _activeState)
         {
             if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)
@@ -96,7 +116,12 @@ public class PlayerController : MonoBehaviour
         if(_currentState == _activeState)
         {
             Vector2 inputs = (_currentState == _activeState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
+            _animator.transform.forward = transform.forward;
             _activeState.SetInputs(inputs);
+            _animator.SetFloat("xInput", inputs.x);
+            _animator.SetFloat("yInput", inputs.y);
+            float movement = Mathf.Abs(inputs.magnitude);
+            _animator.SetFloat("Movement", movement);            
         }
     }
 
@@ -109,7 +134,6 @@ public class PlayerController : MonoBehaviour
     void UnsubscribeToEvents()
     {
         _barrageAction.started -= Barrage;
-
         _jumpAction.started -= JumpOrAirDash;
     }
 
