@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public GameObject CurrentTarget;
 
     [SerializeField] Animator _animator;
-    [SerializeField] GameObject _facingIndicator;   
+    [SerializeField] GameObject _facingIndicator;
     
     InputAction _jumpAction;
     InputAction _moveAction;
@@ -51,8 +51,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        StateControllerUpdate();
-        GetInputsForMovement();
+        if (!ManifestedAvatar.IsGameOver)
+        {
+            StateControllerUpdate();
+            GetInputsForMovement();
+        }
     }
 
     public void StateControllerUpdate()

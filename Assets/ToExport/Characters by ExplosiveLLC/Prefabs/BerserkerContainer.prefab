@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 400000}
   m_Layer: 0
-  m_Name: Berserker
+  m_Name: BerserkerContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119,6 +119,11 @@ MonoBehaviour:
   LeftHandObject: {fileID: 0}
   ObjectToLookAt: {fileID: 0}
   EmmissionPoint: {fileID: 7060535879910781572}
+  xRotation: 0
+  yRotation: 0
+  zRotation: 0
+  wRotation: 0
+  InitalRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &177076
 GameObject:
   m_ObjectHideFlags: 0
