@@ -6,6 +6,7 @@ public class BarrageAspect : MonoBehaviour
     public GameObject BarrageProjectile;
     public GameObject CurrentTarget;
     public bool IsBarraging = false;//TODO: getter?
+    public bool IsRecovered = true;
     public Transform EmissionPoint;
 
     int _counter = 1;
@@ -15,6 +16,7 @@ public class BarrageAspect : MonoBehaviour
     public void PerformBarrage()
     {
         IsBarraging = true;
+        IsRecovered = false;
         InvokeRepeating("SpawnBarrageProjectile", 0f, RepeatTime);        
     }
 
@@ -29,6 +31,7 @@ public class BarrageAspect : MonoBehaviour
         }
         else if (_counter > _timesToRepeat)
         {
+            IsRecovered = true;
             _counter++;
             return;
         }

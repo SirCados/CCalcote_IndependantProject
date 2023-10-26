@@ -14,8 +14,8 @@ public class AvatarAspect : MonoBehaviour
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
-    [SerializeField] float _dashDistance = 10f;
-    [SerializeField] float _dashSpeed = .2f;
+    [SerializeField] float _dashDistance = 5f;
+    [SerializeField] float _dashSpeed = 10f;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
@@ -44,13 +44,10 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformMove(Vector2 inputVector)
     {
-
-        
         Vector3 vectorToRotate = new Vector3(inputVector.x, 0, inputVector.y);
         Vector3 forwardProduct = vectorToRotate.z * -_avatarModelTransform.forward;
         Vector3 rightProduct = vectorToRotate.x * _avatarModelTransform.right;
         Vector3 rotatedVector = forwardProduct + rightProduct;
-
 
         if (IsGrounded && !_animator.GetBool("IsJumping"))
         {
@@ -77,13 +74,16 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformAirDash(Vector2 inputVector) 
     {
+        print("dash");
         IsDashing = true;
+        _playerRigidBody.useGravity = false;
         _playerRigidBody.velocity = Vector3.zero;
-        Vector3 dashVector = (inputVector != Vector2.zero)? new Vector3(inputVector.x, 0, inputVector.y) : Vector3.forward;
-        IsDashing = true;
+        Vector3 dashVector = (inputVector != Vector2.zero)? new Vector3(inputVector.x, 0, inputVector.y) : Vector3.forward;        
         _dashTargetPosition = _playerRigidBody.position + (dashVector * _dashDistance);
         RemainingAirDashes -= 1;
-        _playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, _dashSpeed);
+
+        _playerRigidBody.AddForce(dashVector * 20, ForceMode.VelocityChange);
+        
     }
 
     public void TakeDamage(int incomingDamage)
@@ -107,13 +107,16 @@ public class AvatarAspect : MonoBehaviour
 
     public void CheckIfDashIsDone()
     {
-        if((transform.parent.transform.position - _dashTargetPosition).magnitude < .5)
+
+        if((transform.parent.transform.position - _dashTargetPosition).magnitude < .5f)
+        {
+            _playerRigidBody.velocity = Vector3.zero;
+        }
+
+        if(_playerRigidBody.velocity.magnitude < .5f)
         {
             IsDashing = false;
-        }
-        else
-        {
-            _playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, .2f);//Clean up in Dash Rework
+            _playerRigidBody.useGravity = true;
         }
     }
 
