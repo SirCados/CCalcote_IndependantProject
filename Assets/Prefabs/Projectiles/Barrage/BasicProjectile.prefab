@@ -130,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
   TargetRigidBody: {fileID: 0}
-  _damage: 0
+  _damage: 1
   _projectileSpeed: 20
   _projectileAgility: 25
   _maxDistancePrediction: 100
