@@ -690,9 +690,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7863247022545449751}
+  - component: {fileID: 5315491284295636600}
   - component: {fileID: 7863247022536349275}
   - component: {fileID: 1808288439487932270}
-  - component: {fileID: 5315491284295636600}
   m_Layer: 0
   m_Name: Berserker
   m_TagString: Player
@@ -717,6 +717,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5315491284295636600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863247022545815351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46607e36a2925f048be881afe7701cfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsIKActive: 1
+  LeftHandObject: {fileID: 0}
+  ObjectToLookAt: {fileID: 0}
+  EmmissionPoint: {fileID: 928817361040180737}
+  xRotation: 0
+  yRotation: 0
+  zRotation: 0
+  wRotation: 0
+  InitalRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!95 &7863247022536349275
 Animator:
   serializedVersion: 5
@@ -752,27 +773,6 @@ CapsuleCollider:
   m_Height: 2.5
   m_Direction: 1
   m_Center: {x: 0, y: 1.2, z: 0}
---- !u!114 &5315491284295636600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7863247022545815351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46607e36a2925f048be881afe7701cfc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsIKActive: 0
-  LeftHandObject: {fileID: 0}
-  ObjectToLookAt: {fileID: 0}
-  EmmissionPoint: {fileID: 928817361040180737}
-  xRotation: 0
-  yRotation: 0
-  zRotation: 0
-  wRotation: 0
-  InitalRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &7863247022545815353
 GameObject:
   m_ObjectHideFlags: 0

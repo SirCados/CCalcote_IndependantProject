@@ -44,13 +44,10 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformMove(Vector2 inputVector)
     {
-
-        
         Vector3 vectorToRotate = new Vector3(inputVector.x, 0, inputVector.y);
         Vector3 forwardProduct = vectorToRotate.z * -_avatarModelTransform.forward;
         Vector3 rightProduct = vectorToRotate.x * _avatarModelTransform.right;
         Vector3 rotatedVector = forwardProduct + rightProduct;
-
 
         if (IsGrounded && !_animator.GetBool("IsJumping"))
         {
