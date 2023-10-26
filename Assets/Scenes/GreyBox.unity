@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1546,6 +1546,10 @@ PrefabInstance:
       value: Avatar
       objectReference: {fileID: 0}
     - target: {fileID: 3255078007143302793, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: IsIKActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3255078007143302793, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: LeftHandObject
       value: 
       objectReference: {fileID: 1985652595}
@@ -1583,7 +1587,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6011672223500985550, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _jumpForce
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6011672223500985550, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _movementSpeed
@@ -1689,6 +1693,14 @@ PrefabInstance:
       propertyPath: ManifestedBarrage
       value: 
       objectReference: {fileID: 1887530964}
+    - target: {fileID: 8940541950131621240, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: m_Drag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940541950131621240, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9052394328727186913, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1

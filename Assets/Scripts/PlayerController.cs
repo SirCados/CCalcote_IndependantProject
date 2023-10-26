@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
 
     void Barrage(InputAction.CallbackContext context)
     {
-        if(_currentState == _activeState && ManifestedBarrage.IsRecovered)
+        if(_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             ChangeState(_barrageState);
             ManifestedAvatar.StopJumpVelocity();
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
     void JumpOrAirDash(InputAction.CallbackContext context)
     {
         print("Jump!");
-        if (_currentState == _activeState && ManifestedBarrage.IsRecovered)
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)
             {
@@ -102,8 +102,8 @@ public class PlayerController : MonoBehaviour
 
     void GetInputsForMovement()
     {
-            Vector2 inputs = (_currentState == _activeState && ManifestedBarrage.IsRecovered) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;            
-            _activeState.SetInputs(inputs); 
+        Vector2 inputs = (_currentState == _activeState && !ManifestedBarrage.IsRecovering) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;            
+        _activeState.SetInputs(inputs);
     }
 
     void SubscribeToEvents()
