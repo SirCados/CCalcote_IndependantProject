@@ -6,6 +6,7 @@ public class BarrageAspect : MonoBehaviour
     public GameObject BarrageProjectile;
     public GameObject CurrentTarget;
     public bool IsBarraging = false;//TODO: getter?
+    public Transform EmissionPoint;
 
     int _counter = 1;
     [SerializeField] int _recovery; //will always be larger than timesToRepeat. 
