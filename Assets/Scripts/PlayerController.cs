@@ -7,8 +7,6 @@ public class PlayerController : MonoBehaviour
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
     public GameObject CurrentTarget;
-
-    [SerializeField] Animator _animator;
     [SerializeField] GameObject _facingIndicator;
     
     InputAction _jumpAction;
@@ -38,15 +36,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!ManifestedAvatar.IsGrounded)
-        {
-            _animator.SetBool("IsFalling", true);
-        }
-        else if (ManifestedAvatar.IsGrounded && _animator.GetBool("IsFalling") && !_activeState.IsJumping)
-        {
-            _animator.SetBool("IsJumping", false);
-            _animator.SetBool("IsFalling", false);
-        }
+        
     }
 
     private void FixedUpdate()
@@ -85,7 +75,7 @@ public class PlayerController : MonoBehaviour
 
     void Barrage(InputAction.CallbackContext context)
     {
-        if(_currentState == _activeState)
+        if(_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             ChangeState(_barrageState);
             ManifestedAvatar.StopJumpVelocity();
@@ -95,8 +85,7 @@ public class PlayerController : MonoBehaviour
     void JumpOrAirDash(InputAction.CallbackContext context)
     {
         print("Jump!");
-        _animator.SetBool("IsJumping", true);
-        if (_currentState == _activeState)
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)
             {
@@ -113,16 +102,8 @@ public class PlayerController : MonoBehaviour
 
     void GetInputsForMovement()
     {
-        if(_currentState == _activeState)
-        {
-            Vector2 inputs = (_currentState == _activeState) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
-            _animator.transform.forward = transform.forward;
-            _activeState.SetInputs(inputs);
-            _animator.SetFloat("xInput", inputs.x);
-            _animator.SetFloat("yInput", inputs.y);
-            float movement = Mathf.Abs(inputs.magnitude);
-            _animator.SetFloat("Movement", movement);            
-        }
+        Vector2 inputs = (_currentState == _activeState && !ManifestedBarrage.IsRecovering) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;            
+        _activeState.SetInputs(inputs);
     }
 
     void SubscribeToEvents()

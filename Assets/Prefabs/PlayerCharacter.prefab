@@ -158,7 +158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentState: 
   ManifestedAvatar: {fileID: 6011672223500985550}
-  ManifestedBarrage: {fileID: 1639562032132263451}
+  ManifestedBarrage: {fileID: 0}
   CurrentTarget: {fileID: 0}
   _animator: {fileID: 0}
   _facingIndicator: {fileID: 3978000635418128621}
@@ -259,6 +259,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicAvatarAspect
       objectReference: {fileID: 0}
+    - target: {fileID: 2043683528395669995, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2043683528395669995, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2043683528395669995, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cf899522c9b855479c79d722f39f3cf, type: 3}
 --- !u!4 &194356098875459668 stripped
@@ -334,17 +346,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
---- !u!114 &1639562032132263451 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4169435887995669031, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
-  m_PrefabInstance: {fileID: 3394635645128885308}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db5a1dd1c49e5b848ad08ad63d48b5af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3978000635418128621 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1740810178647389393, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}

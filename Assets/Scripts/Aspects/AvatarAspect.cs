@@ -23,6 +23,8 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] GameObject _facingIndicator;
     [SerializeField] Transform _avatarModelTransform;
     
+    Animator _animator;
+
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;
     public Vector2 InputVector;
@@ -35,12 +37,25 @@ public class AvatarAspect : MonoBehaviour
 
     private void Update()
     {
+        HandleJumpAndFallingAnimations();
         RotateCharacter();
         Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, .2f);
     }
 
     public void PerformMove(Vector2 inputVector)
     {
+        Vector3 vectorToRotate = new Vector3(inputVector.x, 0, inputVector.y);
+        Vector3 forwardProduct = vectorToRotate.z * -_avatarModelTransform.forward;
+        Vector3 rightProduct = vectorToRotate.x * _avatarModelTransform.right;
+        Vector3 rotatedVector = forwardProduct + rightProduct;
+
+        if (IsGrounded && !_animator.GetBool("IsJumping"))
+        {
+            _animator.SetFloat("xInput", rotatedVector.x);
+            _animator.SetFloat("yInput", rotatedVector.z);
+            float movement = Mathf.Abs(inputVector.magnitude);
+            _animator.SetFloat("Movement", movement);
+        }
         InputVector = inputVector;       
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
@@ -51,8 +66,10 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformJump(Vector2 inputVector)
     {
+        _animator.SetBool("IsJumping", true);
         Vector3 airVelocity = new Vector3(inputVector.x, _jumpForce, inputVector.y);
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
+        
     }
 
     public void PerformAirDash(Vector2 inputVector) 
@@ -101,7 +118,7 @@ public class AvatarAspect : MonoBehaviour
     {
         if (_currentTarget)
         {
-            _facingIndicator.transform.LookAt(_currentTarget.transform);            
+            _facingIndicator.transform.LookAt(_currentTarget.transform);
             Vector3 look = new Vector3(_currentTarget.transform.position.x, transform.position.y, _currentTarget.transform.position.z);
             _avatarModelTransform.LookAt(look);
         }
@@ -110,12 +127,27 @@ public class AvatarAspect : MonoBehaviour
     public void ResetAirDashes()
     {
         RemainingAirDashes = _maxiumAirDashes;
-    } 
+    }
+
+    void HandleJumpAndFallingAnimations()
+    {
+        if (!IsGrounded)
+        {
+
+            _animator.SetBool("IsJumping", false);
+            _animator.SetBool("IsFalling", true);
+        }
+        else if (IsGrounded && _animator.GetBool("IsFalling"))
+        {
+            _animator.SetBool("IsFalling", false);
+        }
+    }
     
     void SetupAvatarAspect()
     {
         _currentHealth = _maximumHealth;
         ResetAirDashes();
+        _animator = GetComponentInChildren<Animator>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
         _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget; //account for target switch in PlayerController
     }
