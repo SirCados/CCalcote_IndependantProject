@@ -43,7 +43,6 @@ public class MovingTargetDummy : MonoBehaviour
 
     void BarrageAttack()
     {
-        print("Enemy Barrage!");
         ManifestedBarrage.PerformBarrage();
     }
 

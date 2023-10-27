@@ -6,6 +6,7 @@ public class AvatarAspect : MonoBehaviour
     public bool IsGrounded = true;
     public bool IsDashing = false;
     public int RemainingAirDashes;
+    public float TimeScale;
 
     public float RotationIntensity;
 
@@ -14,8 +15,8 @@ public class AvatarAspect : MonoBehaviour
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
-    [SerializeField] float _dashDistance = 5f;
-    [SerializeField] float _dashSpeed = 10f;
+    [SerializeField] float _dashDistance;
+    [SerializeField] float _dashSpeed;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
@@ -25,6 +26,7 @@ public class AvatarAspect : MonoBehaviour
     
     Animator _animator;
 
+    bool _isDoneDashing = true;
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;
     public Vector2 InputVector;
@@ -37,13 +39,18 @@ public class AvatarAspect : MonoBehaviour
 
     private void Update()
     {
+        if(Time.timeScale == 0)
+        {
+            Time.timeScale = TimeScale;
+        }
         HandleJumpAndFallingAnimations();
         RotateCharacter();
-        Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, .2f);
+        Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, 2f);
     }
 
     public void PerformMove(Vector2 inputVector)
     {
+        print("move");
         Vector3 vectorToRotate = new Vector3(inputVector.x, 0, inputVector.y);
         Vector3 forwardProduct = vectorToRotate.z * -_avatarModelTransform.forward;
         Vector3 rightProduct = vectorToRotate.x * _avatarModelTransform.right;
@@ -60,7 +67,7 @@ public class AvatarAspect : MonoBehaviour
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
-        velocityChange.y = (IsGrounded) ? 0 : -_fallRate;
+        velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
 
@@ -74,16 +81,16 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformAirDash(Vector2 inputVector) 
     {
-        print("dash");
         IsDashing = true;
+        _isDoneDashing = false;
+        _playerRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
         _playerRigidBody.useGravity = false;
         _playerRigidBody.velocity = Vector3.zero;
-        Vector3 dashVector = (inputVector != Vector2.zero)? new Vector3(inputVector.x, 0, inputVector.y) : Vector3.forward;        
+        Vector3 dashVector = (inputVector != Vector2.zero) ? new Vector3(inputVector.x, 0, inputVector.y) : _avatarModelTransform.forward;
         _dashTargetPosition = _playerRigidBody.position + (dashVector * _dashDistance);
         RemainingAirDashes -= 1;
-
-        _playerRigidBody.AddForce(dashVector * 20, ForceMode.VelocityChange);
-        
+        _playerRigidBody.velocity = dashVector;
+        _playerRigidBody.AddForce((dashVector * _dashDistance) * _dashSpeed, ForceMode.Impulse);
     }
 
     public void TakeDamage(int incomingDamage)
@@ -107,16 +114,17 @@ public class AvatarAspect : MonoBehaviour
 
     public void CheckIfDashIsDone()
     {
-
-        if((transform.parent.transform.position - _dashTargetPosition).magnitude < .5f)
+        if ((_dashTargetPosition - transform.parent.transform.position).magnitude < .5f)
         {
             _playerRigidBody.velocity = Vector3.zero;
         }
 
-        if(_playerRigidBody.velocity.magnitude < .5f)
+        if (_playerRigidBody.velocity.magnitude < .5f)
         {
-            IsDashing = false;
+            _playerRigidBody.velocity = Vector3.zero;
+            _playerRigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;            
             _playerRigidBody.useGravity = true;
+            IsDashing = false;
         }
     }
 

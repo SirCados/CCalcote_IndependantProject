@@ -160,7 +160,6 @@ MonoBehaviour:
   ManifestedAvatar: {fileID: 6011672223500985550}
   ManifestedBarrage: {fileID: 0}
   CurrentTarget: {fileID: 0}
-  _animator: {fileID: 0}
   _facingIndicator: {fileID: 3978000635418128621}
 --- !u!114 &7791483632954375951
 MonoBehaviour:
@@ -343,6 +342,10 @@ PrefabInstance:
     - target: {fileID: 1740810178647389393, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
       propertyPath: m_Name
       value: FacingIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 2161286375730957296, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}

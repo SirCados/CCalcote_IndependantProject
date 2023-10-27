@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1529,6 +1529,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 718300621109401542, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: m_TagString
+      value: Avatar
+      objectReference: {fileID: 0}
     - target: {fileID: 1639562032132263451, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _recovery
       value: 6
@@ -1586,8 +1590,16 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6011672223500985550, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: _dashSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011672223500985550, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _jumpForce
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011672223500985550, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: _dashDistance
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6011672223500985550, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _movementSpeed
@@ -2856,6 +2868,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FacingIndicator
       objectReference: {fileID: 0}
+    - target: {fileID: 1740810178647389393, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2161286375730957296, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
       propertyPath: m_LocalPosition.z
       value: 1.5
@@ -2871,6 +2887,10 @@ PrefabInstance:
     - target: {fileID: 4169435887995669031, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
       propertyPath: _timesToRepeat
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5255441363265292189, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7028480788829425231, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
       propertyPath: m_LocalPosition.z
