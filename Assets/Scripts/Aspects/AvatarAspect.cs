@@ -6,7 +6,6 @@ public class AvatarAspect : MonoBehaviour
     public bool IsGrounded = true;
     public bool IsDashing = false;
     public int RemainingAirDashes;
-    public float TimeScale;
 
     public float RotationIntensity;
 
@@ -25,24 +24,19 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] Transform _avatarModelTransform;
     
     Animator _animator;
-
-    bool _isDoneDashing = true;
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;
     public Vector2 InputVector;
     Vector3 _dashTargetPosition;
+    Collider _collider;
 
     private void Awake()
     {
-        SetupAvatarAspect();
+        SetupAvatarAspect();        
     }
 
     private void Update()
     {
-        if(Time.timeScale == 0)
-        {
-            Time.timeScale = TimeScale;
-        }
         HandleJumpAndFallingAnimations();
         RotateCharacter();
         Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, 2f);
@@ -82,7 +76,6 @@ public class AvatarAspect : MonoBehaviour
     public void PerformAirDash(Vector2 inputVector) 
     {
         IsDashing = true;
-        _isDoneDashing = false;
         _playerRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
         _playerRigidBody.useGravity = false;
         _playerRigidBody.velocity = Vector3.zero;
@@ -119,7 +112,7 @@ public class AvatarAspect : MonoBehaviour
             _playerRigidBody.velocity = Vector3.zero;
         }
 
-        if (_playerRigidBody.velocity.magnitude < .5f)
+        if (_playerRigidBody.velocity.magnitude < 1f)
         {
             _playerRigidBody.velocity = Vector3.zero;
             _playerRigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;            
@@ -147,7 +140,6 @@ public class AvatarAspect : MonoBehaviour
     {
         if (!IsGrounded)
         {
-
             _animator.SetBool("IsJumping", false);
             _animator.SetBool("IsFalling", true);
         }
@@ -156,7 +148,7 @@ public class AvatarAspect : MonoBehaviour
             _animator.SetBool("IsFalling", false);
         }
     }
-    
+
     void SetupAvatarAspect()
     {
         _currentHealth = _maximumHealth;
@@ -164,5 +156,10 @@ public class AvatarAspect : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
         _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget; //account for target switch in PlayerController
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("collide");
     }
 }
