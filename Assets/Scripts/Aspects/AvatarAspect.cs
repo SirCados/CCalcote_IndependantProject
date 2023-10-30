@@ -25,10 +25,12 @@ public class AvatarAspect : MonoBehaviour
     
     Animator _animator;
     GameObject _currentTarget;
-    Rigidbody _playerRigidBody;
+    Rigidbody _playerRigidBody;    
     public Vector2 InputVector;
     Vector3 _dashTargetPosition;
-    Collider _collider;
+    Vector3 _dashVector;
+
+    public GameObject DashPoint;
 
     private void Awake()
     {
@@ -38,13 +40,17 @@ public class AvatarAspect : MonoBehaviour
     private void Update()
     {
         HandleJumpAndFallingAnimations();
-        RotateCharacter();
-        Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, 2f);
+        RotateCharacter();        
+        Debug.DrawLine(_currentTarget.transform.position + Vector3.up, (_currentTarget.transform.forward * 5) + Vector3.up, Color.red, 2f);
+    }
+
+    private void FixedUpdate()
+    {        
+        CheckIfDashIsDone();
     }
 
     public void PerformMove(Vector2 inputVector)
     {
-        print("move");
         Vector3 vectorToRotate = new Vector3(inputVector.x, 0, inputVector.y);
         Vector3 forwardProduct = vectorToRotate.z * -_avatarModelTransform.forward;
         Vector3 rightProduct = vectorToRotate.x * _avatarModelTransform.right;
@@ -78,12 +84,11 @@ public class AvatarAspect : MonoBehaviour
         IsDashing = true;
         _playerRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
         _playerRigidBody.useGravity = false;
-        _playerRigidBody.velocity = Vector3.zero;
-        Vector3 dashVector = (inputVector != Vector2.zero) ? new Vector3(inputVector.x, 0, inputVector.y) : _avatarModelTransform.forward;
-        _dashTargetPosition = _playerRigidBody.position + (dashVector * _dashDistance);
+        _dashVector = ((inputVector != Vector2.zero) ? new Vector3(inputVector.x, 0, inputVector.y) : _avatarModelTransform.forward) * _dashDistance;        
+        _dashTargetPosition = _playerRigidBody.position + _dashVector;
+        Instantiate(DashPoint, _dashTargetPosition, new Quaternion());        
         RemainingAirDashes -= 1;
-        _playerRigidBody.velocity = dashVector;
-        _playerRigidBody.AddForce((dashVector * _dashDistance) * _dashSpeed, ForceMode.Impulse);
+        _playerRigidBody.AddForce(_dashVector * _dashSpeed, ForceMode.VelocityChange);
     }
 
     public void TakeDamage(int incomingDamage)
@@ -107,18 +112,28 @@ public class AvatarAspect : MonoBehaviour
 
     public void CheckIfDashIsDone()
     {
-        if ((_dashTargetPosition - transform.parent.transform.position).magnitude < .5f)
+        if (IsDashing)
         {
-            _playerRigidBody.velocity = Vector3.zero;
-        }
+            float distance = Vector3.Distance(_dashTargetPosition, _playerRigidBody.position);
 
-        if (_playerRigidBody.velocity.magnitude < 1f)
-        {
-            _playerRigidBody.velocity = Vector3.zero;
-            _playerRigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;            
-            _playerRigidBody.useGravity = true;
-            IsDashing = false;
-        }
+            if (distance < .1f || distance > _dashDistance)
+            {
+                ResetAfterDash();
+            }
+        }            
+    }
+
+    void ResetAfterDash()
+    {
+        //_playerRigidBody.velocity = ZeroOutVelocity(_playerRigidBody.velocity, _dashVector);
+        //_playerRigidBody.angularVelocity = ZeroOutVelocity(_playerRigidBody.velocity, _dashVector);
+
+        _playerRigidBody.AddForce(_playerRigidBody.velocity * -1, ForceMode.VelocityChange);
+        _playerRigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
+        _playerRigidBody.useGravity = true;
+        _playerRigidBody.Sleep();
+
+        IsDashing = false;
     }
 
     void RotateCharacter()
@@ -126,7 +141,7 @@ public class AvatarAspect : MonoBehaviour
         if (_currentTarget)
         {
             _facingIndicator.transform.LookAt(_currentTarget.transform);
-            Vector3 look = new Vector3(_currentTarget.transform.position.x, transform.position.y, _currentTarget.transform.position.z);
+            Vector3 look = new Vector3(_currentTarget.transform.position.x, 0, _currentTarget.transform.position.z);
             _avatarModelTransform.LookAt(look);
         }
     }
@@ -160,6 +175,19 @@ public class AvatarAspect : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        print("collide");
+        if (!IsGrounded && IsDashing && (collision.transform.CompareTag("Ground") || collision.transform.CompareTag("Wall")))
+        {
+            print("bump");
+            ResetAfterDash();
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (!IsGrounded && IsDashing && (collision.transform.CompareTag("Ground") || collision.transform.CompareTag("Wall")))
+        {
+            print("bump");
+            ResetAfterDash();
+        }
     }
 }
