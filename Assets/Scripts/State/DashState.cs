@@ -24,7 +24,7 @@ public class DashState : IState
         _avatarAspect.CheckIfDashIsDone();
 
         if (!_avatarAspect.IsDashing)
-        {
+        {            
             _isStateDone = true;
         }
     }

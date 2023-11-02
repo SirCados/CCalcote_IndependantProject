@@ -84,7 +84,6 @@ public class PlayerController : MonoBehaviour
 
     void JumpOrAirDash(InputAction.CallbackContext context)
     {
-        print("Jump!");
         if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)

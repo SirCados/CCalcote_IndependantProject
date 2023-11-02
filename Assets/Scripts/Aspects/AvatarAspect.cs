@@ -14,8 +14,8 @@ public class AvatarAspect : MonoBehaviour
 
     [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
-    [SerializeField] float _dashDistance = 10f;
-    [SerializeField] float _dashSpeed = .2f;
+    [SerializeField] float _dashDistance;
+    [SerializeField] float _dashSpeed;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
@@ -24,22 +24,29 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] Transform _avatarModelTransform;
     
     Animator _animator;
-
     GameObject _currentTarget;
-    Rigidbody _playerRigidBody;
+    Rigidbody _playerRigidBody;    
     public Vector2 InputVector;
-    Vector3 _dashTargetPosition;
+    Vector3 _dashStartPosition;
+    Vector3 _dashVector;
+
+    public GameObject DashPoint;
 
     private void Awake()
     {
-        SetupAvatarAspect();
+        SetupAvatarAspect();        
     }
 
     private void Update()
     {
         HandleJumpAndFallingAnimations();
-        RotateCharacter();
-        Debug.DrawLine(transform.position + Vector3.up, (transform.forward * 5) + Vector3.up, Color.red, .2f);
+        RotateCharacter();        
+        Debug.DrawLine(_currentTarget.transform.position + Vector3.up, (_currentTarget.transform.forward * 5) + Vector3.up, Color.red, 2f);
+    }
+
+    private void FixedUpdate()
+    {        
+        CheckIfDashIsDone();
     }
 
     public void PerformMove(Vector2 inputVector)
@@ -60,7 +67,7 @@ public class AvatarAspect : MonoBehaviour
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
-        velocityChange.y = (IsGrounded) ? 0 : -_fallRate;
+        velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
 
@@ -75,12 +82,12 @@ public class AvatarAspect : MonoBehaviour
     public void PerformAirDash(Vector2 inputVector) 
     {
         IsDashing = true;
-        _playerRigidBody.velocity = Vector3.zero;
-        Vector3 dashVector = (inputVector != Vector2.zero)? new Vector3(inputVector.x, 0, inputVector.y) : Vector3.forward;
-        IsDashing = true;
-        _dashTargetPosition = _playerRigidBody.position + (dashVector * _dashDistance);
+        _playerRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
+        _playerRigidBody.useGravity = false;
+        _dashVector = ((inputVector != Vector2.zero) ? new Vector3(inputVector.x, 0, inputVector.y) : _avatarModelTransform.forward) * _dashDistance;                       
         RemainingAirDashes -= 1;
-        _playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, _dashSpeed);
+        _dashStartPosition = _playerRigidBody.position;
+        _playerRigidBody.AddForce(_dashVector * _dashSpeed, ForceMode.VelocityChange);
     }
 
     public void TakeDamage(int incomingDamage)
@@ -104,14 +111,25 @@ public class AvatarAspect : MonoBehaviour
 
     public void CheckIfDashIsDone()
     {
-        if((transform.parent.transform.position - _dashTargetPosition).magnitude < .5)
+        if (IsDashing)
         {
-            IsDashing = false;
-        }
-        else
-        {
-            _playerRigidBody.position = Vector3.Lerp(_playerRigidBody.position, _dashTargetPosition, .2f);//Clean up in Dash Rework
-        }
+            float distance = Vector3.Distance(_playerRigidBody.position, _dashStartPosition);
+
+            if (distance > _dashDistance)
+            {
+                ResetAfterDash();
+            }
+        }            
+    }
+
+    void ResetAfterDash()
+    {
+        _playerRigidBody.AddForce(_playerRigidBody.velocity * -1, ForceMode.VelocityChange);
+        _playerRigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
+        _playerRigidBody.useGravity = true;
+        _playerRigidBody.Sleep();
+
+        IsDashing = false;
     }
 
     void RotateCharacter()
@@ -119,7 +137,7 @@ public class AvatarAspect : MonoBehaviour
         if (_currentTarget)
         {
             _facingIndicator.transform.LookAt(_currentTarget.transform);
-            Vector3 look = new Vector3(_currentTarget.transform.position.x, transform.position.y, _currentTarget.transform.position.z);
+            Vector3 look = new Vector3(_currentTarget.transform.position.x, _playerRigidBody.position.y -1, _currentTarget.transform.position.z);
             _avatarModelTransform.LookAt(look);
         }
     }
@@ -133,7 +151,6 @@ public class AvatarAspect : MonoBehaviour
     {
         if (!IsGrounded)
         {
-
             _animator.SetBool("IsJumping", false);
             _animator.SetBool("IsFalling", true);
         }
@@ -142,7 +159,7 @@ public class AvatarAspect : MonoBehaviour
             _animator.SetBool("IsFalling", false);
         }
     }
-    
+
     void SetupAvatarAspect()
     {
         _currentHealth = _maximumHealth;
@@ -150,5 +167,23 @@ public class AvatarAspect : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
         _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget; //account for target switch in PlayerController
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!IsGrounded && IsDashing && (collision.transform.CompareTag("Ground") || collision.transform.CompareTag("Wall")))
+        {
+            print("bump");
+            ResetAfterDash();
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (!IsGrounded && IsDashing && (collision.transform.CompareTag("Ground") || collision.transform.CompareTag("Wall")))
+        {
+            print("bump");
+            ResetAfterDash();
+        }
     }
 }
