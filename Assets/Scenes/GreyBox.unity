@@ -1609,6 +1609,10 @@ PrefabInstance:
       propertyPath: CurrentTarget
       value: 
       objectReference: {fileID: 1985652591}
+    - target: {fileID: 7164628042617426253, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: _recoveryTime
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 7791483632954375937, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
@@ -1916,7 +1920,7 @@ GameObject:
   - component: {fileID: 900569654}
   m_Layer: 0
   m_Name: Cylinder
-  m_TagString: Untagged
+  m_TagString: Avatar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2991,7 +2995,7 @@ GameObject:
   - component: {fileID: 1985652597}
   m_Layer: 0
   m_Name: Target Dummy
-  m_TagString: Untagged
+  m_TagString: Avatar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
