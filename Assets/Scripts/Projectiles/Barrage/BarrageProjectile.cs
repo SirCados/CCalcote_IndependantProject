@@ -55,8 +55,6 @@ public class BarrageProjectile: MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print(other.transform.name);
-
         if (other.transform.tag == "Avatar")
         {
             AvatarAspect target = other.gameObject.GetComponentInParent<AvatarAspect>();
@@ -70,7 +68,6 @@ public class BarrageProjectile: MonoBehaviour
 
     void GiveDamage(AvatarAspect avatar)
     {
-        print("Take that");
-        avatar.TakeDamage(_damage);
+        //avatar.TakeDamage(_damage);
     }
 }

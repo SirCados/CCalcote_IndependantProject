@@ -25,7 +25,6 @@ public class IKControl : MonoBehaviour
         _animator = GetComponent<Animator>();
 
         InitalRotation = _animator.GetBoneTransform(HumanBodyBones.Chest).localRotation;
-        print(_animator.GetBoneTransform(HumanBodyBones.Chest).localRotation);
     }
 
     private void OnAnimatorIK(int layerIndex)
