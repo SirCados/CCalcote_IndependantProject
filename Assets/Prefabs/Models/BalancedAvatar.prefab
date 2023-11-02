@@ -693,7 +693,7 @@ GameObject:
   - component: {fileID: 5315491284295636600}
   - component: {fileID: 7863247022536349275}
   m_Layer: 0
-  m_Name: Balanced
+  m_Name: BalancedAvatar
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

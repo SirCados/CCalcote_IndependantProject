@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1473,6 +1473,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Avatar
       objectReference: {fileID: 0}
+    - target: {fileID: 1759048492050837911, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: CurrentTarget
+      value: 
+      objectReference: {fileID: 1985652595}
+    - target: {fileID: 1759048492050837911, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: _barrageEmitter
+      value: 
+      objectReference: {fileID: 1265727262}
     - target: {fileID: 1945811222347572755, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1594,6 +1602,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1985652595}
     - target: {fileID: 7164628042617426253, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: _recovery
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7164628042617426253, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: CurrentTarget
       value: 
       objectReference: {fileID: 1985652591}
@@ -1652,7 +1664,7 @@ PrefabInstance:
     - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: CurrentTarget
       value: 
-      objectReference: {fileID: 1985652591}
+      objectReference: {fileID: 1985652595}
     - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _facingIndicator
       value: 
@@ -2270,6 +2282,11 @@ MeshFilter:
 --- !u!1 &1265727261 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4051689731006584454, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+  m_PrefabInstance: {fileID: 625232788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1265727262 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9067026847605713911, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
   m_PrefabInstance: {fileID: 625232788}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1304543580

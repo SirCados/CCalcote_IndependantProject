@@ -6,8 +6,7 @@ public class PlayerController : MonoBehaviour
     public string CurrentState;
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
-    public GameObject CurrentTarget;
-    [SerializeField] GameObject _facingIndicator;
+    public Transform CurrentTarget;
     
     InputAction _jumpAction;
     InputAction _moveAction;
@@ -32,11 +31,6 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         UnsubscribeToEvents();
-    }
-
-    private void Update()
-    {
-        
     }
 
     private void FixedUpdate()
@@ -75,6 +69,7 @@ public class PlayerController : MonoBehaviour
 
     void Barrage(InputAction.CallbackContext context)
     {
+        print("pew");
         if(_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             ChangeState(_barrageState);

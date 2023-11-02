@@ -35,7 +35,7 @@ public class BarrageProjectile: MonoBehaviour
     void MoveProjectile()
     {
         _projectileRigidBody.velocity = transform.forward * _projectileSpeed;
-        float leadTimePercentage = Mathf.InverseLerp(_minDistancePrediction, _maxDistancePrediction, Vector3.Distance(transform.position, Target.transform.position));
+        float leadTimePercentage = Mathf.InverseLerp(_minDistancePrediction, _maxDistancePrediction, Vector3.Distance(transform.position, Target.position));
         PredictTargetMovement(leadTimePercentage);
         RotateProjectile();
     }
@@ -43,7 +43,7 @@ public class BarrageProjectile: MonoBehaviour
     private void PredictTargetMovement(float leadTimePercentage)
     {
         float predictionTime = Mathf.Lerp(0, _maxTimePrediction, leadTimePercentage);
-        _standardPrediction = Target.transform.position + TargetRigidBody.velocity * predictionTime;
+        _standardPrediction = Target.position + TargetRigidBody.velocity * predictionTime;
     }
 
     private void RotateProjectile()

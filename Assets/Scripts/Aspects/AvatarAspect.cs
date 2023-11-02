@@ -7,12 +7,9 @@ public class AvatarAspect : MonoBehaviour
     public bool IsDashing = false;
     public int RemainingAirDashes;
 
-    public float RotationIntensity;
-
     [SerializeField] int _maximumHealth = 3;
     int _currentHealth;
 
-    [SerializeField] float _airDashSpeedLimit;
     [SerializeField] float _accelerationRate;
     [SerializeField] float _dashDistance;
     [SerializeField] float _dashSpeed;
@@ -20,17 +17,14 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
     [SerializeField] int _maxiumAirDashes;    
-    [SerializeField] GameObject _facingIndicator;
+    [SerializeField] Transform _barrageEmitter;
     [SerializeField] Transform _avatarModelTransform;
     
     Animator _animator;
-    GameObject _currentTarget;
-    Rigidbody _playerRigidBody;    
-    public Vector2 InputVector;
+    Rigidbody _playerRigidBody;
+    Transform _currentTarget;
     Vector3 _dashStartPosition;
     Vector3 _dashVector;
-
-    public GameObject DashPoint;
 
     private void Awake()
     {
@@ -41,7 +35,7 @@ public class AvatarAspect : MonoBehaviour
     {
         HandleJumpAndFallingAnimations();
         RotateCharacter();        
-        Debug.DrawLine(_currentTarget.transform.position + Vector3.up, (_currentTarget.transform.forward * 5) + Vector3.up, Color.red, 2f);
+        Debug.DrawLine(_currentTarget.position + Vector3.up, (_currentTarget.forward * 5) + Vector3.up, Color.red, 2f);
     }
 
     private void FixedUpdate()
@@ -51,6 +45,7 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformMove(Vector2 inputVector)
     {
+        //calculate the inputs for animation controller
         Vector3 vectorToRotate = new Vector3(inputVector.x, 0, inputVector.y);
         Vector3 forwardProduct = vectorToRotate.z * -_avatarModelTransform.forward;
         Vector3 rightProduct = vectorToRotate.x * _avatarModelTransform.right;
@@ -60,10 +55,9 @@ public class AvatarAspect : MonoBehaviour
         {
             _animator.SetFloat("xInput", rotatedVector.x);
             _animator.SetFloat("yInput", rotatedVector.z);
-            float movement = Mathf.Abs(inputVector.magnitude);
+            float movement = Mathf.Abs(inputVector.sqrMagnitude);//.sqrMagnitude more performant than .magnitude
             _animator.SetFloat("Movement", movement);
         }
-        InputVector = inputVector;       
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
@@ -75,8 +69,7 @@ public class AvatarAspect : MonoBehaviour
     {
         _animator.SetBool("IsJumping", true);
         Vector3 airVelocity = new Vector3(inputVector.x, _jumpForce, inputVector.y);
-        _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
-        
+        _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);        
     }
 
     public void PerformAirDash(Vector2 inputVector) 
@@ -122,24 +115,27 @@ public class AvatarAspect : MonoBehaviour
         }            
     }
 
-    void ResetAfterDash()
-    {
-        _playerRigidBody.AddForce(_playerRigidBody.velocity * -1, ForceMode.VelocityChange);
-        _playerRigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
-        _playerRigidBody.useGravity = true;
-        _playerRigidBody.Sleep();
-
-        IsDashing = false;
-    }
-
     void RotateCharacter()
     {
         if (_currentTarget)
         {
-            _facingIndicator.transform.LookAt(_currentTarget.transform);
-            Vector3 look = new Vector3(_currentTarget.transform.position.x, _playerRigidBody.position.y -1, _currentTarget.transform.position.z);
+            _barrageEmitter.transform.LookAt(_currentTarget);
+            Vector3 look = new Vector3(_currentTarget.position.x, _playerRigidBody.position.y -1, _currentTarget.position.z);
             _avatarModelTransform.LookAt(look);
         }
+    }
+
+    void ResetAfterDash()
+    {
+        //Add a force that is the equal opposite of the force that dashed the player.
+        _playerRigidBody.AddForce(_playerRigidBody.velocity * -1, ForceMode.VelocityChange);
+        //Ensure the original rigidbody constraints are in place
+        _playerRigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
+        _playerRigidBody.useGravity = true;
+        //sleep the rigidbody for at least a frame just in case something happens. Not sure if this is necessary
+        _playerRigidBody.Sleep();
+
+        IsDashing = false;
     }
 
     public void ResetAirDashes()
@@ -160,30 +156,30 @@ public class AvatarAspect : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        //This conditional is gross. Can I clean this up in the future? 
+        if (!IsGrounded && IsDashing && (collision.transform.CompareTag("Wall") || collision.transform.CompareTag("Avatar")))
+        {
+            ResetAfterDash();            
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        //This conditional is gross. Can I clean this up in the future? 
+        if (!IsGrounded && IsDashing && (collision.transform.CompareTag("Wall") || collision.transform.CompareTag("Avatar")))
+        {
+            ResetAfterDash();
+        }
+    }
+
     void SetupAvatarAspect()
     {
         _currentHealth = _maximumHealth;
         ResetAirDashes();
         _animator = GetComponentInChildren<Animator>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
-        _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget; //account for target switch in PlayerController
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!IsGrounded && IsDashing && (collision.transform.CompareTag("Ground") || collision.transform.CompareTag("Wall")))
-        {
-            print("bump");
-            ResetAfterDash();
-        }
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if (!IsGrounded && IsDashing && (collision.transform.CompareTag("Ground") || collision.transform.CompareTag("Wall")))
-        {
-            print("bump");
-            ResetAfterDash();
-        }
+        _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget;
     }
 }

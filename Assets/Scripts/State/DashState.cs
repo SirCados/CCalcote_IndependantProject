@@ -11,7 +11,6 @@ public class DashState : IState
     {
         _nextState = nextState;
         _avatarAspect = avatar;
-
     }
     public void OnEnterState()
     {
