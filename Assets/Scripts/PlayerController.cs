@@ -23,7 +23,9 @@ public class PlayerController : MonoBehaviour
     public enum AvatarType
     {
         BALANCED,        
-        HEAVY        
+        HEAVY,
+        FLOATY,
+        SWIFT
     }
 
     public AvatarType AvatarToManifest;
@@ -121,6 +123,12 @@ public class PlayerController : MonoBehaviour
             case AvatarType.HEAVY:
                 manifestedAvatar = Instantiate(Avatars[1], transform);
                 return manifestedAvatar;
+            case AvatarType.FLOATY:
+                manifestedAvatar = Instantiate(Avatars[2], transform);
+                return manifestedAvatar;
+            case AvatarType.SWIFT:
+                manifestedAvatar = Instantiate(Avatars[3], transform);
+                return manifestedAvatar;
         }
         return null;
     }
@@ -140,6 +148,7 @@ public class PlayerController : MonoBehaviour
     void SetupCharacterController()
     {
         ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
+        ManifestedBarrage = ManifestedAvatar.GetComponentInChildren<BarrageAspect>();
         _playerInput = GetComponent<PlayerInput>();
 
         _barrageAction = _playerInput.actions["Barrage"];

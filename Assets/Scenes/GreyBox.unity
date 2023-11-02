@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1619,7 +1619,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7791483632954375948, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 7791483632954375948, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1658,6 +1658,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1985652595}
     - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: AvatarToManifest
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _facingIndicator
       value: 
       objectReference: {fileID: 0}
@@ -1665,6 +1669,18 @@ PrefabInstance:
       propertyPath: ManifestedBarrage
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: Avatars.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: Avatars.Array.data[2]
+      value: 
+      objectReference: {fileID: 8533300339795707824, guid: beec966901f0142418bdeb85ebda7566, type: 3}
+    - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: Avatars.Array.data[3]
+      value: 
+      objectReference: {fileID: 8533300339795707824, guid: 5ef76be1abf033b45b73e4a9cffff542, type: 3}
     - target: {fileID: 8940541950131621240, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_Drag
       value: 1

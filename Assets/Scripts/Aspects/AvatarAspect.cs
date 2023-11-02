@@ -55,7 +55,7 @@ public class AvatarAspect : MonoBehaviour
         {
             _animator.SetFloat("xInput", rotatedVector.x);
             _animator.SetFloat("yInput", rotatedVector.z);
-            float movement = Mathf.Abs(inputVector.sqrMagnitude);//.sqrMagnitude more performant than .magnitude
+            float movement = Mathf.Abs(inputVector.magnitude);//.sqrMagnitude more performant than .magnitude
             _animator.SetFloat("Movement", movement);
         }
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
