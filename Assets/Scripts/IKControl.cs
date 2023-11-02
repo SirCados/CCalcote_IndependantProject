@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //from https://docs.unity3d.com/Manual/InverseKinematics.html
@@ -7,24 +5,14 @@ using UnityEngine;
 public class IKControl : MonoBehaviour
 {
     public bool IsIKActive = false;
-    public Transform LeftHandObject = null;
-    public Transform ObjectToLookAt = null;
-    public Transform EmmissionPoint = null;
-
-    public float xRotation;
-    public float yRotation;
-    public float zRotation;
-    public float wRotation;
-
-    public Quaternion InitalRotation;
+    Transform _leftHandObject = null;
+    Transform _objectToLookAt = null;
 
     Animator _animator;
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
-
-        InitalRotation = _animator.GetBoneTransform(HumanBodyBones.Chest).localRotation;
+        SetUpIKControl();
     }
 
     private void OnAnimatorIK(int layerIndex)
@@ -33,27 +21,18 @@ public class IKControl : MonoBehaviour
         {
             if (IsIKActive)
             {
-                if(ObjectToLookAt != null)
+                if(_objectToLookAt != null)
                 {
                     _animator.SetLookAtWeight(1);
-                    _animator.SetLookAtPosition(ObjectToLookAt.position);                    
+                    _animator.SetLookAtPosition(_objectToLookAt.position);                    
                 } 
 
-                if(LeftHandObject != null)
+                if(_leftHandObject != null)
                 {
                     _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, .5f);
                     _animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-                    _animator.SetIKPosition(AvatarIKGoal.LeftHand, LeftHandObject.position);
-                    _animator.SetIKRotation(AvatarIKGoal.LeftHand, LeftHandObject.rotation);
-                    //_animator.SetBoneLocalRotation(HumanBodyBones.Chest, new Quaternion(xRotation, 0, 0, 1));
-                   // _animator.SetBoneLocalRotation(HumanBodyBones.LeftHand, new Quaternion(xRotation, yRotation, zRotation, 1));
-
-                    //EmmissionPoint.LookAt(ObjectToLookAt);
-                    //float pivot = EmmissionPoint.localRotation.y;
-                    //print(pivot);
-
-                    //_animator.bodyRotation = new Quaternion(0, _animator.bodyRotation.y + pivot, 0, 0);
-
+                    _animator.SetIKPosition(AvatarIKGoal.LeftHand, _leftHandObject.position);
+                    _animator.SetIKRotation(AvatarIKGoal.LeftHand, _leftHandObject.rotation);
                 }
             }
             else
@@ -66,9 +45,10 @@ public class IKControl : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void SetUpIKControl()
     {
-        
+        _animator = GetComponent<Animator>();
+        _leftHandObject = GetComponentInParent<PlayerController>().CurrentTarget;
+        _objectToLookAt = GetComponentInParent<PlayerController>().CurrentTarget;
     }
 }
