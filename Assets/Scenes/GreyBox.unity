@@ -1230,22 +1230,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &477870494 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 528797455739243794, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
-  m_PrefabInstance: {fileID: 625232788}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &477870497 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1759048492050837911, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
-  m_PrefabInstance: {fileID: 625232788}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 477870494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e17d7454c5708484a8ba427d8febcdd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &581866956
 GameObject:
   m_ObjectHideFlags: 0
@@ -1453,6 +1437,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 528797455739243794, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
+      propertyPath: m_Name
+      value: BalancedAvatarContainer
+      objectReference: {fileID: 0}
     - target: {fileID: 718300621109401542, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_TagString
       value: Avatar
@@ -1480,7 +1468,7 @@ PrefabInstance:
     - target: {fileID: 1759048492050837911, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _barrageEmitter
       value: 
-      objectReference: {fileID: 1265727262}
+      objectReference: {fileID: 0}
     - target: {fileID: 1945811222347572755, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1672,11 +1660,11 @@ PrefabInstance:
     - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: _facingIndicator
       value: 
-      objectReference: {fileID: 1265727261}
+      objectReference: {fileID: 0}
     - target: {fileID: 7791483632954375950, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: ManifestedBarrage
       value: 
-      objectReference: {fileID: 962795273}
+      objectReference: {fileID: 0}
     - target: {fileID: 8940541950131621240, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
       propertyPath: m_Drag
       value: 1
@@ -2004,17 +1992,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 900569652}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &962795273 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7164628042617426253, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
-  m_PrefabInstance: {fileID: 625232788}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db5a1dd1c49e5b848ad08ad63d48b5af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1028880300
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2025,7 +2002,7 @@ PrefabInstance:
     - target: {fileID: -378583704268251526, guid: ba86ed90c0a40d245a5ad09dfdf2bfd9, type: 3}
       propertyPath: CurrentTarget
       value: 
-      objectReference: {fileID: 477870494}
+      objectReference: {fileID: 0}
     - target: {fileID: 2515790291869129234, guid: ba86ed90c0a40d245a5ad09dfdf2bfd9, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2283,16 +2260,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1243070503}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1265727261 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4051689731006584454, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
-  m_PrefabInstance: {fileID: 625232788}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1265727262 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9067026847605713911, guid: 1994e64db5fa40d40b1f3388b58a8fbc, type: 3}
-  m_PrefabInstance: {fileID: 625232788}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1304543580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2864,7 +2831,7 @@ PrefabInstance:
     - target: {fileID: 4169435887995669031, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
       propertyPath: CurrentTarget
       value: 
-      objectReference: {fileID: 477870494}
+      objectReference: {fileID: 0}
     - target: {fileID: 4169435887995669031, guid: 1cb47fcf71c4d4f41bd0116099ce2b81, type: 3}
       propertyPath: _timesToRepeat
       value: 3
@@ -3035,7 +3002,7 @@ MonoBehaviour:
   StartFiring: 2
   RepeatFire: 5
   ManifestedBarrage: {fileID: 1764221577}
-  Target: {fileID: 477870497}
+  Target: {fileID: 0}
   FacingIndicator: {fileID: 1933033342}
 --- !u!54 &1985652597
 Rigidbody:
