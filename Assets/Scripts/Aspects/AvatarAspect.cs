@@ -27,7 +27,7 @@ public class AvatarAspect : MonoBehaviour
     GameObject _currentTarget;
     Rigidbody _playerRigidBody;    
     public Vector2 InputVector;
-    Vector3 _dashTargetPosition;
+    Vector3 _dashStartPosition;
     Vector3 _dashVector;
 
     public GameObject DashPoint;
@@ -84,10 +84,9 @@ public class AvatarAspect : MonoBehaviour
         IsDashing = true;
         _playerRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
         _playerRigidBody.useGravity = false;
-        _dashVector = ((inputVector != Vector2.zero) ? new Vector3(inputVector.x, 0, inputVector.y) : _avatarModelTransform.forward) * _dashDistance;        
-        _dashTargetPosition = _playerRigidBody.position + _dashVector;
-        Instantiate(DashPoint, _dashTargetPosition, new Quaternion());        
+        _dashVector = ((inputVector != Vector2.zero) ? new Vector3(inputVector.x, 0, inputVector.y) : _avatarModelTransform.forward) * _dashDistance;                       
         RemainingAirDashes -= 1;
+        _dashStartPosition = _playerRigidBody.position;
         _playerRigidBody.AddForce(_dashVector * _dashSpeed, ForceMode.VelocityChange);
     }
 
@@ -114,9 +113,9 @@ public class AvatarAspect : MonoBehaviour
     {
         if (IsDashing)
         {
-            float distance = Vector3.Distance(_dashTargetPosition, _playerRigidBody.position);
+            float distance = Vector3.Distance(_playerRigidBody.position, _dashStartPosition);
 
-            if (distance < .1f || distance > _dashDistance)
+            if (distance > _dashDistance)
             {
                 ResetAfterDash();
             }
@@ -125,9 +124,6 @@ public class AvatarAspect : MonoBehaviour
 
     void ResetAfterDash()
     {
-        //_playerRigidBody.velocity = ZeroOutVelocity(_playerRigidBody.velocity, _dashVector);
-        //_playerRigidBody.angularVelocity = ZeroOutVelocity(_playerRigidBody.velocity, _dashVector);
-
         _playerRigidBody.AddForce(_playerRigidBody.velocity * -1, ForceMode.VelocityChange);
         _playerRigidBody.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotation;
         _playerRigidBody.useGravity = true;
@@ -141,7 +137,7 @@ public class AvatarAspect : MonoBehaviour
         if (_currentTarget)
         {
             _facingIndicator.transform.LookAt(_currentTarget.transform);
-            Vector3 look = new Vector3(_currentTarget.transform.position.x, 0, _currentTarget.transform.position.z);
+            Vector3 look = new Vector3(_currentTarget.transform.position.x, _playerRigidBody.position.y -1, _currentTarget.transform.position.z);
             _avatarModelTransform.LookAt(look);
         }
     }
