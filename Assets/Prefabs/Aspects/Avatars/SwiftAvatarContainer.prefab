@@ -212,7 +212,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.4
-  m_Height: 1.5
+  m_Height: 1.6
   m_Direction: 1
   m_Center: {x: 0, y: -0.7, z: 0}
 --- !u!1001 &6860958088372547795
@@ -232,7 +232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
       propertyPath: m_LocalScale.y
@@ -240,7 +240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
       propertyPath: m_LocalPosition.x
@@ -248,7 +248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -1.3
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
       propertyPath: m_LocalPosition.z
@@ -281,6 +281,22 @@ PrefabInstance:
     - target: {fileID: 400000, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400110, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400110, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400112, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4107460196079633675, guid: e3949d9101822a1459662c0d452dfe86, type: 3}
+      propertyPath: IsIKActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3949d9101822a1459662c0d452dfe86, type: 3}

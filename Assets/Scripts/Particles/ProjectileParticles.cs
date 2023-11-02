@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectileParticles : MonoBehaviour
@@ -14,6 +12,5 @@ public class ProjectileParticles : MonoBehaviour
     void DestroySelf()
     {
         Destroy(gameObject);
-    }
-    
+    }    
 }
