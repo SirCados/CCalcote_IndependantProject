@@ -61,9 +61,12 @@ public class BarrageProjectile: MonoBehaviour
             GiveDamage(target);           
         }
 
-        Instantiate(_hitParticles, transform.position, new Quaternion());
-        transform.DetachChildren();
-        Destroy(gameObject);
+        if(other.transform.tag != "Projectile")
+        {
+            Instantiate(_hitParticles, transform.position, new Quaternion());
+            transform.DetachChildren();
+            Destroy(gameObject);
+        }
     }
 
     void GiveDamage(AvatarAspect avatar)

@@ -3,11 +3,13 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject[] Avatars;
+
     public string CurrentState;
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
     public Transform CurrentTarget;
-    
+        
     InputAction _jumpAction;
     InputAction _moveAction;
     InputAction _barrageAction;
@@ -17,6 +19,14 @@ public class PlayerController : MonoBehaviour
     ActiveState _activeState;
     BarrageState _barrageState;
     DashState _dashState;
+
+    public enum AvatarType
+    {
+        BALANCED,        
+        HEAVY        
+    }
+
+    public AvatarType AvatarToManifest;
 
     private void Awake()
     {
@@ -65,11 +75,16 @@ public class PlayerController : MonoBehaviour
 
         _currentState = newState;
         _currentState.OnEnterState();        
-    }    
+    }
+
+    void GetInputsForMovement()
+    {
+        Vector2 inputs = (_currentState == _activeState && !ManifestedBarrage.IsRecovering) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
+        _activeState.SetInputs(inputs);
+    }
 
     void Barrage(InputAction.CallbackContext context)
     {
-        print("pew");
         if(_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             ChangeState(_barrageState);
@@ -94,10 +109,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void GetInputsForMovement()
+    GameObject ManifestAvatar()
     {
-        Vector2 inputs = (_currentState == _activeState && !ManifestedBarrage.IsRecovering) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;            
-        _activeState.SetInputs(inputs);
+        AvatarType avatar = AvatarToManifest;
+        GameObject manifestedAvatar;
+        switch (avatar)
+        {
+            case AvatarType.BALANCED:
+                manifestedAvatar = Instantiate(Avatars[0], transform);
+                return manifestedAvatar;
+            case AvatarType.HEAVY:
+                manifestedAvatar = Instantiate(Avatars[1], transform);
+                return manifestedAvatar;
+        }
+        return null;
     }
 
     void SubscribeToEvents()
@@ -114,6 +139,7 @@ public class PlayerController : MonoBehaviour
 
     void SetupCharacterController()
     {
+        ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
         _playerInput = GetComponent<PlayerInput>();
 
         _barrageAction = _playerInput.actions["Barrage"];

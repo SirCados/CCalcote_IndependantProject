@@ -5,14 +5,14 @@ using UnityEngine;
 public class IKControl : MonoBehaviour
 {
     public bool IsIKActive = false;
-    public Transform LeftHandObject = null;
-    public Transform ObjectToLookAt = null;
+    Transform _leftHandObject = null;
+    Transform _objectToLookAt = null;
 
     Animator _animator;
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        SetUpIKControl();
     }
 
     private void OnAnimatorIK(int layerIndex)
@@ -21,18 +21,18 @@ public class IKControl : MonoBehaviour
         {
             if (IsIKActive)
             {
-                if(ObjectToLookAt != null)
+                if(_objectToLookAt != null)
                 {
                     _animator.SetLookAtWeight(1);
-                    _animator.SetLookAtPosition(ObjectToLookAt.position);                    
+                    _animator.SetLookAtPosition(_objectToLookAt.position);                    
                 } 
 
-                if(LeftHandObject != null)
+                if(_leftHandObject != null)
                 {
                     _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, .5f);
                     _animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-                    _animator.SetIKPosition(AvatarIKGoal.LeftHand, LeftHandObject.position);
-                    _animator.SetIKRotation(AvatarIKGoal.LeftHand, LeftHandObject.rotation);
+                    _animator.SetIKPosition(AvatarIKGoal.LeftHand, _leftHandObject.position);
+                    _animator.SetIKRotation(AvatarIKGoal.LeftHand, _leftHandObject.rotation);
                 }
             }
             else
@@ -43,5 +43,12 @@ public class IKControl : MonoBehaviour
             }
 
         }
+    }
+
+    void SetUpIKControl()
+    {
+        _animator = GetComponent<Animator>();
+        _leftHandObject = GetComponentInParent<PlayerController>().CurrentTarget;
+        _objectToLookAt = GetComponentInParent<PlayerController>().CurrentTarget;
     }
 }
