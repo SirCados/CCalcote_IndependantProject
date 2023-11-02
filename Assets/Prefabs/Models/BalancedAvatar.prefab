@@ -693,8 +693,8 @@ GameObject:
   - component: {fileID: 5315491284295636600}
   - component: {fileID: 7863247022536349275}
   m_Layer: 0
-  m_Name: Balanced
-  m_TagString: Player
+  m_Name: BalancedAvatar
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -729,14 +729,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsIKActive: 1
-  LeftHandObject: {fileID: 0}
-  ObjectToLookAt: {fileID: 0}
-  EmmissionPoint: {fileID: 928817361040180737}
-  xRotation: 0
-  yRotation: 0
-  zRotation: 0
-  wRotation: 0
-  InitalRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!95 &7863247022536349275
 Animator:
   serializedVersion: 5

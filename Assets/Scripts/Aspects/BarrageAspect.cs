@@ -3,14 +3,19 @@ using UnityEngine;
 public class BarrageAspect : MonoBehaviour
 {
     public float RepeatTime = 0.1f;
-    public GameObject BarrageProjectile;
-    public GameObject CurrentTarget;
-    public bool IsBarraging = false;//TODO: getter?
+    public GameObject BarrageProjectile;    
+    public bool IsBarraging = false;
     public bool IsRecovering = false;
 
     int _counter = 1;
-    [SerializeField] int _recovery; //will always be larger than timesToRepeat. 
+    [SerializeField] int _recoveryTime; //will always be larger than timesToRepeat. 
     [SerializeField] int _timesToRepeat; //number of times the barrage will fire on a given press.
+    Transform _currentTarget;
+
+    private void Awake()
+    {
+        SetUpBarrageAspect();
+    }
 
     public void PerformBarrage()
     {
@@ -21,7 +26,7 @@ public class BarrageAspect : MonoBehaviour
 
     void SpawnBarrageProjectile()
     {
-        if (_counter > _recovery)
+        if (_counter > _recoveryTime)
         {
             IsRecovering = false;
             _counter = 1;
@@ -36,8 +41,13 @@ public class BarrageAspect : MonoBehaviour
         }
         _counter++;
         BarrageProjectile projectile = Instantiate(BarrageProjectile, transform).GetComponent<BarrageProjectile>();
-        projectile.Target = CurrentTarget.transform;
-        projectile.TargetRigidBody = CurrentTarget.GetComponent<Rigidbody>();
+        projectile.Target = _currentTarget;
+        projectile.TargetRigidBody = _currentTarget.GetComponent<Rigidbody>();
         transform.DetachChildren();
+    }
+
+    void SetUpBarrageAspect()
+    {
+        _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget;
     }
 }
