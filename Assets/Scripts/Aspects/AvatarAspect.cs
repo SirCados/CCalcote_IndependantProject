@@ -10,13 +10,14 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] int _maximumHealth = 3;
     int _currentHealth;
 
+    [SerializeField] [Range(0, 1)] float _airWalk;
     [SerializeField] float _accelerationRate;
     [SerializeField] float _dashDistance;
     [SerializeField] float _dashSpeed;
     [SerializeField] float _jumpForce;
     [SerializeField] float _movementSpeed;
     [SerializeField] float _fallRate;
-    [SerializeField] int _maxiumAirDashes;    
+    [SerializeField] int _maxiumAirDashes;   
     [SerializeField] Transform _barrageEmitter;
     [SerializeField] Transform _avatarModelTransform;
     
@@ -58,7 +59,7 @@ public class AvatarAspect : MonoBehaviour
             float movement = Mathf.Abs(inputVector.magnitude);//.sqrMagnitude more performant than .magnitude
             _animator.SetFloat("Movement", movement);
         }
-        float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
+        float speed = (IsGrounded) ? _movementSpeed : _movementSpeed * _airWalk;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
         velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        

@@ -176,12 +176,13 @@ MonoBehaviour:
   IsDashing: 0
   RemainingAirDashes: 0
   _maximumHealth: 3
+  _airWalk: 0.7
   _accelerationRate: 1.5
   _dashDistance: 10
   _dashSpeed: 10
   _jumpForce: 20
-  _movementSpeed: 25
-  _fallRate: 30
+  _movementSpeed: 30
+  _fallRate: 25
   _maxiumAirDashes: 3
   _barrageEmitter: {fileID: 931816217033728341}
   _avatarModelTransform: {fileID: 671796269553424711}
