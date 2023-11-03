@@ -48,7 +48,6 @@ public class ActiveState : IState
         get => _isStateDone;
     }
 
-
     public IState NextState
     {
         get => null;

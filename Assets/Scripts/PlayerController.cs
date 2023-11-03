@@ -8,16 +8,20 @@ public class PlayerController : MonoBehaviour
     public string CurrentState;
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
+    public BlastAspect ManifestedBlast;
     public Transform CurrentTarget;
         
     InputAction _jumpAction;
     InputAction _moveAction;
     InputAction _barrageAction;
+    InputAction _blastAction;
+    InputAction _aimAction;
     PlayerInput _playerInput;
 
     IState _currentState;
     ActiveState _activeState;
     BarrageState _barrageState;
+    BlastState _blastState;
     DashState _dashState;
 
     public enum AvatarType
@@ -51,6 +55,10 @@ public class PlayerController : MonoBehaviour
         {
             StateControllerUpdate();
             GetInputsForMovement();
+            if (ManifestedBlast.IsBlasting)
+            {
+                GetInputsForAiming();
+            }
         }
     }
 
@@ -85,12 +93,35 @@ public class PlayerController : MonoBehaviour
         _activeState.SetInputs(inputs);
     }
 
+    void GetInputsForAiming()
+    {
+        Vector2 inputs = (_currentState == _activeState && !ManifestedBarrage.IsRecovering) ? _aimAction.ReadValue<Vector2>() : Vector2.zero;
+        _blastState.SetInputs(inputs);
+        print(inputs);
+    }
+
     void Barrage(InputAction.CallbackContext context)
     {
         if(_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             ChangeState(_barrageState);
             ManifestedAvatar.StopJumpVelocity();
+        }
+    }
+
+    void Blast(InputAction.CallbackContext context)
+    {
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
+        {
+            if (!ManifestedBlast.IsBlasting)
+            {
+
+            }
+            else
+            {
+                ChangeState(_blastState);
+                ManifestedAvatar.StopJumpVelocity();
+            }
         }
     }
 
@@ -137,27 +168,35 @@ public class PlayerController : MonoBehaviour
     {
         _barrageAction.started += Barrage;
         _jumpAction.started += JumpOrAirDash;
+        _blastAction.started += Blast;
+        _blastAction.canceled += Blast;
     }
 
     void UnsubscribeToEvents()
     {
         _barrageAction.started -= Barrage;
         _jumpAction.started -= JumpOrAirDash;
+        _blastAction.started -= Blast;
+        _blastAction.canceled -= Blast;
     }
 
     void SetupCharacterController()
     {
         ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
         ManifestedBarrage = ManifestedAvatar.GetComponentInChildren<BarrageAspect>();
+        ManifestedBlast = ManifestedAvatar.GetComponentInChildren<BlastAspect>();
         _playerInput = GetComponent<PlayerInput>();
 
+        _aimAction = _playerInput.actions["Aim"];
         _barrageAction = _playerInput.actions["Barrage"];
+        _blastAction = _playerInput.actions["Blast"];
         _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];
 
         _activeState = new ActiveState(ManifestedAvatar);
-        ChangeState(_activeState);               
-        _dashState = new DashState(_activeState, ManifestedAvatar);
+        ChangeState(_activeState);
         _barrageState = new BarrageState(_activeState, ManifestedBarrage);
+        _blastState = new BlastState(_activeState, ManifestedAvatar, ManifestedBlast);
+        _dashState = new DashState(_activeState, ManifestedAvatar);
     }
 }

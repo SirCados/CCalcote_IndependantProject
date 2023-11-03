@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class AvatarAspect : MonoBehaviour
 {
+    public bool IsBlasting = false;
+    public bool IsDashing = false;
     public bool IsGameOver = false;
     public bool IsGrounded = true;
-    public bool IsDashing = false;
     public int RemainingAirDashes;
 
     [SerializeField] int _maximumHealth = 3;
@@ -61,6 +62,7 @@ public class AvatarAspect : MonoBehaviour
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
+        velocityChange = (IsBlasting) ? velocityChange / 2 : velocityChange;
         velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
