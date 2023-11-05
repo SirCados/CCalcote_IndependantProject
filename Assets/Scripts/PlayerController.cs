@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     BlastState _blastState;
     DashState _dashState;
 
+    bool _isAiming = false;
+
     public enum AvatarType
     {
         BALANCED,        
@@ -55,7 +57,7 @@ public class PlayerController : MonoBehaviour
         {
             StateControllerUpdate();
             GetInputsForMovement();
-            if (ManifestedBlast.IsBlasting)
+            if (_isAiming)
             {
                 GetInputsForAiming();
             }
@@ -113,15 +115,10 @@ public class PlayerController : MonoBehaviour
     {
         if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
-            if (!ManifestedBlast.IsBlasting)
-            {
-
-            }
-            else
-            {
-                ChangeState(_blastState);
-                ManifestedAvatar.StopJumpVelocity();
-            }
+            print("Blast");
+            _isAiming = !_isAiming;
+                //ChangeState(_blastState);
+                //ManifestedAvatar.StopJumpVelocity();
         }
     }
 

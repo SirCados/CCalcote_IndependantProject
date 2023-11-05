@@ -42,6 +42,7 @@ public class BlastState : IState
     public void SetInputs(Vector2 inputVector)
     {
         _inputVector = inputVector;
+        Debug.Log(_inputVector);
     }
 
     public bool IsStateDone
