@@ -5,7 +5,8 @@ public class BlastState : IState
     BlastAspect _blastAspect;
     bool _isStateDone;
     IState _nextState;
-    Vector2 _inputVector;
+    Vector2 _aimInputVector;
+    Vector2 _movementInputVector;
 
     public BlastState(IState nextState, AvatarAspect avatarAspect, BlastAspect blastAspect)
     {
@@ -23,14 +24,7 @@ public class BlastState : IState
 
     public void OnUpdateState()
     {
-        if (_blastAspect.IsBlasting)
-        {
-            _avatarAspect.PerformMove(_inputVector);
-        }
-        else
-        {
-            _isStateDone = true;
-        }
+        _avatarAspect.PerformMove(_movementInputVector);        
     }
 
     public void OnExitState()
@@ -39,11 +33,15 @@ public class BlastState : IState
         _isStateDone = false;
     }
 
-    public void SetInputs(Vector2 inputVector)
+    public void SetAimInputs(Vector2 inputVector)
     {
-        _inputVector = inputVector;
-        Debug.Log(_inputVector);
+        _aimInputVector = inputVector;
     }
+
+    public void SetMovementInputs(Vector2 inputVector)
+    {
+        _movementInputVector = inputVector;
+    }    
 
     public bool IsStateDone
     {

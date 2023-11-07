@@ -43,12 +43,12 @@
                 },
                 {
                     "name": "Aim",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "cd4d8f53-4ec7-45ac-b01d-1e1d9641e229",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -185,8 +185,19 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Right Stick",
-                    "id": "53bec9ed-aa94-4b28-a321-b6e0544212a2",
+                    "name": "",
+                    "id": "120effe9-bab0-49d4-911d-6b90f4bf9944",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "6f851478-4b62-473c-aed0-3788ea9bfe4b",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
@@ -197,7 +208,7 @@
                 },
                 {
                     "name": "up",
-                    "id": "7c5be1bd-0dee-402a-875a-e51ad1ba7f61",
+                    "id": "f2b8c02f-31fe-454e-8823-9cc8e0ad0435",
                     "path": "<HID::Core (Plus) Wired Controller>/rz",
                     "interactions": "",
                     "processors": "",
@@ -208,7 +219,7 @@
                 },
                 {
                     "name": "down",
-                    "id": "1b12624e-439d-4a25-a632-4e5db4020c90",
+                    "id": "ff73c803-1719-4762-9336-76c19df6b7db",
                     "path": "<HID::Core (Plus) Wired Controller>/rz",
                     "interactions": "",
                     "processors": "",
@@ -219,7 +230,7 @@
                 },
                 {
                     "name": "left",
-                    "id": "79395954-97a5-4b33-ac60-96dbc337b358",
+                    "id": "c4d9ca94-1e52-4376-b115-252eed9c0732",
                     "path": "<HID::Core (Plus) Wired Controller>/z",
                     "interactions": "",
                     "processors": "",
@@ -230,7 +241,7 @@
                 },
                 {
                     "name": "right",
-                    "id": "b3368f3e-a714-4036-b87a-7683d9b4993e",
+                    "id": "0ecf6bfd-7cb6-44bd-a7b6-7a8dc0958000",
                     "path": "<HID::Core (Plus) Wired Controller>/z",
                     "interactions": "",
                     "processors": "",

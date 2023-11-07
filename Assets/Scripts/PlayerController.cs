@@ -97,9 +97,13 @@ public class PlayerController : MonoBehaviour
 
     void GetInputsForAiming()
     {
-        Vector2 inputs = (_currentState == _activeState && !ManifestedBarrage.IsRecovering) ? _aimAction.ReadValue<Vector2>() : Vector2.zero;
-        _blastState.SetInputs(inputs);
-        print(inputs);
+        Vector2 aimInputs = _aimAction.ReadValue<Vector2>();
+        _blastState.SetAimInputs(aimInputs);
+        Vector2 movementInputs = _moveAction.ReadValue<Vector2>();        
+        _blastState.SetMovementInputs(movementInputs);
+
+        print("aim: " + aimInputs);
+        print("move: " + movementInputs);
     }
 
     void Barrage(InputAction.CallbackContext context)
@@ -116,9 +120,19 @@ public class PlayerController : MonoBehaviour
         if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             print("Blast");
-            _isAiming = !_isAiming;
-                //ChangeState(_blastState);
-                //ManifestedAvatar.StopJumpVelocity();
+            _isAiming = true;
+            ChangeState(_blastState);
+            ManifestedAvatar.StopJumpVelocity();
+        }
+    }
+
+    void Neutral(InputAction.CallbackContext context)
+    {
+        if(_currentState != _activeState)
+        {
+            print("Neutral");
+            _isAiming = false;
+            ChangeState(_activeState);
         }
     }
 
@@ -166,7 +180,7 @@ public class PlayerController : MonoBehaviour
         _barrageAction.started += Barrage;
         _jumpAction.started += JumpOrAirDash;
         _blastAction.started += Blast;
-        _blastAction.canceled += Blast;
+        _blastAction.canceled += Neutral;
     }
 
     void UnsubscribeToEvents()
@@ -174,7 +188,7 @@ public class PlayerController : MonoBehaviour
         _barrageAction.started -= Barrage;
         _jumpAction.started -= JumpOrAirDash;
         _blastAction.started -= Blast;
-        _blastAction.canceled -= Blast;
+        _blastAction.canceled -= Neutral;
     }
 
     void SetupCharacterController()
