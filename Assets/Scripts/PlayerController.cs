@@ -206,8 +206,8 @@ public class PlayerController : MonoBehaviour
         _aimYAction = _playerInput.actions["AimY"];
         _barrageAction = _playerInput.actions["Barrage"];
         _blastAction = _playerInput.actions["Blast"];
-        _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];
+        _moveAction = _playerInput.actions["Move"];
 
         _activeState = new ActiveState(ManifestedAvatar);
         ChangeState(_activeState);

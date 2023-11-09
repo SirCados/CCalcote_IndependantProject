@@ -19,6 +19,7 @@ public class BlastState : IState
     {
         _isStateDone = false;
         _blastAspect.BeginBlast();
+        _avatarAspect.IsBlasting = true;
 
     }
 
@@ -30,6 +31,7 @@ public class BlastState : IState
     public void OnExitState()
     {
         _blastAspect.EndBlast();
+        _avatarAspect.IsBlasting = false;
         _isStateDone = false;
     }
 

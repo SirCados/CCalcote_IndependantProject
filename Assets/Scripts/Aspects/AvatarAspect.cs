@@ -22,6 +22,7 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] Transform _avatarModelTransform;
     
     Animator _animator;
+    IKControl _ikControl;
     Rigidbody _playerRigidBody;
     Transform _currentTarget;
     Vector3 _dashStartPosition;
@@ -42,6 +43,7 @@ public class AvatarAspect : MonoBehaviour
     private void FixedUpdate()
     {        
         CheckIfDashIsDone();
+        PerformHandRaise();
     }
 
     public void PerformMove(Vector2 inputVector)
@@ -62,7 +64,7 @@ public class AvatarAspect : MonoBehaviour
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed / 3;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
-        velocityChange = (IsBlasting) ? velocityChange / 2 : velocityChange;
+        velocityChange = (IsBlasting) ? velocityChange / 5 : velocityChange;
         velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
@@ -83,6 +85,20 @@ public class AvatarAspect : MonoBehaviour
         RemainingAirDashes -= 1;
         _dashStartPosition = _playerRigidBody.position;
         _playerRigidBody.AddForce(_dashVector * _dashSpeed, ForceMode.VelocityChange);
+    }
+
+    public void PerformHandRaise()
+    {
+        if (IsBlasting)
+        {
+            _ikControl.IsAiming = true;
+            _ikControl.IsActive = false;
+        }
+        else if (!_ikControl.IsActive && !IsBlasting)
+        {
+            _ikControl.IsActive = true;
+            _ikControl.IsAiming = false;
+        }
     }
 
     public void TakeDamage(int incomingDamage)
@@ -181,6 +197,7 @@ public class AvatarAspect : MonoBehaviour
         _currentHealth = _maximumHealth;
         ResetAirDashes();
         _animator = GetComponentInChildren<Animator>();
+        _ikControl = GetComponentInChildren<IKControl>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
         _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget;
     }
