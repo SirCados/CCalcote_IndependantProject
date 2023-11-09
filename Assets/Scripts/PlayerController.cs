@@ -199,7 +199,8 @@ public class PlayerController : MonoBehaviour
     {
         ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
         ManifestedBarrage = ManifestedAvatar.GetComponentInChildren<BarrageAspect>();
-        ManifestedBlast = GetComponentInChildren<BlastAspect>();
+        ManifestedBlast = ManifestedAvatar.GetComponentInChildren<BlastAspect>();
+        ManifestedBlast.CurrentTarget = CurrentTarget;
         _playerInput = GetComponent<PlayerInput>();
 
         _aimXAction = _playerInput.actions["AimX"];

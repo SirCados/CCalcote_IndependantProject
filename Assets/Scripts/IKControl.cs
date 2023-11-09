@@ -6,7 +6,7 @@ public class IKControl : MonoBehaviour
 {
     public bool IsIKActive = false;
     public bool IsActive = true;
-    public bool IsAiming = false;
+    public bool IsBlasting = false;
 
     Transform _leftHandTarget = null;
     Transform _rightHandTarget = null;
@@ -39,7 +39,7 @@ public class IKControl : MonoBehaviour
                     _animator.SetIKRotation(AvatarIKGoal.LeftHand, _leftHandTarget.rotation);
                 }
 
-                if (_rightHandTarget != null && IsAiming)
+                if (_rightHandTarget != null && IsBlasting)
                 {
                     _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, .5f);
                     _animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);

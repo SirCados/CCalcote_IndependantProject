@@ -36,8 +36,7 @@ public class AvatarAspect : MonoBehaviour
     private void Update()
     {
         HandleJumpAndFallingAnimations();
-        RotateCharacter();        
-        Debug.DrawLine(_currentTarget.position + Vector3.up, (_currentTarget.forward * 5) + Vector3.up, Color.red, 2f);
+        RotateCharacter();
     }
 
     private void FixedUpdate()
@@ -91,13 +90,13 @@ public class AvatarAspect : MonoBehaviour
     {
         if (IsBlasting)
         {
-            _ikControl.IsAiming = true;
+            _ikControl.IsBlasting = true;
             _ikControl.IsActive = false;
         }
         else if (!_ikControl.IsActive && !IsBlasting)
         {
             _ikControl.IsActive = true;
-            _ikControl.IsAiming = false;
+            _ikControl.IsBlasting = false;
         }
     }
 
