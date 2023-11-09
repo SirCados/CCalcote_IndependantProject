@@ -171,15 +171,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e17d7454c5708484a8ba427d8febcdd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsBlasting: 0
+  IsDashing: 0
   IsGameOver: 0
   IsGrounded: 1
-  IsDashing: 0
   RemainingAirDashes: 0
   _maximumHealth: 3
   _accelerationRate: 2
   _dashDistance: 10
   _dashSpeed: 10
-  _jumpForce: 15
+  _jumpForce: 18
   _movementSpeed: 30
   _fallRate: 45
   _maxiumAirDashes: 2

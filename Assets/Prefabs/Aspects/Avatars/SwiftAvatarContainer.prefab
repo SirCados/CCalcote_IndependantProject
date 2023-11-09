@@ -179,9 +179,9 @@ MonoBehaviour:
   RemainingAirDashes: 0
   _maximumHealth: 3
   _accelerationRate: 5
-  _dashDistance: 5
+  _dashDistance: 7
   _dashSpeed: 15
-  _jumpForce: 15
+  _jumpForce: 18
   _movementSpeed: 35
   _fallRate: 45
   _maxiumAirDashes: 3

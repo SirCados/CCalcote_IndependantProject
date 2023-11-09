@@ -171,15 +171,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e17d7454c5708484a8ba427d8febcdd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsBlasting: 0
+  IsDashing: 0
   IsGameOver: 0
   IsGrounded: 1
-  IsDashing: 0
   RemainingAirDashes: 0
   _maximumHealth: 3
   _accelerationRate: 3
   _dashDistance: 15
   _dashSpeed: 10
-  _jumpForce: 15
+  _jumpForce: 18
   _movementSpeed: 20
   _fallRate: 45
   _maxiumAirDashes: 1
@@ -212,9 +213,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 2.6
+  m_Height: 2.7
   m_Direction: 1
-  m_Center: {x: 0, y: -0.3, z: 0}
+  m_Center: {x: 0, y: -0.1, z: 0}
 --- !u!1001 &161339222738000552
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -248,7 +249,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: eb1df5d927440cd43ba20570a201448f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5
+      value: -1.4
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: eb1df5d927440cd43ba20570a201448f, type: 3}
       propertyPath: m_LocalPosition.z

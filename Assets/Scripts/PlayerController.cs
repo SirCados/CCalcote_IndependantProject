@@ -15,7 +15,8 @@ public class PlayerController : MonoBehaviour
     InputAction _moveAction;
     InputAction _barrageAction;
     InputAction _blastAction;
-    InputAction _aimAction;
+    InputAction _aimXAction;
+    InputAction _aimYAction;
     PlayerInput _playerInput;
 
     IState _currentState;
@@ -97,7 +98,10 @@ public class PlayerController : MonoBehaviour
 
     void GetInputsForAiming()
     {
-        Vector2 aimInputs = _aimAction.ReadValue<Vector2>();
+        float aimX = _aimXAction.ReadValue<float>();
+        float aimY = _aimYAction.ReadValue<float>();
+
+        Vector2 aimInputs = new Vector2(aimX, aimY).normalized;
         _blastState.SetAimInputs(aimInputs);
         Vector2 movementInputs = _moveAction.ReadValue<Vector2>();        
         _blastState.SetMovementInputs(movementInputs);
@@ -195,10 +199,11 @@ public class PlayerController : MonoBehaviour
     {
         ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
         ManifestedBarrage = ManifestedAvatar.GetComponentInChildren<BarrageAspect>();
-        ManifestedBlast = ManifestedAvatar.GetComponentInChildren<BlastAspect>();
+        ManifestedBlast = GetComponentInChildren<BlastAspect>();
         _playerInput = GetComponent<PlayerInput>();
 
-        _aimAction = _playerInput.actions["Aim"];
+        _aimXAction = _playerInput.actions["AimX"];
+        _aimYAction = _playerInput.actions["AimY"];
         _barrageAction = _playerInput.actions["Barrage"];
         _blastAction = _playerInput.actions["Blast"];
         _moveAction = _playerInput.actions["Move"];

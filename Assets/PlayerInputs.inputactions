@@ -42,10 +42,19 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Aim",
+                    "name": "AimX",
+                    "type": "Value",
+                    "id": "85232e9f-210f-4970-b3ca-31c825c45292",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "AimY",
                     "type": "Value",
                     "id": "cd4d8f53-4ec7-45ac-b01d-1e1d9641e229",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -186,69 +195,25 @@
                 },
                 {
                     "name": "",
-                    "id": "120effe9-bab0-49d4-911d-6b90f4bf9944",
-                    "path": "<Joystick>/stick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "2D Vector",
-                    "id": "6f851478-4b62-473c-aed0-3788ea9bfe4b",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Aim",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "f2b8c02f-31fe-454e-8823-9cc8e0ad0435",
+                    "id": "97337657-e2fe-49cd-a162-8f71e17315c3",
                     "path": "<HID::Core (Plus) Wired Controller>/rz",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Aim",
+                    "action": "AimY",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "down",
-                    "id": "ff73c803-1719-4762-9336-76c19df6b7db",
-                    "path": "<HID::Core (Plus) Wired Controller>/rz",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "c4d9ca94-1e52-4376-b115-252eed9c0732",
+                    "name": "",
+                    "id": "3c745bcb-ba0a-4ae5-a0e1-8a1ff8151318",
                     "path": "<HID::Core (Plus) Wired Controller>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Aim",
+                    "action": "AimX",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "0ecf6bfd-7cb6-44bd-a7b6-7a8dc0958000",
-                    "path": "<HID::Core (Plus) Wired Controller>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         }
