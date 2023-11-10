@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     InputAction _aimXAction;
     InputAction _aimYAction;
     PlayerInput _playerInput;
+    AimingRing _aimingRing;
 
     IState _currentState;
     ActiveState _activeState;
@@ -99,15 +100,12 @@ public class PlayerController : MonoBehaviour
     void GetInputsForAiming()
     {
         float aimX = _aimXAction.ReadValue<float>();
-        float aimY = _aimYAction.ReadValue<float>();
+        float aimY = -_aimYAction.ReadValue<float>();
 
         Vector2 aimInputs = new Vector2(aimX, aimY).normalized;
         _blastState.SetAimInputs(aimInputs);
         Vector2 movementInputs = _moveAction.ReadValue<Vector2>();        
         _blastState.SetMovementInputs(movementInputs);
-
-        print("aim: " + aimInputs);
-        print("move: " + movementInputs);
     }
 
     void Barrage(InputAction.CallbackContext context)
@@ -127,6 +125,7 @@ public class PlayerController : MonoBehaviour
             _isAiming = true;
             ChangeState(_blastState);
             ManifestedAvatar.StopJumpVelocity();
+            ManifestedAvatar.SlowMoveVelocity();
         }
     }
 
@@ -202,6 +201,7 @@ public class PlayerController : MonoBehaviour
         ManifestedBlast = ManifestedAvatar.GetComponentInChildren<BlastAspect>();
         ManifestedBlast.CurrentTarget = CurrentTarget;
         _playerInput = GetComponent<PlayerInput>();
+
 
         _aimXAction = _playerInput.actions["AimX"];
         _aimYAction = _playerInput.actions["AimY"];

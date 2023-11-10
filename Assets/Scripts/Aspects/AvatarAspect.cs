@@ -115,7 +115,16 @@ public class AvatarAspect : MonoBehaviour
     {        
         if (!IsGrounded)
         {
-            _playerRigidBody.velocity = Vector3.down;
+            //_playerRigidBody.velocity = Vector3.down;
+            _playerRigidBody.velocity = new Vector3(_playerRigidBody.velocity.x, 0, _playerRigidBody.velocity.z); 
+        }
+    }
+
+    public void SlowMoveVelocity()
+    {
+        if (IsGrounded)
+        {
+            _playerRigidBody.velocity = _playerRigidBody.velocity / 2;
         }
     }
 

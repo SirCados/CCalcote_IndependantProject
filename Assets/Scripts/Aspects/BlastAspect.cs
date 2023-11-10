@@ -3,64 +3,72 @@ using UnityEngine;
 public class BlastAspect : MonoBehaviour
 {
     public bool IsBlasting = false;
+    public bool IsGrounded = false;
     public GameObject BlastProjectile;
     public Transform CurrentTarget;
+    public Transform BlastAimingRing;
 
     [SerializeField] LineRenderer _lineRenderer;
     [SerializeField] Transform _releasePosition;
-    [SerializeField] int _linePoints = 25;
+    [SerializeField] int _linePoints = 10;
     [SerializeField] float _timeBetweenPoints = .1f;
 
 
     private void Awake()
     {
         SetUpBlastAspect();
+        BlastAimingRing.gameObject.SetActive(false);
+        _lineRenderer.positionCount = 3;
     }
 
     private void Update()
     {
         if (IsBlasting)
         {
-            DrawProjection();
-        }
-        else
-        {
-            _lineRenderer.enabled = false;
+            DrawLine();
         }
     }
 
     public void BeginBlast()
     {
         IsBlasting = true;
+        Vector3 initialPosition = new Vector3(CurrentTarget.position.x, 0, CurrentTarget.position.z);
+        BlastAimingRing.position = initialPosition;
+        BlastAimingRing.gameObject.SetActive(IsBlasting);
+        _lineRenderer.enabled = true;
+
     }
 
     public void EndBlast()
     {
         IsBlasting = false;
-        
+        BlastAimingRing.gameObject.SetActive(IsBlasting);
+        _lineRenderer.enabled = false;
     }
 
-    void DrawProjection()
+    void DrawLine()
     {
-        _lineRenderer.enabled = true;
-        _lineRenderer.positionCount = Mathf.CeilToInt(_linePoints / _timeBetweenPoints) + 1;
-        print(_lineRenderer.positionCount);
-        _lineRenderer.SetPosition(_lineRenderer.positionCount - 1, CurrentTarget.position);
-        Vector3 startPosition = _releasePosition.position;
-        Vector3 startVelocity = transform.forward * 20;
-        int counter = 0;
-        _lineRenderer.SetPosition(counter, startPosition);
-        for (float time = 0; time < _linePoints; time += _timeBetweenPoints)
-        {
-            counter++;
-            Vector3 point = startPosition + time * startVelocity;
-            point.y = startPosition.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
-            _lineRenderer.SetPosition(counter, point);
-        }
+        //This is good enough for now
+        Vector3 pointA = transform.position;
+        Vector3 pointB = BlastAimingRing.position;
+        Vector3 midPoint = (pointA + pointB) / 2;
+        float distance = Vector3.Distance(pointA, pointB);
+        midPoint.y = (IsGrounded)?distance/3 : midPoint.y;
+        _lineRenderer.SetPosition(0, pointA);
+        _lineRenderer.SetPosition(1, midPoint);
+        _lineRenderer.SetPosition(2, pointB);
+
+    }
+
+    public void PerformRingMove(Vector2 inputVector)
+    {
+        float speed = .5f;
+        Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);
+        BlastAimingRing.Translate(targetVelocity);
     }
 
     void SetUpBlastAspect()
     {
-        
+        BlastAimingRing.parent = GetComponentInParent<PlayerController>().transform;
     }
 }

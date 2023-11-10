@@ -20,12 +20,13 @@ public class BlastState : IState
         _isStateDone = false;
         _blastAspect.BeginBlast();
         _avatarAspect.IsBlasting = true;
-
     }
 
     public void OnUpdateState()
     {
-        _avatarAspect.PerformMove(_movementInputVector);        
+        _avatarAspect.PerformMove(_movementInputVector);
+        _blastAspect.IsGrounded = _avatarAspect.IsGrounded;
+        _blastAspect.PerformRingMove(_aimInputVector);
     }
 
     public void OnExitState()
