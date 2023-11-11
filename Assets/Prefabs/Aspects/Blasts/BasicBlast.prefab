@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6437646231957399586}
   - component: {fileID: 6437646231957399613}
-  - component: {fileID: 8044670368305651016}
   - component: {fileID: 8912996695549051266}
   m_Layer: 0
   m_Name: BasicBlast
@@ -26,8 +25,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6437646231957399587}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.69074565, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -48,30 +47,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsBlasting: 0
   IsGrounded: 0
+  IsProjectileActive: 0
   Projectile: {fileID: 6288169372248113522, guid: e36d0b1176848b7468ec7acd9eb5e478, type: 3}
   CurrentTarget: {fileID: 0}
   BlastAimingRing: {fileID: 0}
-  _lineRenderer: {fileID: 0}
-  _releasePosition: {fileID: 0}
+  _lineRenderer: {fileID: 8912996695549051266}
+  _releasePosition: {fileID: 6437646231957399586}
   _linePoints: 25
   _timeBetweenPoints: 0.1
---- !u!114 &8044670368305651016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6437646231957399587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2f622323752aa043ba01adfd9169ceb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsBlasting: 0
-  _startPosition: {x: 0, y: 0, z: 0}
-  _startVelocity: {x: 0, y: 0, z: 0}
-  _trajectoryVertDist: 0.25
-  _debugAlwaysDrawTrajectory: 0
 --- !u!120 &8912996695549051266
 LineRenderer:
   m_ObjectHideFlags: 0
