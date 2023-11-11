@@ -14,12 +14,11 @@ public class BlastAspect : MonoBehaviour
     [SerializeField] int _linePoints = 10;
     [SerializeField] float _timeBetweenPoints = .1f;
 
+    AvatarAspect _avatarAspect;
 
     private void Awake()
     {
         SetUpBlastAspect();
-        BlastAimingRing.gameObject.SetActive(false);
-        _lineRenderer.positionCount = 3;
     }
 
     private void OnEnable()
@@ -52,14 +51,17 @@ public class BlastAspect : MonoBehaviour
     public void EndBlast()
     {
         IsBlasting = false;
-        SpawnBlastProjectile();
         _lineRenderer.enabled = false;
-
+        if (!_avatarAspect.IsKnockedDown || !_avatarAspect.IsInHitStun)
+        {
+            //TODO: I think I set up a race condition with this. The states and all the toggles need to be cleaned up and have their responsibilities checked anyways.
+            SpawnBlastProjectile();
+        }
     }
 
     void DrawLine()
     {
-        //This is good enough for now
+        //TODO: This is good enough for now, but this will need to be a parabolic arc at some point.
         Vector3 pointA = transform.position;
         Vector3 pointB = BlastAimingRing.position;
         Vector3 midPoint = (pointA + pointB) / 2;
@@ -93,6 +95,9 @@ public class BlastAspect : MonoBehaviour
 
     void SetUpBlastAspect()
     {
-        BlastAimingRing.parent = GetComponentInParent<PlayerController>().transform;
+        BlastAimingRing.parent = GetComponentInParent<Transform>();        
+        BlastAimingRing.gameObject.SetActive(false);
+        _lineRenderer.positionCount = 3;
+        _avatarAspect = GetComponentInParent<AvatarAspect>();
     }
 }

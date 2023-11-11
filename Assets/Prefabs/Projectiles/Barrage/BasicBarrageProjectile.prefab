@@ -52,8 +52,9 @@ MonoBehaviour:
   Target: {fileID: 0}
   TargetRigidBody: {fileID: 0}
   _damage: 1
-  _projectileSpeed: 20
-  _projectileAgility: 25
+  _stabilityDamage: 10
+  _projectileSpeed: 30
+  _projectileAgility: 45
   _maxDistancePrediction: 100
   _minDistancePrediction: 5
   _maxTimePrediction: 5

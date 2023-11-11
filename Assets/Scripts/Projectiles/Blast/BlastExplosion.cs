@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RotateExplosion : MonoBehaviour
+public class BlastExplosion : MonoBehaviour
 {
     public float ScaleLimit;
     public float ExpansionRate = .1f;
@@ -13,7 +13,7 @@ public class RotateExplosion : MonoBehaviour
 
     private void Awake()
     {
-        _particles = GetComponentInChildren<ParticleSystem>();        
+        _particles = GetComponentInChildren<ParticleSystem>();
     }
 
     private void Start()
@@ -32,9 +32,9 @@ public class RotateExplosion : MonoBehaviour
 
     void ScaleSphere()
     {
-        if(ExplosionSphere.localScale.magnitude < 12)
+        if (ExplosionSphere.localScale.magnitude < 12)
         {
-            ExplosionSphere.localScale = Vector3.Lerp(ExplosionSphere.localScale, ExplosionSphere.localScale * 7, ExpansionRate * Time.deltaTime);            
+            ExplosionSphere.localScale = Vector3.Lerp(ExplosionSphere.localScale, ExplosionSphere.localScale * 7, ExpansionRate * Time.deltaTime);
         }
         else
         {

@@ -9,7 +9,7 @@ public class BarrageAspect : MonoBehaviour
 
     int _counter = 1;
     [SerializeField] int _recoveryTime; //will always be larger than timesToRepeat. 
-    [SerializeField] int _timesToRepeat; //number of times the barrage will fire on a given press.
+    [SerializeField] int _amountOfProjectiles; //number of times the barrage will fire on a given press.
     Transform _currentTarget;
 
     private void Awake()
@@ -33,7 +33,7 @@ public class BarrageAspect : MonoBehaviour
             CancelInvoke();
             return;
         }
-        else if (_counter > _timesToRepeat)
+        else if (_counter > _amountOfProjectiles)
         {
             IsBarraging = false;
             _counter++;
@@ -41,13 +41,13 @@ public class BarrageAspect : MonoBehaviour
         }
         _counter++;
         BarrageProjectile barrageProjectile = Instantiate(Projectile, transform).GetComponent<BarrageProjectile>();
-        barrageProjectile.Target = _currentTarget;
-        barrageProjectile.TargetRigidBody = _currentTarget.GetComponent<Rigidbody>();
+        barrageProjectile.Target = _currentTarget.GetComponentInChildren<Rigidbody>().transform;
+        barrageProjectile.TargetRigidBody = _currentTarget.GetComponentInChildren<Rigidbody>();
         transform.DetachChildren();
     }
 
     void SetUpBarrageAspect()
     {
-        _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget;
+        _currentTarget = GetComponentInParent<IController>().Target;
     }
 }

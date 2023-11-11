@@ -8,6 +8,7 @@ public class AvatarAspect : MonoBehaviour
     public bool IsGameOver = false;
     public bool IsGrounded = true;
     public bool IsKnockedDown = false;
+    public bool IsInHitStun = false;
     public bool IsInvulnerable = false;
     public bool IsSturdy = false;
     public int RemainingAirDashes;
@@ -42,7 +43,7 @@ public class AvatarAspect : MonoBehaviour
     Animator _animator;
     IKControl _ikControl;
     int _currentHealth;
-    int _currentStability;
+    public int _currentStability;
     Rigidbody _playerRigidBody;
     Transform _currentTarget;
     Vector3 _dashStartPosition;
@@ -120,59 +121,56 @@ public class AvatarAspect : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int incomingDamage)
+    public IEnumerator TakeDamage(int incomingDamage)
     {
         if (!IsInvulnerable)
         {
             int damageToTake = incomingDamage - _defense;
-            
-            _currentHealth -= (damageToTake > 1)? damageToTake: 1;
-            if (_currentHealth <= 0)
-            {
-                _currentHealth = 0;
-                IsGameOver = true;
-                print("GAME OVER!!! RESTART!");
-            }
+            IsInHitStun = true;
+            _animator.SetBool("IsInHitStun", true);
+            IsDashing = false;
+            yield return new WaitForSecondsRealtime(.1f);
+            IsInHitStun = false;
+            _animator.SetBool("IsInHitStun", false);
         }
         
     }
-
     public void LoseStability(int stabiltyLoss)
     {
         if (!IsSturdy)
         {
             int stabilityToLose = (stabiltyLoss - _defense / 2);
             _currentStability -= (stabilityToLose > 1) ? stabilityToLose : 1;
-            StartCoroutine(RegainStability());
             if (_currentStability <= 0)
             {
                 _currentStability = 0;
                 IsKnockedDown = true;
+                _animator.SetBool("IsKnockedDown", true);
             }
+            StartCoroutine(RegainStability());
         }
     }
 
     public IEnumerator RegainStability()
     {
+        print("started");
         if (IsKnockedDown)
         {
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSecondsRealtime(3);
             GetUpSequence();            
         }
-
-        while(_currentStability < _maximumStability)
+        yield return new WaitForSecondsRealtime(3);
+        while (_currentStability < _maximumStability && !IsKnockedDown)
         {
             _currentStability += 1;
-            //if (_currentStability == _maximumStability)
-            //{
-            //    yield break;
-            //}
-            yield return new WaitForSeconds(.25f);
+            yield return new WaitForSecondsRealtime(1f);
         }
     }
 
     void GetUpSequence()
     {
+        IsKnockedDown = false;
+        _animator.SetBool("IsKnockedDown", false);
         StartCoroutine(Invulerability());
         _currentStability = _maximumStability;
     }
@@ -181,7 +179,7 @@ public class AvatarAspect : MonoBehaviour
     {
         IsInvulnerable = true;
         IsSturdy = true;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSecondsRealtime(3);
         IsInvulnerable = false;
         IsSturdy = false;
         yield break;
@@ -283,6 +281,6 @@ public class AvatarAspect : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _ikControl = GetComponentInChildren<IKControl>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
-        _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget;
+        _currentTarget = GetComponentInParent<IController>().Target;
     }
 }
