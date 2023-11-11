@@ -9,14 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3145379201103041898}
+  - component: {fileID: 2393018492168810302}
   - component: {fileID: 3789571327221194297}
   - component: {fileID: 6067445834744838014}
   - component: {fileID: 568054242870121217}
   - component: {fileID: 6887810291255289954}
-  - component: {fileID: 2393018492168810302}
   - component: {fileID: 6015284511503206473}
   m_Layer: 0
-  m_Name: BasicProjectile
+  m_Name: BasicBarrageProjectile
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,6 +37,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2393018492168810302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716134632654722132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a09f707d1b794749ab5fde0e1ef28d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  TargetRigidBody: {fileID: 0}
+  _damage: 1
+  _projectileSpeed: 20
+  _projectileAgility: 25
+  _maxDistancePrediction: 100
+  _minDistancePrediction: 5
+  _maxTimePrediction: 5
+  _hitParticles: {fileID: 4122821944592492203, guid: 210e466c6c5211f45a7890f13a3a59f1, type: 3}
 --- !u!33 &3789571327221194297
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -116,27 +137,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2393018492168810302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4716134632654722132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a09f707d1b794749ab5fde0e1ef28d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Target: {fileID: 0}
-  TargetRigidBody: {fileID: 0}
-  _damage: 1
-  _projectileSpeed: 20
-  _projectileAgility: 25
-  _maxDistancePrediction: 100
-  _minDistancePrediction: 5
-  _maxTimePrediction: 5
-  _hitParticles: {fileID: 4122821944592492203, guid: 210e466c6c5211f45a7890f13a3a59f1, type: 3}
 --- !u!82 &6015284511503206473
 AudioSource:
   m_ObjectHideFlags: 0
@@ -149,7 +149,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 78e470ce2c39a93468568c1f0260cbb5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.3
   m_Pitch: 1.25
   Loop: 0
   Mute: 0

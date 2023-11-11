@@ -8,17 +8,25 @@ public class PlayerController : MonoBehaviour
     public string CurrentState;
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
+    public BlastAspect ManifestedBlast;
     public Transform CurrentTarget;
         
     InputAction _jumpAction;
     InputAction _moveAction;
     InputAction _barrageAction;
+    InputAction _blastAction;
+    InputAction _aimXAction;
+    InputAction _aimYAction;
     PlayerInput _playerInput;
+    AimingRing _aimingRing;
 
     IState _currentState;
     ActiveState _activeState;
     BarrageState _barrageState;
+    BlastState _blastState;
     DashState _dashState;
+
+    bool _isAiming = false;
 
     public enum AvatarType
     {
@@ -51,6 +59,10 @@ public class PlayerController : MonoBehaviour
         {
             StateControllerUpdate();
             GetInputsForMovement();
+            if (_isAiming)
+            {
+                GetInputsForAiming();
+            }
         }
     }
 
@@ -85,12 +97,49 @@ public class PlayerController : MonoBehaviour
         _activeState.SetInputs(inputs);
     }
 
+    void GetInputsForAiming()
+    {
+        float aimX = _aimXAction.ReadValue<float>();
+        float aimY = _aimYAction.ReadValue<float>();
+
+        Vector2 aimInputs = new Vector2(aimX, -aimY).normalized;
+        _blastState.SetAimInputs(aimInputs);
+        Vector2 movementInputs = _moveAction.ReadValue<Vector2>();        
+        _blastState.SetMovementInputs(movementInputs);
+    }
+
     void Barrage(InputAction.CallbackContext context)
     {
         if(_currentState == _activeState && !ManifestedBarrage.IsRecovering)
         {
             ChangeState(_barrageState);
             ManifestedAvatar.StopJumpVelocity();
+        }
+    }
+
+    void Blast(InputAction.CallbackContext context)
+    {
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering && !ManifestedBlast.IsProjectileActive)
+        {
+            print("Blast");
+            _isAiming = true;
+            ChangeState(_blastState);
+            ManifestedAvatar.StopJumpVelocity();
+            ManifestedAvatar.SlowMoveVelocity();
+        }
+        else
+        {
+            //play error sound
+        }
+    }
+
+    void Neutral(InputAction.CallbackContext context)
+    {
+        if(_currentState != _activeState)
+        {
+            print("Neutral");
+            _isAiming = false;
+            ChangeState(_activeState);
         }
     }
 
@@ -137,27 +186,38 @@ public class PlayerController : MonoBehaviour
     {
         _barrageAction.started += Barrage;
         _jumpAction.started += JumpOrAirDash;
+        _blastAction.started += Blast;
+        _blastAction.canceled += Neutral;
     }
 
     void UnsubscribeToEvents()
     {
         _barrageAction.started -= Barrage;
         _jumpAction.started -= JumpOrAirDash;
+        _blastAction.started -= Blast;
+        _blastAction.canceled -= Neutral;
     }
 
     void SetupCharacterController()
     {
         ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
         ManifestedBarrage = ManifestedAvatar.GetComponentInChildren<BarrageAspect>();
+        ManifestedBlast = ManifestedAvatar.GetComponentInChildren<BlastAspect>();
+        ManifestedBlast.CurrentTarget = CurrentTarget;
         _playerInput = GetComponent<PlayerInput>();
 
+
+        _aimXAction = _playerInput.actions["AimX"];
+        _aimYAction = _playerInput.actions["AimY"];
         _barrageAction = _playerInput.actions["Barrage"];
-        _moveAction = _playerInput.actions["Move"];
+        _blastAction = _playerInput.actions["Blast"];
         _jumpAction = _playerInput.actions["Jump"];
+        _moveAction = _playerInput.actions["Move"];
 
         _activeState = new ActiveState(ManifestedAvatar);
-        ChangeState(_activeState);               
-        _dashState = new DashState(_activeState, ManifestedAvatar);
+        ChangeState(_activeState);
         _barrageState = new BarrageState(_activeState, ManifestedBarrage);
+        _blastState = new BlastState(_activeState, ManifestedAvatar, ManifestedBlast);
+        _dashState = new DashState(_activeState, ManifestedAvatar);
     }
 }

@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class AvatarAspect : MonoBehaviour
 {
+    public bool IsBlasting = false;
+    public bool IsDashing = false;
     public bool IsGameOver = false;
     public bool IsGrounded = true;
-    public bool IsDashing = false;
     public int RemainingAirDashes;
 
     [SerializeField] int _maximumHealth = 3;
@@ -22,6 +23,7 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] Transform _avatarModelTransform;
     
     Animator _animator;
+    IKControl _ikControl;
     Rigidbody _playerRigidBody;
     Transform _currentTarget;
     Vector3 _dashStartPosition;
@@ -35,13 +37,13 @@ public class AvatarAspect : MonoBehaviour
     private void Update()
     {
         HandleJumpAndFallingAnimations();
-        RotateCharacter();        
-        Debug.DrawLine(_currentTarget.position + Vector3.up, (_currentTarget.forward * 5) + Vector3.up, Color.red, 2f);
+        RotateCharacter();
     }
 
     private void FixedUpdate()
     {        
         CheckIfDashIsDone();
+        PerformHandRaise();
     }
 
     public void PerformMove(Vector2 inputVector)
@@ -62,6 +64,7 @@ public class AvatarAspect : MonoBehaviour
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed * _airWalk;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
+        velocityChange = (IsBlasting) ? velocityChange / 5 : velocityChange;
         velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
@@ -84,6 +87,20 @@ public class AvatarAspect : MonoBehaviour
         _playerRigidBody.AddForce(_dashVector * _dashSpeed, ForceMode.VelocityChange);
     }
 
+    public void PerformHandRaise()
+    {
+        if (IsBlasting)
+        {
+            _ikControl.IsBlasting = true;
+            _ikControl.IsActive = false;
+        }
+        else if (!_ikControl.IsActive && !IsBlasting)
+        {
+            _ikControl.IsActive = true;
+            _ikControl.IsBlasting = false;
+        }
+    }
+
     public void TakeDamage(int incomingDamage)
     {
         _currentHealth -= incomingDamage;
@@ -98,8 +115,16 @@ public class AvatarAspect : MonoBehaviour
     public void StopJumpVelocity()
     {        
         if (!IsGrounded)
+        {            
+            _playerRigidBody.velocity = new Vector3(_playerRigidBody.velocity.x, 0, _playerRigidBody.velocity.z); 
+        }
+    }
+
+    public void SlowMoveVelocity()
+    {
+        if (IsGrounded)
         {
-            _playerRigidBody.velocity = Vector3.down;
+            _playerRigidBody.velocity = _playerRigidBody.velocity / 2;
         }
     }
 
@@ -180,6 +205,7 @@ public class AvatarAspect : MonoBehaviour
         _currentHealth = _maximumHealth;
         ResetAirDashes();
         _animator = GetComponentInChildren<Animator>();
+        _ikControl = GetComponentInChildren<IKControl>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
         _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget;
     }
