@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class AvatarAspect : MonoBehaviour
 {
@@ -6,24 +7,42 @@ public class AvatarAspect : MonoBehaviour
     public bool IsDashing = false;
     public bool IsGameOver = false;
     public bool IsGrounded = true;
+    public bool IsKnockedDown = false;
+    public bool IsInvulnerable = false;
+    public bool IsSturdy = false;
     public int RemainingAirDashes;
 
+    [Header("AVATAR STATS")]
+    [Tooltip("How much damage the avatar can take before game over.")]
     [SerializeField] int _maximumHealth = 3;
-    int _currentHealth;
-
-    [SerializeField] [Range(0, 1)] float _airWalk;
-    [SerializeField] float _accelerationRate;
-    [SerializeField] float _dashDistance;
-    [SerializeField] float _dashSpeed;
-    [SerializeField] float _jumpForce;
+    [Tooltip("Reduced damage taken and stabilty loss from hits. Cannot reduce them to 0")]
+    [SerializeField][Range(0, 20)] int _defense;
+    [Tooltip("If avatar reaches 0 Stabilty, it is knocked down.")]
+    [SerializeField][Range(30, 60)] int _maximumStability;
+    [Tooltip("How fast an avatar can move")]
     [SerializeField] float _movementSpeed;
+    [Tooltip("How fast an avatar can get to top speed.")]
+    [SerializeField] float _accelerationRate;
+    [Tooltip("How much force an avatar recieves when jumping.")]
+    [SerializeField] float _jumpForce;
+    [Tooltip("How well an avatar can move in the air while falling.")]
+    [SerializeField][Range(0, 1)] float _airWalk;
+    [Tooltip("How fast an avatar will fall, will affect jump height.")]
     [SerializeField] float _fallRate;
-    [SerializeField] int _maxiumAirDashes;   
+    [Tooltip("Number of times an avatar can air dash before touching the ground.")]
+    [SerializeField] int _maxiumAirDashes;
+    [Tooltip("Distance of an air dash.")]
+    [SerializeField] float _dashDistance;
+    [Tooltip("Speed of an air dash.")]
+    [SerializeField] float _dashSpeed;
+
     [SerializeField] Transform _barrageEmitter;
     [SerializeField] Transform _avatarModelTransform;
     
     Animator _animator;
     IKControl _ikControl;
+    int _currentHealth;
+    int _currentStability;
     Rigidbody _playerRigidBody;
     Transform _currentTarget;
     Vector3 _dashStartPosition;
@@ -103,13 +122,69 @@ public class AvatarAspect : MonoBehaviour
 
     public void TakeDamage(int incomingDamage)
     {
-        _currentHealth -= incomingDamage;
-        if(_currentHealth >= 0)
+        if (!IsInvulnerable)
         {
-            _currentHealth = 0;
-            IsGameOver = true;
-            print("GAME OVER!!! RESTART!");
+            int damageToTake = incomingDamage - _defense;
+            
+            _currentHealth -= (damageToTake > 1)? damageToTake: 1;
+            if (_currentHealth <= 0)
+            {
+                _currentHealth = 0;
+                IsGameOver = true;
+                print("GAME OVER!!! RESTART!");
+            }
         }
+        
+    }
+
+    public void LoseStability(int stabiltyLoss)
+    {
+        if (!IsSturdy)
+        {
+            int stabilityToLose = (stabiltyLoss - _defense / 2);
+            _currentStability -= (stabilityToLose > 1) ? stabilityToLose : 1;
+            StartCoroutine(RegainStability());
+            if (_currentStability <= 0)
+            {
+                _currentStability = 0;
+                IsKnockedDown = true;
+            }
+        }
+    }
+
+    public IEnumerator RegainStability()
+    {
+        if (IsKnockedDown)
+        {
+            yield return new WaitForSeconds(3);
+            GetUpSequence();            
+        }
+
+        while(_currentStability < _maximumStability)
+        {
+            _currentStability += 1;
+            //if (_currentStability == _maximumStability)
+            //{
+            //    yield break;
+            //}
+            yield return new WaitForSeconds(.25f);
+        }
+    }
+
+    void GetUpSequence()
+    {
+        StartCoroutine(Invulerability());
+        _currentStability = _maximumStability;
+    }
+
+    IEnumerator Invulerability()
+    {
+        IsInvulnerable = true;
+        IsSturdy = true;
+        yield return new WaitForSeconds(3);
+        IsInvulnerable = false;
+        IsSturdy = false;
+        yield break;
     }
 
     public void StopJumpVelocity()
@@ -203,6 +278,7 @@ public class AvatarAspect : MonoBehaviour
     void SetupAvatarAspect()
     {
         _currentHealth = _maximumHealth;
+        _currentStability = _maximumStability;
         ResetAirDashes();
         _animator = GetComponentInChildren<Animator>();
         _ikControl = GetComponentInChildren<IKControl>();

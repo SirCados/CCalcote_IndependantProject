@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!ManifestedAvatar.IsGameOver)
+        if (!ManifestedAvatar.IsGameOver || !ManifestedAvatar.IsKnockedDown)
         {
             StateControllerUpdate();
             GetInputsForMovement();
