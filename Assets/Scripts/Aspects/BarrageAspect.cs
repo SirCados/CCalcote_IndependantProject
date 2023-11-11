@@ -3,7 +3,7 @@ using UnityEngine;
 public class BarrageAspect : MonoBehaviour
 {
     public float RepeatTime = 0.1f;
-    public GameObject BarrageProjectile;    
+    public GameObject Projectile;    
     public bool IsBarraging = false;
     public bool IsRecovering = false;
 
@@ -40,9 +40,9 @@ public class BarrageAspect : MonoBehaviour
             return;
         }
         _counter++;
-        BarrageProjectile projectile = Instantiate(BarrageProjectile, transform).GetComponent<BarrageProjectile>();
-        projectile.Target = _currentTarget;
-        projectile.TargetRigidBody = _currentTarget.GetComponent<Rigidbody>();
+        BarrageProjectile barrageProjectile = Instantiate(Projectile, transform).GetComponent<BarrageProjectile>();
+        barrageProjectile.Target = _currentTarget;
+        barrageProjectile.TargetRigidBody = _currentTarget.GetComponent<Rigidbody>();
         transform.DetachChildren();
     }
 

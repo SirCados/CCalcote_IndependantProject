@@ -1,0 +1,57 @@
+using UnityEngine;
+using System.Collections;
+
+public class BlastProjectile : MonoBehaviour
+{
+    Rigidbody _projectileRigidBody;
+    public RotateExplosion Explosion;
+    ParticleSystem _particles;
+    public Transform Target;
+    [SerializeField] float _projectileSpeed = 20;
+
+    public delegate void ExplosionEvent();
+    public static event ExplosionEvent OnExplosion;
+
+
+    private void Awake()
+    {
+        _projectileRigidBody = GetComponent<Rigidbody>();
+        _particles = GetComponentInChildren<ParticleSystem>();
+        
+    }
+
+    private void Start()
+    {
+        RotateProjectile();
+    }
+
+    private void FixedUpdate()
+    {
+        MoveProjectile();
+    }
+
+    void MoveProjectile()
+    {
+        _projectileRigidBody.velocity = transform.forward * _projectileSpeed;
+    }
+
+    private void RotateProjectile()
+    {
+        Vector3 heading = Target.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(heading);
+        transform.rotation = rotation;
+    }
+
+    void DoExplosion()
+    {
+        if(OnExplosion != null)
+            OnExplosion();
+        Instantiate(Explosion, transform.position, new Quaternion());        
+        Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        DoExplosion();
+    }
+}

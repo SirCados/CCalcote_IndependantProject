@@ -119,13 +119,17 @@ public class PlayerController : MonoBehaviour
 
     void Blast(InputAction.CallbackContext context)
     {
-        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering && !ManifestedBlast.IsProjectileActive)
         {
             print("Blast");
             _isAiming = true;
             ChangeState(_blastState);
             ManifestedAvatar.StopJumpVelocity();
             ManifestedAvatar.SlowMoveVelocity();
+        }
+        else
+        {
+            //play error sound
         }
     }
 

@@ -476,6 +476,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 321240932486831038}
     - target: {fileID: 6437646231957399613, guid: ee302821d73040a4ea11949bab09ea4b, type: 3}
+      propertyPath: Projectile
+      value: 
+      objectReference: {fileID: 6288169372248113522, guid: e36d0b1176848b7468ec7acd9eb5e478, type: 3}
+    - target: {fileID: 6437646231957399613, guid: ee302821d73040a4ea11949bab09ea4b, type: 3}
       propertyPath: _lineRenderer
       value: 
       objectReference: {fileID: 594374147452048422}

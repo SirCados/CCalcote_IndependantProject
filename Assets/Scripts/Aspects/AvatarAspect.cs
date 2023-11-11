@@ -114,8 +114,7 @@ public class AvatarAspect : MonoBehaviour
     public void StopJumpVelocity()
     {        
         if (!IsGrounded)
-        {
-            //_playerRigidBody.velocity = Vector3.down;
+        {            
             _playerRigidBody.velocity = new Vector3(_playerRigidBody.velocity.x, 0, _playerRigidBody.velocity.z); 
         }
     }

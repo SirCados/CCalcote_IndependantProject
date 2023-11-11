@@ -4,7 +4,8 @@ public class BlastAspect : MonoBehaviour
 {
     public bool IsBlasting = false;
     public bool IsGrounded = false;
-    public GameObject BlastProjectile;
+    public bool IsProjectileActive = false;
+    public GameObject Projectile;
     public Transform CurrentTarget;
     public Transform BlastAimingRing;
 
@@ -21,12 +22,24 @@ public class BlastAspect : MonoBehaviour
         _lineRenderer.positionCount = 3;
     }
 
+    private void OnEnable()
+    {
+        BlastProjectile.OnExplosion += HandleExplosion;
+    }
+
+    private void OnDisable()
+    {
+        BlastProjectile.OnExplosion -= HandleExplosion;
+    }
+
     private void Update()
     {
         if (IsBlasting)
         {
             DrawLine();
         }
+
+        BlastAimingRing.gameObject.SetActive(IsProjectileActive);
     }
 
     public void BeginBlast()
@@ -42,8 +55,9 @@ public class BlastAspect : MonoBehaviour
     public void EndBlast()
     {
         IsBlasting = false;
-        BlastAimingRing.gameObject.SetActive(IsBlasting);
+        SpawnBlastProjectile();
         _lineRenderer.enabled = false;
+
     }
 
     void DrawLine()
@@ -57,7 +71,6 @@ public class BlastAspect : MonoBehaviour
         _lineRenderer.SetPosition(0, pointA);
         _lineRenderer.SetPosition(1, midPoint);
         _lineRenderer.SetPosition(2, pointB);
-
     }
 
     public void PerformRingMove(Vector2 inputVector)
@@ -65,6 +78,19 @@ public class BlastAspect : MonoBehaviour
         float speed = .5f;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);
         BlastAimingRing.Translate(targetVelocity);
+    }
+
+    void SpawnBlastProjectile()
+    {
+        IsProjectileActive = true;
+        BlastProjectile blastProjectile = Instantiate(Projectile, transform).GetComponent<BlastProjectile>();
+        blastProjectile.Target = BlastAimingRing;
+        transform.DetachChildren();
+    }
+
+    void HandleExplosion()
+    {
+        IsProjectileActive = false;
     }
 
     void SetUpBlastAspect()

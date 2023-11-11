@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8044670368305651016}
   - component: {fileID: 8912996695549051266}
   m_Layer: 0
-  m_Name: BasicBlastAspect
+  m_Name: BasicBlast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,9 +47,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsBlasting: 0
-  BlastProjectile: {fileID: 0}
+  IsGrounded: 0
+  Projectile: {fileID: 6288169372248113522, guid: e36d0b1176848b7468ec7acd9eb5e478, type: 3}
   CurrentTarget: {fileID: 0}
-  AimingRing: {fileID: 0}
+  BlastAimingRing: {fileID: 0}
   _lineRenderer: {fileID: 0}
   _releasePosition: {fileID: 0}
   _linePoints: 25
