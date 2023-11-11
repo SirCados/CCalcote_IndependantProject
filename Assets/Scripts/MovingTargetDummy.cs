@@ -10,9 +10,11 @@ public class MovingTargetDummy : MonoBehaviour
     public float StartFiring = 2f;
     public float RepeatFire = 5f;
 
-    public BarrageAspect ManifestedBarrage;
-    public AvatarAspect Target;
+    public BarrageAspect ManifestedBarrage;    
+    public PlayerController PlayerController;
     public Transform FacingIndicator;
+
+    AvatarAspect _target;
 
     // Use this for initialization
     void Start()
@@ -20,18 +22,19 @@ public class MovingTargetDummy : MonoBehaviour
         Minumum = transform.position.x;
         Maximum = transform.position.x + 10;
         FireAtInterval();
+        _target = PlayerController.GetComponentInChildren<AvatarAspect>();
     }
 
     // Update is called once per frame
     void Update()
     {       
-        if (Target.IsGameOver)
+        if (_target.IsGameOver)
         {
             CancelInvoke();
         }
         else
         {
-            FacingIndicator.LookAt(Target.transform);
+            FacingIndicator.LookAt(_target.transform);
             transform.position = new Vector3(Mathf.PingPong(Time.time * Speed, Maximum - Minumum) - Minumum, transform.position.y, transform.position.z);
         }
     }

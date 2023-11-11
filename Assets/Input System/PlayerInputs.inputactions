@@ -31,6 +31,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Blast",
+                    "type": "Button",
+                    "id": "c5e9a29d-883e-4085-9065-c094a5162416",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AimX",
+                    "type": "Value",
+                    "id": "85232e9f-210f-4970-b3ca-31c825c45292",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "AimY",
+                    "type": "Value",
+                    "id": "cd4d8f53-4ec7-45ac-b01d-1e1d9641e229",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -152,6 +179,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Barrage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bffa710d-a3a4-4a42-8e10-385dc0c2f41e",
+                    "path": "<HID::Core (Plus) Wired Controller>/button8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Blast",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "97337657-e2fe-49cd-a162-8f71e17315c3",
+                    "path": "<HID::Core (Plus) Wired Controller>/rz",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AimY",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3c745bcb-ba0a-4ae5-a0e1-8a1ff8151318",
+                    "path": "<HID::Core (Plus) Wired Controller>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AimX",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

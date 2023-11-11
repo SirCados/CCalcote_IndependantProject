@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2515790291869129234}
   - component: {fileID: -378583704268251526}
   m_Layer: 0
-  m_Name: BasicBarrageAspect
+  m_Name: BasicBarrage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RepeatTime: 0.1
-  BarrageProjectile: {fileID: 4716134632654722132, guid: 7bbf619b4e305d14384de15046aae336, type: 3}
-  CurrentTarget: {fileID: 0}
+  Projectile: {fileID: 4716134632654722132, guid: 7bbf619b4e305d14384de15046aae336, type: 3}
   IsBarraging: 0
-  _recovery: 8
+  IsRecovering: 0
+  _recoveryTime: 0
   _timesToRepeat: 3
