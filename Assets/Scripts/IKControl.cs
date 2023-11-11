@@ -62,8 +62,8 @@ public class IKControl : MonoBehaviour
     void SetUpIKControl()
     {
         _animator = GetComponent<Animator>();
-        _leftHandTarget = GetComponentInParent<PlayerController>().CurrentTarget;
+        _leftHandTarget = GetComponentInParent<IController>().Target;
         _rightHandTarget = _leftHandTarget;
-        _objectToLookAt = GetComponentInParent<PlayerController>().CurrentTarget;
+        _objectToLookAt = GetComponentInParent<IController>().Target;
     }
 }

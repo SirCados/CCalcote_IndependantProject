@@ -4831,7 +4831,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4706228109193832757}
-  - component: {fileID: 1141985246}
+  - component: {fileID: -2770519468673036436}
   - component: {fileID: 7303028776892921842}
   m_Layer: 0
   m_Name: BasicBlastExplosion
@@ -4857,7 +4857,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1141985246
+--- !u!114 &-2770519468673036436
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4866,12 +4866,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4706228109193832756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ee69178d5dc5cc4ea55ab22f3546652, type: 3}
+  m_Script: {fileID: 11500000, guid: d867b41bf32bbe746a554d1f9f1a86e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ScaleLimit: 0
   ExpansionRate: 0.9
   ExplosionSphere: {fileID: 1929745374502945046}
+  _damage: 1
+  _stabilityDamage: 10
 --- !u!82 &7303028776892921842
 AudioSource:
   m_ObjectHideFlags: 0

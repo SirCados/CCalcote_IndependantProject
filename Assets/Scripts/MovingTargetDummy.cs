@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingTargetDummy : MonoBehaviour
+public class MovingTargetDummy : MonoBehaviour, IController
 {
     public float Minumum = 2f;
     public float Maximum = 3f;
@@ -13,6 +11,8 @@ public class MovingTargetDummy : MonoBehaviour
     public BarrageAspect ManifestedBarrage;    
     public PlayerController PlayerController;
     public Transform FacingIndicator;
+
+    public Transform CurrentTarget;
 
     AvatarAspect _target;
 
@@ -47,6 +47,12 @@ public class MovingTargetDummy : MonoBehaviour
     void BarrageAttack()
     {
         ManifestedBarrage.PerformBarrage();
+    }
+
+    public Transform Target
+    {
+        get => CurrentTarget;
+        set => CurrentTarget = value;
     }
 
 }

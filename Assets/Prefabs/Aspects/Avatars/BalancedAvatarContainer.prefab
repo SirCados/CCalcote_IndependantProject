@@ -177,15 +177,22 @@ MonoBehaviour:
   IsDashing: 0
   IsGameOver: 0
   IsGrounded: 1
+  IsKnockedDown: 0
+  IsInHitStun: 0
+  IsInvulnerable: 0
+  IsSturdy: 0
   RemainingAirDashes: 0
   _maximumHealth: 3
-  _accelerationRate: 1
-  _dashDistance: 10
-  _dashSpeed: 10
-  _jumpForce: 18
+  _defense: 0
+  _maximumStability: 30
   _movementSpeed: 30
+  _accelerationRate: 1
+  _jumpForce: 18
+  _airWalk: 0
   _fallRate: 45
   _maxiumAirDashes: 2
+  _dashDistance: 10
+  _dashSpeed: 10
   _barrageEmitter: {fileID: 931816217033728341}
   _avatarModelTransform: {fileID: 8157129935636422224}
 --- !u!54 &948529447300712410

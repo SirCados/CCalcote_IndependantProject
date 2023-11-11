@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IController
 {
     public GameObject[] Avatars;
 
@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     BarrageState _barrageState;
     BlastState _blastState;
     DashState _dashState;
+    DownState _downState;
 
     bool _isAiming = false;
 
@@ -55,13 +56,20 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!ManifestedAvatar.IsGameOver || !ManifestedAvatar.IsKnockedDown)
+        if (!ManifestedAvatar.IsGameOver)
         {
-            StateControllerUpdate();
-            GetInputsForMovement();
-            if (_isAiming)
+            if (ManifestedAvatar.IsKnockedDown)
             {
-                GetInputsForAiming();
+                ChangeState(_downState);
+            }
+            else if (!ManifestedAvatar.IsInHitStun)
+            {
+                StateControllerUpdate();
+                GetInputsForMovement();
+                if (_isAiming)
+                {
+                    GetInputsForAiming();
+                }
             }
         }
     }
@@ -115,13 +123,16 @@ public class PlayerController : MonoBehaviour
             ChangeState(_barrageState);
             ManifestedAvatar.StopJumpVelocity();
         }
+        else
+        {
+            PlayErrorSound();
+        }
     }
 
     void Blast(InputAction.CallbackContext context)
     {
         if (_currentState == _activeState && !ManifestedBarrage.IsRecovering && !ManifestedBlast.IsProjectileActive)
         {
-            print("Blast");
             _isAiming = true;
             ChangeState(_blastState);
             ManifestedAvatar.StopJumpVelocity();
@@ -129,7 +140,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //play error sound
+            PlayErrorSound();
         }
     }
 
@@ -137,7 +148,6 @@ public class PlayerController : MonoBehaviour
     {
         if(_currentState != _activeState)
         {
-            print("Neutral");
             _isAiming = false;
             ChangeState(_activeState);
         }
@@ -156,7 +166,15 @@ public class PlayerController : MonoBehaviour
             else if(ManifestedAvatar.IsGrounded)
             {
                 _activeState.IsJumping = true;
-            }            
+            }
+            else
+            {
+                PlayErrorSound();
+            }
+        }
+        else
+        {
+            PlayErrorSound();
         }
     }
 
@@ -180,6 +198,17 @@ public class PlayerController : MonoBehaviour
                 return manifestedAvatar;
         }
         return null;
+    }
+
+    void PlayErrorSound()
+    {
+
+    }
+
+    public Transform Target
+    {
+        get => CurrentTarget;
+        set => CurrentTarget = value;
     }
 
     void SubscribeToEvents()
@@ -219,5 +248,6 @@ public class PlayerController : MonoBehaviour
         _barrageState = new BarrageState(_activeState, ManifestedBarrage);
         _blastState = new BlastState(_activeState, ManifestedAvatar, ManifestedBlast);
         _dashState = new DashState(_activeState, ManifestedAvatar);
+        _downState = new DownState(_activeState, ManifestedAvatar);
     }
 }
