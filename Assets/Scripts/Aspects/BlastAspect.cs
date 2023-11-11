@@ -37,9 +37,7 @@ public class BlastAspect : MonoBehaviour
         if (IsBlasting)
         {
             DrawLine();
-        }
-
-        BlastAimingRing.gameObject.SetActive(IsProjectileActive);
+        }        
     }
 
     public void BeginBlast()
@@ -47,9 +45,8 @@ public class BlastAspect : MonoBehaviour
         IsBlasting = true;
         Vector3 initialPosition = new Vector3(CurrentTarget.position.x, 0, CurrentTarget.position.z);
         BlastAimingRing.position = initialPosition;
-        BlastAimingRing.gameObject.SetActive(IsBlasting);
+        BlastAimingRing.gameObject.SetActive(true);
         _lineRenderer.enabled = true;
-
     }
 
     public void EndBlast()
@@ -91,6 +88,7 @@ public class BlastAspect : MonoBehaviour
     void HandleExplosion()
     {
         IsProjectileActive = false;
+        BlastAimingRing.gameObject.SetActive(false);
     }
 
     void SetUpBlastAspect()
