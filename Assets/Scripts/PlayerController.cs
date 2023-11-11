@@ -100,9 +100,9 @@ public class PlayerController : MonoBehaviour
     void GetInputsForAiming()
     {
         float aimX = _aimXAction.ReadValue<float>();
-        float aimY = -_aimYAction.ReadValue<float>();
+        float aimY = _aimYAction.ReadValue<float>();
 
-        Vector2 aimInputs = new Vector2(aimX, aimY).normalized;
+        Vector2 aimInputs = new Vector2(aimX, -aimY).normalized;
         _blastState.SetAimInputs(aimInputs);
         Vector2 movementInputs = _moveAction.ReadValue<Vector2>();        
         _blastState.SetMovementInputs(movementInputs);
