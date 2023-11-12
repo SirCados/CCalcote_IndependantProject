@@ -131,11 +131,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7654463459936398513}
-  - component: {fileID: 7589568410177633077}
+  - component: {fileID: 937742778947110400}
   - component: {fileID: 948529447300712410}
   - component: {fileID: 6025632080852627845}
   m_Layer: 0
-  m_Name: HeavyAvatarContainer
+  m_Name: EnduringAvatarContainer
   m_TagString: Avatar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -161,7 +161,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7589568410177633077
+--- !u!114 &937742778947110400
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,22 +170,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 8533300339795707824}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e17d7454c5708484a8ba427d8febcdd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 4fffc6a49ade8d744bd3408fb307bbf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   IsBlasting: 0
   IsDashing: 0
   IsGameOver: 0
   IsGrounded: 1
+  IsKnockedDown: 0
+  IsInHitStun: 0
+  IsInvulnerable: 0
+  IsSturdy: 0
+  CurrentHealth: 0
+  CurrentStability: 0
   RemainingAirDashes: 0
-  _maximumHealth: 3
+  _maximumHealth: 500
+  _defense: 20
+  _maximumStability: 60
+  _movementSpeed: 25
   _accelerationRate: 3
-  _dashDistance: 15
-  _dashSpeed: 10
-  _jumpForce: 18
-  _movementSpeed: 20
+  _jumpForce: 20
+  _airWalk: 0.3
   _fallRate: 45
   _maxiumAirDashes: 1
+  _dashDistance: 15
+  _dashSpeed: 5
   _barrageEmitter: {fileID: 931816217033728341}
   _avatarModelTransform: {fileID: 161339222738124840}
 --- !u!54 &948529447300712410
@@ -227,7 +236,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: eb1df5d927440cd43ba20570a201448f, type: 3}
       propertyPath: m_Name
-      value: Heavy
+      value: Enduring
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: eb1df5d927440cd43ba20570a201448f, type: 3}
       propertyPath: m_RootOrder

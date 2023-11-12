@@ -9,6 +9,7 @@ public class BarrageProjectile: MonoBehaviour
     public Rigidbody TargetRigidBody;
 
     [SerializeField] int _damage;
+    [SerializeField] int _stabilityDamage;
 
     [Header("MOVEMENT")]
     [SerializeField] float _projectileSpeed = 20;
@@ -71,6 +72,7 @@ public class BarrageProjectile: MonoBehaviour
 
     void GiveDamage(AvatarAspect avatar)
     {
-        //avatar.TakeDamage(_damage);
+        print("take this!");
+        avatar.TakeHit(_damage, _stabilityDamage);
     }
 }

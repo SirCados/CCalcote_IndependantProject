@@ -31,6 +31,7 @@ public class DashState : IState
     public void OnExitState()
     {
         _isStateDone = false;
+        _avatarAspect.IsDashing = false;
     }
 
     void HandleAirDash()

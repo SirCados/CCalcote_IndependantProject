@@ -1,10 +1,9 @@
 using UnityEngine;
-using System.Collections;
 
 public class BlastProjectile : MonoBehaviour
 {
     Rigidbody _projectileRigidBody;
-    public RotateExplosion Explosion;
+    public BlastExplosion Explosion;
     ParticleSystem _particles;
     public Transform Target;
     [SerializeField] float _projectileSpeed = 20;

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 12097220158375969}
   - component: {fileID: 1569683535926523999}
   m_Layer: 0
-  m_Name: Floaty
+  m_Name: Graceful
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,6 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsIKActive: 1
+  IsActive: 1
+  IsBlasting: 0
 --- !u!95 &1569683535926523999
 Animator:
   serializedVersion: 5

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class AvatarAspect : MonoBehaviour
 {
@@ -6,42 +7,61 @@ public class AvatarAspect : MonoBehaviour
     public bool IsDashing = false;
     public bool IsGameOver = false;
     public bool IsGrounded = true;
+    public bool IsKnockedDown = false;
+    public bool IsInHitStun = false;
+    public bool IsInvulnerable = false;
+    public bool IsSturdy = false;
+
+    [Header("PUBLIC AVATAR STATS")]
+    public int CurrentHealth;
+    public int CurrentStability;
     public int RemainingAirDashes;
 
-    [SerializeField] int _maximumHealth = 3;
-    int _currentHealth;
+    [Header("AVATAR STATS")]
+    [Tooltip("How much damage the avatar can take before game over.")]
+    [SerializeField]protected int _maximumHealth = 3;
+    [Tooltip("Reduced damage taken and stabilty loss from hits. Cannot reduce them to 0")]
+    [SerializeField][Range(0, 20)] protected int _defense;
+    [Tooltip("If avatar reaches 0 Stabilty, it is knocked down.")]
+    [SerializeField][Range(30, 60)] protected int _maximumStability;
+    [Tooltip("How fast an avatar can move")]
+    [SerializeField] protected float _movementSpeed;
+    [Tooltip("How fast an avatar can get to top speed.")]
+    [SerializeField] protected float _accelerationRate;
+    [Tooltip("How much force an avatar recieves when jumping.")]
+    [SerializeField]protected float _jumpForce;
+    [Tooltip("How well an avatar can move in the air while falling.")]
+    [SerializeField][Range(0, 1)] protected float _airWalk;
+    [Tooltip("How fast an avatar will fall, will affect jump height.")]
+    [SerializeField] protected float _fallRate;
+    [Tooltip("Number of times an avatar can air dash before touching the ground.")]
+    [SerializeField] protected int _maxiumAirDashes;
+    [Tooltip("Distance of an air dash.")]
+    [SerializeField] protected float _dashDistance;
+    [Tooltip("Speed of an air dash.")]
+    [SerializeField] protected float _dashSpeed;
 
-    [SerializeField] [Range(0, 1)] float _airWalk;
-    [SerializeField] float _accelerationRate;
-    [SerializeField] float _dashDistance;
-    [SerializeField] float _dashSpeed;
-    [SerializeField] float _jumpForce;
-    [SerializeField] float _movementSpeed;
-    [SerializeField] float _fallRate;
-    [SerializeField] int _maxiumAirDashes;   
-    [SerializeField] Transform _barrageEmitter;
-    [SerializeField] Transform _avatarModelTransform;
-    
-    Animator _animator;
-    IKControl _ikControl;
-    Rigidbody _playerRigidBody;
-    Transform _currentTarget;
-    Vector3 _dashStartPosition;
-    Vector3 _dashVector;
+    [SerializeField] protected Transform _barrageEmitter;
+    [SerializeField] protected Transform _avatarModelTransform;
+
+    protected int _aimWalk = 5;
+
+    protected Animator _animator;
+    protected IKControl _ikControl;
+    protected Rigidbody _playerRigidBody;
+    protected Transform _currentTarget;
+    protected Vector3 _dashStartPosition;
+    protected Vector3 _dashVector;
 
     private void Awake()
     {
         SetupAvatarAspect();        
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         HandleJumpAndFallingAnimations();
         RotateCharacter();
-    }
-
-    private void FixedUpdate()
-    {        
         CheckIfDashIsDone();
         PerformHandRaise();
     }
@@ -64,7 +84,7 @@ public class AvatarAspect : MonoBehaviour
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed * _airWalk;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
-        velocityChange = (IsBlasting) ? velocityChange / 5 : velocityChange;
+        velocityChange = (IsBlasting) ? velocityChange / _aimWalk : velocityChange;
         velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
@@ -76,13 +96,14 @@ public class AvatarAspect : MonoBehaviour
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);        
     }
 
-    public void PerformAirDash(Vector2 inputVector) 
+    public virtual void PerformAirDash(Vector2 inputVector) 
     {
         IsDashing = true;
+        RemainingAirDashes--;
         _playerRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
         _playerRigidBody.useGravity = false;
         _dashVector = ((inputVector != Vector2.zero) ? new Vector3(inputVector.x, 0, inputVector.y) : _avatarModelTransform.forward) * _dashDistance;                       
-        RemainingAirDashes -= 1;
+        
         _dashStartPosition = _playerRigidBody.position;
         _playerRigidBody.AddForce(_dashVector * _dashSpeed, ForceMode.VelocityChange);
     }
@@ -101,15 +122,72 @@ public class AvatarAspect : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int incomingDamage)
+    public void TakeHit(int incomingDamage, int incomingStabilityLoss)
     {
-        _currentHealth -= incomingDamage;
-        if(_currentHealth >= 0)
+        StopCoroutine(HandleHit(incomingDamage, incomingStabilityLoss));
+        StartCoroutine(HandleHit(incomingDamage, incomingStabilityLoss));
+    }
+
+    IEnumerator HandleHit(int incomingDamage, int incomingStabilityLoss)
+    {
+        if (!IsInvulnerable)
         {
-            _currentHealth = 0;
-            IsGameOver = true;
-            print("GAME OVER!!! RESTART!");
+            StopCoroutine(RegainStability());
+            int damageToTake = incomingDamage - _defense;
+            CurrentHealth -= (damageToTake > 1) ? damageToTake : 1;
+            IsInHitStun = true;
+            _animator.SetBool("IsInHitStun", true);
+            if (!IsSturdy)
+            {
+                int stabilityToLose = (incomingStabilityLoss - Mathf.CeilToInt(_defense / 2));
+                CurrentStability -= (stabilityToLose > 1) ? stabilityToLose : 1;
+                if (CurrentStability <= 0)
+                {
+                    CurrentStability = 0;
+                    IsKnockedDown = true;
+                    _animator.SetBool("IsKnockedDown", true);
+                }
+            }
+            IsDashing = false;
+            yield return new WaitForSecondsRealtime(.1f);
+            IsInHitStun = false;
+            _animator.SetBool("IsInHitStun", false);
+            StartCoroutine(RegainStability());
+        }        
+    }
+
+    public virtual IEnumerator RegainStability()
+    {
+        print("started");
+        if (IsKnockedDown)
+        {
+            yield return new WaitForSecondsRealtime(3);
+            GetUpSequence();            
         }
+        yield return new WaitForSecondsRealtime(3);
+        while (CurrentStability < _maximumStability && !IsKnockedDown)
+        {
+            CurrentStability += 1;
+            yield return new WaitForSecondsRealtime(1f);
+        }
+    }
+
+    protected void GetUpSequence()
+    {
+        IsKnockedDown = false;
+        _animator.SetBool("IsKnockedDown", false);
+        StartCoroutine(Invulerability());
+        CurrentStability = _maximumStability;
+    }
+
+    IEnumerator Invulerability()
+    {
+        IsInvulnerable = true;
+        IsSturdy = true;
+        yield return new WaitForSecondsRealtime(3);
+        IsInvulnerable = false;
+        IsSturdy = false;
+        yield break;
     }
 
     public void StopJumpVelocity()
@@ -200,13 +278,14 @@ public class AvatarAspect : MonoBehaviour
         }
     }
 
-    void SetupAvatarAspect()
+    public virtual void SetupAvatarAspect()
     {
-        _currentHealth = _maximumHealth;
+        CurrentHealth = _maximumHealth;
+        CurrentStability = _maximumStability;
         ResetAirDashes();
         _animator = GetComponentInChildren<Animator>();
         _ikControl = GetComponentInChildren<IKControl>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
-        _currentTarget = GetComponentInParent<PlayerController>().CurrentTarget;
+        _currentTarget = GetComponentInParent<IController>().Target;
     }
 }

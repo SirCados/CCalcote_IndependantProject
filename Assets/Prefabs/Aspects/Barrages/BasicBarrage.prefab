@@ -48,5 +48,5 @@ MonoBehaviour:
   Projectile: {fileID: 4716134632654722132, guid: 7bbf619b4e305d14384de15046aae336, type: 3}
   IsBarraging: 0
   IsRecovering: 0
-  _recoveryTime: 0
-  _timesToRepeat: 3
+  _recoveryTime: 8
+  _amountOfProjectiles: 3
