@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BezierCurve : MonoBehaviour
+public class SwiftAvatar : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
