@@ -1,18 +1,29 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GracefulAvatar : MonoBehaviour
+public class GracefulAvatar : AvatarAspect
 {
-    // Start is called before the first frame update
-    void Start()
+    bool _isInputBlocked = false;
+    public override void PerformAirDash(Vector2 inputVector)
     {
-        
+        if (!_isInputBlocked && RemainingAirDashes !=0)
+        {
+            _isInputBlocked = true;
+            RemainingAirDashes--;
+            _animator.SetBool("IsJumping", true);
+            Vector3 airVelocity = new Vector3(inputVector.x, _jumpForce, inputVector.y);
+            _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);
+            StartCoroutine(AirJumpPause());
+        }
+        else
+        {
+            //play error sound
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator AirJumpPause()
     {
-        
+        yield return new WaitForSecondsRealtime(.5f);
+        _isInputBlocked = false;
     }
 }

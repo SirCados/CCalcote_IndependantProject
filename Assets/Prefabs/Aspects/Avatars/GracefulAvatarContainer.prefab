@@ -131,11 +131,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7654463459936398513}
-  - component: {fileID: 7589568410177633077}
   - component: {fileID: 948529447300712410}
   - component: {fileID: 6025632080852627845}
+  - component: {fileID: -5641153189811847158}
   m_Layer: 0
-  m_Name: FloatyAvatarContainer
+  m_Name: GracefulAvatarContainer
   m_TagString: Avatar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -161,34 +161,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7589568410177633077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8533300339795707824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e17d7454c5708484a8ba427d8febcdd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsBlasting: 0
-  IsDashing: 0
-  IsGameOver: 0
-  IsGrounded: 1
-  RemainingAirDashes: 0
-  _maximumHealth: 3
-  _airWalk: 0.7
-  _accelerationRate: 1.5
-  _dashDistance: 10
-  _dashSpeed: 10
-  _jumpForce: 20
-  _movementSpeed: 30
-  _fallRate: 25
-  _maxiumAirDashes: 3
-  _barrageEmitter: {fileID: 931816217033728341}
-  _avatarModelTransform: {fileID: 671796269553424711}
 --- !u!54 &948529447300712410
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -219,6 +191,42 @@ CapsuleCollider:
   m_Height: 2.1
   m_Direction: 1
   m_Center: {x: 0, y: -0.5, z: 0}
+--- !u!114 &-5641153189811847158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8533300339795707824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0cf248c032e0ab45a96e7a17139d530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsBlasting: 0
+  IsDashing: 0
+  IsGameOver: 0
+  IsGrounded: 1
+  IsKnockedDown: 0
+  IsInHitStun: 0
+  IsInvulnerable: 0
+  IsSturdy: 0
+  CurrentHealth: 0
+  CurrentStability: 0
+  RemainingAirDashes: 0
+  _maximumHealth: 500
+  _defense: 10
+  _maximumStability: 40
+  _movementSpeed: 25
+  _accelerationRate: 1.5
+  _jumpForce: 18
+  _airWalk: 0.8
+  _fallRate: 25
+  _maxiumAirDashes: 3
+  _dashDistance: 0
+  _dashSpeed: 0
+  _barrageEmitter: {fileID: 931816217033728341}
+  _avatarModelTransform: {fileID: 671796269553424711}
 --- !u!1001 &671796269553550279
 PrefabInstance:
   m_ObjectHideFlags: 0

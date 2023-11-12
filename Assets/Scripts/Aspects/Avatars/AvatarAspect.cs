@@ -21,35 +21,35 @@ public class AvatarAspect : MonoBehaviour
     [Tooltip("How much damage the avatar can take before game over.")]
     [SerializeField]protected int _maximumHealth = 3;
     [Tooltip("Reduced damage taken and stabilty loss from hits. Cannot reduce them to 0")]
-    [SerializeField][Range(0, 20)] int _defense;
+    [SerializeField][Range(0, 20)] protected int _defense;
     [Tooltip("If avatar reaches 0 Stabilty, it is knocked down.")]
-    [SerializeField][Range(30, 60)]protected int _maximumStability;
+    [SerializeField][Range(30, 60)] protected int _maximumStability;
     [Tooltip("How fast an avatar can move")]
-    [SerializeField] float _movementSpeed;
+    [SerializeField] protected float _movementSpeed;
     [Tooltip("How fast an avatar can get to top speed.")]
-    [SerializeField] float _accelerationRate;
+    [SerializeField] protected float _accelerationRate;
     [Tooltip("How much force an avatar recieves when jumping.")]
-    [SerializeField] float _jumpForce;
+    [SerializeField]protected float _jumpForce;
     [Tooltip("How well an avatar can move in the air while falling.")]
-    [SerializeField][Range(0, 1)] float _airWalk;
+    [SerializeField][Range(0, 1)] protected float _airWalk;
     [Tooltip("How fast an avatar will fall, will affect jump height.")]
-    [SerializeField] float _fallRate;
+    [SerializeField] protected float _fallRate;
     [Tooltip("Number of times an avatar can air dash before touching the ground.")]
-    [SerializeField] int _maxiumAirDashes;
+    [SerializeField] protected int _maxiumAirDashes;
     [Tooltip("Distance of an air dash.")]
-    [SerializeField] float _dashDistance;
+    [SerializeField] protected float _dashDistance;
     [Tooltip("Speed of an air dash.")]
-    [SerializeField] float _dashSpeed;
+    [SerializeField] protected float _dashSpeed;
 
-    [SerializeField] Transform _barrageEmitter;
-    [SerializeField] Transform _avatarModelTransform;
-    
-    Animator _animator;
-    IKControl _ikControl;
-    Rigidbody _playerRigidBody;
-    Transform _currentTarget;
-    Vector3 _dashStartPosition;
-    Vector3 _dashVector;
+    [SerializeField] protected Transform _barrageEmitter;
+    [SerializeField] protected Transform _avatarModelTransform;
+
+    protected Animator _animator;
+    protected IKControl _ikControl;
+    protected Rigidbody _playerRigidBody;
+    protected Transform _currentTarget;
+    protected Vector3 _dashStartPosition;
+    protected Vector3 _dashVector;
 
     private void Awake()
     {
@@ -94,10 +94,10 @@ public class AvatarAspect : MonoBehaviour
         _playerRigidBody.AddForce(airVelocity, ForceMode.VelocityChange);        
     }
 
-    public void PerformAirDash(Vector2 inputVector) 
+    public virtual void PerformAirDash(Vector2 inputVector) 
     {
         IsDashing = true;
-        RemainingAirDashes -= 1;
+        RemainingAirDashes--;
         _playerRigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
         _playerRigidBody.useGravity = false;
         _dashVector = ((inputVector != Vector2.zero) ? new Vector3(inputVector.x, 0, inputVector.y) : _avatarModelTransform.forward) * _dashDistance;                       
