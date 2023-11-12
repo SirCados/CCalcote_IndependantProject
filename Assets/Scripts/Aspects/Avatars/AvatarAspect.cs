@@ -137,7 +137,7 @@ public class AvatarAspect : MonoBehaviour
             _animator.SetBool("IsInHitStun", true);
             if (!IsSturdy)
             {
-                int stabilityToLose = (incomingStabilityLoss - _defense);
+                int stabilityToLose = (incomingStabilityLoss - Mathf.CeilToInt(_defense / 2));
                 CurrentStability -= (stabilityToLose > 1) ? stabilityToLose : 1;
                 if (CurrentStability <= 0)
                 {
@@ -152,10 +152,6 @@ public class AvatarAspect : MonoBehaviour
             _animator.SetBool("IsInHitStun", false);
             StartCoroutine(RegainStability());
         }        
-    }
-    public void LoseStability(int stabiltyLoss)
-    {
-        
     }
 
     public virtual IEnumerator RegainStability()

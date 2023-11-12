@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
   TargetRigidBody: {fileID: 0}
-  _damage: 20
+  _damage: 30
   _stabilityDamage: 20
   _projectileSpeed: 30
   _projectileAgility: 45
