@@ -44,6 +44,8 @@ public class AvatarAspect : MonoBehaviour
     [SerializeField] protected Transform _barrageEmitter;
     [SerializeField] protected Transform _avatarModelTransform;
 
+    protected int _aimWalk = 5;
+
     protected Animator _animator;
     protected IKControl _ikControl;
     protected Rigidbody _playerRigidBody;
@@ -82,7 +84,7 @@ public class AvatarAspect : MonoBehaviour
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed * _airWalk;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
-        velocityChange = (IsBlasting) ? velocityChange / 5 : velocityChange;
+        velocityChange = (IsBlasting) ? velocityChange / _aimWalk : velocityChange;
         velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
@@ -276,7 +278,7 @@ public class AvatarAspect : MonoBehaviour
         }
     }
 
-    void SetupAvatarAspect()
+    public virtual void SetupAvatarAspect()
     {
         CurrentHealth = _maximumHealth;
         CurrentStability = _maximumStability;

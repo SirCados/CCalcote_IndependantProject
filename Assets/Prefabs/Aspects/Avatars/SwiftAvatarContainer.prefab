@@ -131,7 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7654463459936398513}
-  - component: {fileID: 7589568410177633077}
+  - component: {fileID: 5945415973171212653}
   - component: {fileID: 948529447300712410}
   - component: {fileID: 6025632080852627845}
   m_Layer: 0
@@ -161,7 +161,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7589568410177633077
+--- !u!114 &5945415973171212653
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,22 +170,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 8533300339795707824}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e17d7454c5708484a8ba427d8febcdd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f6ae7b9575da3246902267738da3e78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   IsBlasting: 0
   IsDashing: 0
   IsGameOver: 0
   IsGrounded: 1
+  IsKnockedDown: 0
+  IsInHitStun: 0
+  IsInvulnerable: 0
+  IsSturdy: 0
+  CurrentHealth: 0
+  CurrentStability: 0
   RemainingAirDashes: 0
-  _maximumHealth: 3
-  _accelerationRate: 1
-  _dashDistance: 6
-  _dashSpeed: 15
-  _jumpForce: 18
+  _maximumHealth: 500
+  _defense: 0
+  _maximumStability: 30
   _movementSpeed: 35
+  _accelerationRate: 1.5
+  _jumpForce: 18
+  _airWalk: 0.5
   _fallRate: 45
-  _maxiumAirDashes: 3
+  _maxiumAirDashes: 2
+  _dashDistance: 5
+  _dashSpeed: 10
   _barrageEmitter: {fileID: 931816217033728341}
   _avatarModelTransform: {fileID: 6860958088372939347}
 --- !u!54 &948529447300712410
