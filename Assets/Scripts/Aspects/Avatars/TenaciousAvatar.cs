@@ -24,7 +24,11 @@ public class TenaciousAvatar : AvatarAspect
             CurrentStability += 1;
             if (CurrentHealth < _maximumHealth)
             {
-                CurrentHealth += 1;
+                CurrentHealth += 2;
+                if(CurrentHealth > _maximumHealth)
+                {
+                    CurrentHealth = _maximumHealth;
+                }
             }
             yield return new WaitForSecondsRealtime(1f);
         }
