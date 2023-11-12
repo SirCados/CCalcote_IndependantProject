@@ -72,7 +72,7 @@ public class BarrageProjectile: MonoBehaviour
 
     void GiveDamage(AvatarAspect avatar)
     {
-        avatar.TakeDamage(_damage);
-        avatar.LoseStability(_stabilityDamage);
+        print("take this!");
+        avatar.TakeHit(_damage, _stabilityDamage);
     }
 }

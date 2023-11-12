@@ -693,7 +693,7 @@ GameObject:
   - component: {fileID: 5315491284295636600}
   - component: {fileID: 7863247022536349275}
   m_Layer: 0
-  m_Name: BalancedAvatar
+  m_Name: TenaciousAvatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -729,6 +729,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsIKActive: 1
+  IsActive: 1
+  IsBlasting: 0
 --- !u!95 &7863247022536349275
 Animator:
   serializedVersion: 5

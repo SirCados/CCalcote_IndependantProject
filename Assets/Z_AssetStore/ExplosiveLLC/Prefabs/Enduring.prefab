@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8170428888260994753}
   - component: {fileID: 1269820927637276731}
   m_Layer: 0
-  m_Name: Heavy
+  m_Name: Enduring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsIKActive: 1
+  IsActive: 1
+  IsBlasting: 0
 --- !u!95 &1269820927637276731
 Animator:
   serializedVersion: 5
