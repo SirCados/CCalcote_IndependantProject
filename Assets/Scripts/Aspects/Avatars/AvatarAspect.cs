@@ -64,6 +64,15 @@ public class AvatarAspect : MonoBehaviour
         RotateCharacter();
         CheckIfDashIsDone();
         PerformHandRaise();
+        if (IsKnockedDown)
+        {
+            IsKnockedDown = !IsGetUpAnimationDone();
+            print(IsKnockedDown);
+            if (!IsKnockedDown)
+            {
+                _animator.SetBool("IsGettingUp", false);
+            }
+        }
     }
 
     public void PerformMove(Vector2 inputVector)
@@ -82,9 +91,10 @@ public class AvatarAspect : MonoBehaviour
             _animator.SetFloat("Movement", movement);
         }
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed * _airWalk;
-        Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
+        speed = (IsBlasting) ? speed / _aimWalk : speed;
+        Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);
+        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
-        velocityChange = (IsBlasting) ? velocityChange / _aimWalk : velocityChange;
         velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
@@ -158,7 +168,6 @@ public class AvatarAspect : MonoBehaviour
 
     public virtual IEnumerator RegainStability()
     {
-        print("started");
         if (IsKnockedDown)
         {
             yield return new WaitForSecondsRealtime(3);
@@ -174,10 +183,15 @@ public class AvatarAspect : MonoBehaviour
 
     protected void GetUpSequence()
     {
-        IsKnockedDown = false;
         _animator.SetBool("IsKnockedDown", false);
+        _animator.SetBool("IsGettingUp", true);
         StartCoroutine(Invulerability());
         CurrentStability = _maximumStability;
+    }
+
+    bool IsGetUpAnimationDone()
+    {
+        return (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !_animator.IsInTransition(0));
     }
 
     IEnumerator Invulerability()
