@@ -84,6 +84,8 @@ public class BlastAspect : MonoBehaviour
         IsProjectileActive = true;
         BlastProjectile blastProjectile = Instantiate(Projectile, transform).GetComponent<BlastProjectile>();
         blastProjectile.Target = BlastAimingRing;
+        blastProjectile.SetDistanceToTarget();
+        blastProjectile.IsArcing = _avatarAspect.IsGrounded;
         transform.DetachChildren();
     }
 

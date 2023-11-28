@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1365051431686365335}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1950594054762389938}
@@ -275,7 +275,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Explosion: {fileID: -2770519468673036436, guid: 27e2ad7326fa73e409faaaf0a3f8cccf, type: 3}
   Target: {fileID: 0}
-  _projectileSpeed: 20
+  _projectileSpeed: 2
+  IsArcing: 1
 --- !u!54 &7189560985171660920
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -508,7 +509,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -1010,7 +1011,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 0.1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -1888,7 +1889,7 @@ ParticleSystem:
     flipU: 0
     flipV: 0
   VelocityModule:
-    enabled: 0
+    enabled: 1
     x:
       serializedVersion: 2
       minMaxState: 0
