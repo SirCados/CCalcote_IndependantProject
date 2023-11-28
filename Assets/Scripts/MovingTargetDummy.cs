@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MovingTargetDummy : MonoBehaviour, IController
 {
+    public bool IsAttacking = false;
     public float Minumum = 2f;
     public float Maximum = 3f;
     public float Speed = 5f;
@@ -41,7 +42,14 @@ public class MovingTargetDummy : MonoBehaviour, IController
 
     void FireAtInterval()
     {
-        InvokeRepeating("BarrageAttack", StartFiring, RepeatFire);
+        if (IsAttacking)
+        {
+            InvokeRepeating("BarrageAttack", StartFiring, RepeatFire);
+        }
+        else if (IsInvoking())
+        {
+            CancelInvoke();
+        }
     }
 
     void BarrageAttack()

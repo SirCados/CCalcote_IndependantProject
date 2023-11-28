@@ -158,7 +158,6 @@ public class AvatarAspect : MonoBehaviour
 
     public virtual IEnumerator RegainStability()
     {
-        print("started");
         if (IsKnockedDown)
         {
             yield return new WaitForSecondsRealtime(3);
