@@ -41,7 +41,7 @@ public class AvatarAspect : MonoBehaviour
     [Tooltip("Speed of an air dash.")]
     [SerializeField] protected float _dashSpeed;
 
-    [SerializeField] protected Transform _barrageEmitter;
+    [SerializeField] protected Transform _facingIndicator;
     [SerializeField] protected Transform _avatarModelTransform;
 
     protected int _aimWalk = 5;
@@ -225,7 +225,7 @@ public class AvatarAspect : MonoBehaviour
     {
         if (_currentTarget)
         {
-            _barrageEmitter.transform.LookAt(_currentTarget);
+            _facingIndicator.transform.LookAt(_currentTarget);
             Vector3 look = new Vector3(_currentTarget.position.x, _playerRigidBody.position.y -1, _currentTarget.position.z);
             _avatarModelTransform.LookAt(look);
         }
