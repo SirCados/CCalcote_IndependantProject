@@ -273,9 +273,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e51bcb1ef5be84986e26563da728d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Explosion: {fileID: -2770519468673036436, guid: 27e2ad7326fa73e409faaaf0a3f8cccf, type: 3}
-  Target: {fileID: 0}
   _projectileSpeed: 2
+  Explosion: {fileID: 4786680251014196173, guid: 27e2ad7326fa73e409faaaf0a3f8cccf, type: 3}
+  Target: {fileID: 0}
   IsArcing: 1
 --- !u!54 &7189560985171660920
 Rigidbody:

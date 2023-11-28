@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class BlastProjectile : MonoBehaviour
 {
+    [Header("MOVEMENT")]
+    [SerializeField] float _projectileSpeed = 20;
+
     Rigidbody _projectileRigidBody;
     public BlastExplosion Explosion;
-    ParticleSystem _particles;
     public Transform Target;
-    [SerializeField] float _projectileSpeed = 20;
     float _targetDistance;
-    float _projectileHeight;
     public bool IsArcing = true;
     float _moveTime = 0;
 
@@ -22,8 +22,7 @@ public class BlastProjectile : MonoBehaviour
 
     private void Awake()
     {
-        _projectileRigidBody = GetComponent<Rigidbody>();
-        _particles = GetComponentInChildren<ParticleSystem>();       
+        _projectileRigidBody = GetComponent<Rigidbody>();      
     }
 
     private void Start()
@@ -41,7 +40,6 @@ public class BlastProjectile : MonoBehaviour
         if (Target != null)
         {
             _targetDistance = Vector3.Distance(transform.position, Target.position);
-            print(_targetDistance);
         }
     }
 
@@ -87,7 +85,7 @@ public class BlastProjectile : MonoBehaviour
     {
         if(OnExplosion != null)
             OnExplosion();
-        Instantiate(Explosion, transform.position, new Quaternion());        
+        Instantiate(Explosion, transform.position, new Quaternion());
         Destroy(gameObject);
     }
 

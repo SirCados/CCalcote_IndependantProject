@@ -124,6 +124,9 @@ public class AvatarAspect : MonoBehaviour
 
     public void TakeHit(int incomingDamage, int incomingStabilityLoss)
     {
+        print("ouch");
+        //Will cause damage loss if multiple hits happen too close together.
+        //need to confirm or find a better way to handle everything
         StopCoroutine(HandleHit(incomingDamage, incomingStabilityLoss));
         StartCoroutine(HandleHit(incomingDamage, incomingStabilityLoss));
     }
