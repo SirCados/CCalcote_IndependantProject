@@ -10,15 +10,14 @@ public class BlastAspect : MonoBehaviour
     public Transform BlastAimingRing;
 
     [SerializeField] LineRenderer _lineRenderer;
-    [SerializeField] Transform _releasePosition;
-    [SerializeField] int _linePoints = 10;
-    [SerializeField] float _timeBetweenPoints = .1f;
+    [SerializeField] Transform _emitterPosition;
 
     AvatarAspect _avatarAspect;
 
     private void Awake()
     {
         SetUpBlastAspect();
+        transform.DetachChildren();
     }
 
     private void OnEnable()
@@ -82,11 +81,11 @@ public class BlastAspect : MonoBehaviour
     void SpawnBlastProjectile()
     {
         IsProjectileActive = true;
-        BlastProjectile blastProjectile = Instantiate(Projectile, transform).GetComponent<BlastProjectile>();
+        BlastProjectile blastProjectile = Instantiate(Projectile, _emitterPosition).GetComponent<BlastProjectile>();
         blastProjectile.Target = BlastAimingRing;
         blastProjectile.SetDistanceToTarget();
         blastProjectile.IsArcing = _avatarAspect.IsGrounded;
-        transform.DetachChildren();
+        _emitterPosition.DetachChildren();        
     }
 
     void HandleExplosion()

@@ -8,6 +8,7 @@ public class BarrageProjectile: MonoBehaviour
     public Transform Target;
     public Rigidbody TargetRigidBody;
 
+    [Header("OFFENSE")]
     [SerializeField] int _damage;
     [SerializeField] int _stabilityDamage;
 
@@ -72,7 +73,7 @@ public class BarrageProjectile: MonoBehaviour
 
     void GiveDamage(AvatarAspect avatar)
     {
-        print("take this!");
+        print("Take this!");
         avatar.TakeHit(_damage, _stabilityDamage);
     }
 }

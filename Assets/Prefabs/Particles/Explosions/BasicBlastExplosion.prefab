@@ -4831,7 +4831,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4706228109193832757}
-  - component: {fileID: -2770519468673036436}
+  - component: {fileID: 4786680251014196173}
   - component: {fileID: 7303028776892921842}
   m_Layer: 0
   m_Name: BasicBlastExplosion
@@ -4857,7 +4857,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2770519468673036436
+--- !u!114 &4786680251014196173
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4869,11 +4869,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d867b41bf32bbe746a554d1f9f1a86e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScaleLimit: 0
+  ScaleLimit: 12
   ExpansionRate: 0.9
-  ExplosionSphere: {fileID: 1929745374502945046}
-  _damage: 1
-  _stabilityDamage: 10
+  _damage: 50
+  _stabilityDamage: 50
+  _area: {fileID: 2890019145375788381}
 --- !u!82 &7303028776892921842
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4982,6 +4982,7 @@ GameObject:
   - component: {fileID: 5822753716967003633}
   - component: {fileID: 7398709200440293411}
   - component: {fileID: 8998063663964197261}
+  - component: {fileID: 2890019145375788381}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -5067,3 +5068,15 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2890019145375788381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485056570026506168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb660dadaebdc5d4885e7116415b0d16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
