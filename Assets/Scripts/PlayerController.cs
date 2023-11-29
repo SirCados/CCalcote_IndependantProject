@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour, IController
 
     void Blast(InputAction.CallbackContext context)
     {
-        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering && !ManifestedBlast.IsProjectileActive)
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering && !ManifestedBlast.IsProjectileActive && !ManifestedAvatar.IsDashing)
         {
             _isAiming = true;
             ChangeState(_blastState);
@@ -146,16 +146,17 @@ public class PlayerController : MonoBehaviour, IController
 
     void Neutral(InputAction.CallbackContext context)
     {
-        if(_currentState != _activeState)
+        if(_currentState != _activeState && !ManifestedAvatar.IsDashing)
         {
             _isAiming = false;
             ChangeState(_activeState);
+            //spamming dash and blast causes player to get stuck floating in air
         }
     }
 
     void JumpOrAirDash(InputAction.CallbackContext context)
     {
-        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering && !ManifestedBlast.IsBlasting)
         {
             if (!ManifestedAvatar.IsGrounded && ManifestedAvatar.RemainingAirDashes != 0)
             {

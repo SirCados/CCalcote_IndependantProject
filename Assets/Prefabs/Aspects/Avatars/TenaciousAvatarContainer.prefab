@@ -155,8 +155,8 @@ MonoBehaviour:
   _defense: 5
   _maximumStability: 35
   _movementSpeed: 30
-  _accelerationRate: 1
-  _jumpForce: 15
+  _accelerationRate: 2
+  _jumpForce: 20
   _airWalk: 0.5
   _fallRate: 35
   _maxiumAirDashes: 2

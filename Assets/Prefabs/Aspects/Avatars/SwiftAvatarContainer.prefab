@@ -130,7 +130,7 @@ MonoBehaviour:
   _airWalk: 0.5
   _fallRate: 45
   _maxiumAirDashes: 2
-  _dashDistance: 5
+  _dashDistance: 10
   _dashSpeed: 10
   _facingIndicator: {fileID: 9146508410600841205}
   _avatarModelTransform: {fileID: 6860958088372939347}

@@ -89,7 +89,7 @@ public class BlastProjectile : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         DoExplosion();
     }

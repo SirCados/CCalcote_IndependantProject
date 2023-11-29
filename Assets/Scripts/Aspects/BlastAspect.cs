@@ -12,10 +12,6 @@ public class BlastAspect : MonoBehaviour
     [SerializeField] LineRenderer _lineRenderer;
     [SerializeField] Transform _emitterPosition;
 
-    [SerializeField] int _linePoints = 10;
-    [SerializeField] float _timeBetweenPoints = .1f;
-
-
     AvatarAspect _avatarAspect;
 
     private void Awake()
