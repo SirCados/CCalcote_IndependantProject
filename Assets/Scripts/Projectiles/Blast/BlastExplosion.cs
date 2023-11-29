@@ -4,16 +4,17 @@ public class BlastExplosion : MonoBehaviour
 {
     public float ScaleLimit;
     public float ExpansionRate = .1f;
-    public Transform ExplosionSphere;
+    Transform _explosionSphere;
 
     [SerializeField] int _damage;
     [SerializeField] int _stabilityDamage;
 
-    ParticleSystem _particles;
+    [SerializeField] BlastAreaOfEffect _area;
 
     private void Awake()
     {
-        _particles = GetComponentInChildren<ParticleSystem>();
+        _area.SetUpAreaOfEffect(_damage, _stabilityDamage);
+        _explosionSphere = _area.gameObject.transform;
     }
 
     private void Start()
@@ -32,32 +33,18 @@ public class BlastExplosion : MonoBehaviour
 
     void ScaleSphere()
     {
-        if (ExplosionSphere.localScale.magnitude < 12)
+        if (_explosionSphere.localScale.magnitude < ScaleLimit)
         {
-            ExplosionSphere.localScale = Vector3.Lerp(ExplosionSphere.localScale, ExplosionSphere.localScale * 7, ExpansionRate * Time.deltaTime);
+            _explosionSphere.localScale = Vector3.Lerp(_explosionSphere.localScale, _explosionSphere.localScale * 7, ExpansionRate * Time.deltaTime);
         }
         else
         {
-            ExplosionSphere.gameObject.SetActive(false);
+            _explosionSphere.gameObject.SetActive(false);
         }
     }
 
     void DestroySelf()
     {
         Destroy(gameObject);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.transform.tag == "Avatar")
-        {
-            AvatarAspect target = other.gameObject.GetComponentInParent<AvatarAspect>();
-            GiveDamage(target);
-        }
-    }
-
-    void GiveDamage(AvatarAspect avatar)
-    {
-        avatar.TakeHit(_damage, _stabilityDamage);
     }
 }

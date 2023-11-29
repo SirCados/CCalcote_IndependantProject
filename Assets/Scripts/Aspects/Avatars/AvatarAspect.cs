@@ -41,10 +41,10 @@ public class AvatarAspect : MonoBehaviour
     [Tooltip("Speed of an air dash.")]
     [SerializeField] protected float _dashSpeed;
 
-    [SerializeField] protected Transform _barrageEmitter;
+    [SerializeField] protected Transform _facingIndicator;
     [SerializeField] protected Transform _avatarModelTransform;
 
-    protected int _aimWalk = 5;
+    [Range(0, 1)] protected float _aimWalk = .2f;
 
     protected Animator _animator;
     protected IKControl _ikControl;
@@ -84,8 +84,8 @@ public class AvatarAspect : MonoBehaviour
         float speed = (IsGrounded) ? _movementSpeed : _movementSpeed * _airWalk;
         Vector3 targetVelocity = transform.TransformDirection(new Vector3(inputVector.x, 0, inputVector.y) * speed);        
         Vector3 velocityChange = (targetVelocity - _playerRigidBody.velocity) * _accelerationRate;
-        velocityChange = (IsBlasting) ? velocityChange / _aimWalk : velocityChange;
-        velocityChange.y = (IsGrounded) ? 0 : -_fallRate;        
+        velocityChange = (IsBlasting) ? velocityChange * _aimWalk : velocityChange;
+        velocityChange.y = (IsGrounded)? 0:-_fallRate;        
         _playerRigidBody.AddForce(velocityChange, ForceMode.Acceleration);
     }
 
@@ -115,7 +115,7 @@ public class AvatarAspect : MonoBehaviour
             _ikControl.IsBlasting = true;
             _ikControl.IsActive = false;
         }
-        else if (!_ikControl.IsActive && !IsBlasting)
+        else if (!IsBlasting)
         {
             _ikControl.IsActive = true;
             _ikControl.IsBlasting = false;
@@ -124,6 +124,9 @@ public class AvatarAspect : MonoBehaviour
 
     public void TakeHit(int incomingDamage, int incomingStabilityLoss)
     {
+        print("ouch");
+        //Will cause damage loss if multiple hits happen too close together.
+        //need to confirm or find a better way to handle everything
         StopCoroutine(HandleHit(incomingDamage, incomingStabilityLoss));
         StartCoroutine(HandleHit(incomingDamage, incomingStabilityLoss));
     }
@@ -158,7 +161,6 @@ public class AvatarAspect : MonoBehaviour
 
     public virtual IEnumerator RegainStability()
     {
-        print("started");
         if (IsKnockedDown)
         {
             yield return new WaitForSecondsRealtime(3);
@@ -223,7 +225,7 @@ public class AvatarAspect : MonoBehaviour
     {
         if (_currentTarget)
         {
-            _barrageEmitter.transform.LookAt(_currentTarget);
+            _facingIndicator.transform.LookAt(_currentTarget);
             Vector3 look = new Vector3(_currentTarget.position.x, _playerRigidBody.position.y -1, _currentTarget.position.z);
             _avatarModelTransform.LookAt(look);
         }
