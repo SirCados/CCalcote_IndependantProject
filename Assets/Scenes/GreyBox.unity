@@ -2951,7 +2951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1751baf23e50634182c706b958dcbef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAttacking: 0
+  IsAttacking: 1
   Minumum: 0
   Maximum: 3
   Speed: 5

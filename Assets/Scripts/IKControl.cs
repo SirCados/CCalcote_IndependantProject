@@ -59,6 +59,14 @@ public class IKControl : MonoBehaviour
         }
     }
 
+    void DoneGettingUp()
+    {
+        //Unsure how to handle this better. This is outside of this scripts concerns, but works for the moment
+        print("done getting up");
+        //IsGettingUp = false;
+        _animator.SetBool("IsGettingUp", false);
+    }
+
     void SetUpIKControl()
     {
         _animator = GetComponent<Animator>();

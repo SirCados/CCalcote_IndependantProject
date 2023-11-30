@@ -6,6 +6,7 @@ public class AvatarAspect : MonoBehaviour
     public bool IsBlasting = false;
     public bool IsDashing = false;
     public bool IsGameOver = false;
+    public bool IsGettingUp = false;
     public bool IsGrounded = true;
     public bool IsKnockedDown = false;
     public bool IsInHitStun = false;
@@ -152,7 +153,7 @@ public class AvatarAspect : MonoBehaviour
                 }
             }
             IsDashing = false;
-            yield return new WaitForSecondsRealtime(.1f);
+            yield return new WaitForSeconds(.1f);
             IsInHitStun = false;
             _animator.SetBool("IsInHitStun", false);
             StartCoroutine(RegainStability());
@@ -163,14 +164,14 @@ public class AvatarAspect : MonoBehaviour
     {
         if (IsKnockedDown)
         {
-            yield return new WaitForSecondsRealtime(3);
-            GetUpSequence();            
+            yield return new WaitForSeconds(3);
+            GetUpSequence();
         }
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitForSeconds(3);
         while (CurrentStability < _maximumStability && !IsKnockedDown)
         {
             CurrentStability += 1;
-            yield return new WaitForSecondsRealtime(1f);
+            yield return new WaitForSeconds(1f);
         }
     }
 
@@ -178,7 +179,10 @@ public class AvatarAspect : MonoBehaviour
     {
         IsKnockedDown = false;
         _animator.SetBool("IsKnockedDown", false);
+        IsGettingUp = true;
+        _animator.SetBool("IsGettingUp", true);
         StartCoroutine(Invulerability());
+        StartCoroutine(GetUpAnimation());
         CurrentStability = _maximumStability;
     }
 
@@ -186,10 +190,16 @@ public class AvatarAspect : MonoBehaviour
     {
         IsInvulnerable = true;
         IsSturdy = true;
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitForSeconds(5);
         IsInvulnerable = false;
         IsSturdy = false;
         yield break;
+    }
+
+    IEnumerator GetUpAnimation()
+    {
+        yield return new WaitWhile(() => _animator.GetBool("IsGettingUp"));
+        IsGettingUp = false;
     }
 
     public void StopJumpVelocity()
@@ -223,7 +233,7 @@ public class AvatarAspect : MonoBehaviour
 
     void RotateCharacter()
     {
-        if (_currentTarget)
+        if (_currentTarget && !(IsKnockedDown || IsGettingUp))
         {
             _facingIndicator.transform.LookAt(_currentTarget);
             Vector3 look = new Vector3(_currentTarget.position.x, _playerRigidBody.position.y -1, _currentTarget.position.z);
