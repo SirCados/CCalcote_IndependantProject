@@ -70,6 +70,7 @@ GameObject:
   - component: {fileID: 948529447300712410}
   - component: {fileID: 6025632080852627845}
   - component: {fileID: -5641153189811847158}
+  - component: {fileID: 209027030585855754}
   m_Layer: 0
   m_Name: GracefulAvatarContainer
   m_TagString: Avatar
@@ -143,6 +144,7 @@ MonoBehaviour:
   IsBlasting: 0
   IsDashing: 0
   IsGameOver: 0
+  IsGettingUp: 0
   IsGrounded: 1
   IsKnockedDown: 0
   IsInHitStun: 0
@@ -164,6 +166,28 @@ MonoBehaviour:
   _dashSpeed: 0
   _facingIndicator: {fileID: 6701400362807834304}
   _avatarModelTransform: {fileID: 671796269553424711}
+--- !u!195 &209027030585855754
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8533300339795707824}
+  m_Enabled: 0
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1.52
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1001 &671796269553550279
 PrefabInstance:
   m_ObjectHideFlags: 0

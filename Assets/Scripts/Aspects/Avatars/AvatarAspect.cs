@@ -150,6 +150,7 @@ public class AvatarAspect : MonoBehaviour
                     CurrentStability = 0;
                     IsKnockedDown = true;
                     _animator.SetBool("IsKnockedDown", true);
+                    _ikControl.IsIKActive = false;
                 }
             }
             IsDashing = false;
@@ -200,6 +201,7 @@ public class AvatarAspect : MonoBehaviour
     {
         yield return new WaitWhile(() => _animator.GetBool("IsGettingUp"));
         IsGettingUp = false;
+        _ikControl.IsIKActive = true;
     }
 
     public void StopJumpVelocity()
