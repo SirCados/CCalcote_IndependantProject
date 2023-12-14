@@ -93,7 +93,6 @@ public class EnemyController : MonoBehaviour, IController
 
     private void FixedUpdate()
     {
-
         if (!ManifestedAvatar.IsGameOver)
         {
             //change to switch?

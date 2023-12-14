@@ -16,7 +16,7 @@ public class EnduringAvatar : AvatarAspect
         IsInvulnerable = true;
         //play Invulnerable sound here
         //visual effect toggle here
-        yield return new WaitForSecondsRealtime(.5f);
+        yield return new WaitForSecondsRealtime(1f);
         IsInvulnerable = false;
     }
 }

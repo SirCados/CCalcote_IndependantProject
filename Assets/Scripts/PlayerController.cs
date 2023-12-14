@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour, IController
 
     bool _isAiming = false;
 
+    AvatarSelect _avatarSelect;
+
     public enum AvatarType
     {
         BALANCED,        
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviour, IController
 
     private void Awake()
     {
+        AvatarToManifest = (AvatarType)GameObject.Find("AvatarSelect").GetComponent<AvatarSelect>().SelectedAvatar;
         StartCoroutine(GetTargetAvatar());        
         Time.timeScale = _TimeScale;
     }

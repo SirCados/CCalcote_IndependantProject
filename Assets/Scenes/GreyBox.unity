@@ -3736,6 +3736,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1543953345}
     - target: {fileID: 6138634081394175337, guid: 69be762d49a449546aedd91fefcb2398, type: 3}
+      propertyPath: AvatarToManifest
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138634081394175337, guid: 69be762d49a449546aedd91fefcb2398, type: 3}
       propertyPath: _colliders.Array.data[0]
       value: 
       objectReference: {fileID: 1965405567}
