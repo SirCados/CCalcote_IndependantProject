@@ -5,14 +5,21 @@ using UnityEngine;
 //[RequireComponent(typeof(SphereCollider))]
 public class VisionSensor : MonoBehaviour
 {
+    public SphereCollider ImmediateVision;
     [SerializeField] LayerMask DetectionMask = ~0;
     [SerializeField][Range(.01f, .5f)] float _VisionRefreshRate = .2f;
     public Transform CurrentTarget;
 
     AvatarAspect _enemyAvatar;
 
+    public delegate void GainSightEvent(Transform Target);
+    public GainSightEvent OnGainSight;
+    public delegate void LoseSightEvent(Transform Target);
+    public LoseSightEvent OnLoseSight;
+
     private void Start()
     {
+        ImmediateVision = GetComponent<SphereCollider>();
         StartCoroutine(GetEnemyAvatar());
     }
 
@@ -35,9 +42,12 @@ public class VisionSensor : MonoBehaviour
             yield return new WaitForSeconds(_VisionRefreshRate);
             if (CanSeeTarget())
             {
-                print("I see you.");
+                OnGainSight?.Invoke(CurrentTarget);
             }
-
+            else
+            {
+                OnLoseSight?.Invoke(CurrentTarget);
+            }
         }
     }
 
@@ -54,8 +64,8 @@ public class VisionSensor : MonoBehaviour
             {
                 if (hit.transform.CompareTag("Avatar"))
                 {
-                    Debug.DrawLine(myLocation, targetLocation, Color.red, _VisionRefreshRate);
-                    print(hit.transform.name);
+                    CurrentTarget = hit.transform;
+                    Debug.DrawLine(myLocation, targetLocation, Color.red, _VisionRefreshRate);                    
                     return true;
                 }
             }

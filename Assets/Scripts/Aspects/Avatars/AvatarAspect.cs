@@ -69,6 +69,7 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformMove(Vector2 inputVector)
     {
+        //print(inputVector);
         //calculate the inputs for animation controller
         Vector3 vectorToRotate = new Vector3(inputVector.x, 0, inputVector.y);
         Vector3 forwardProduct = vectorToRotate.z * -_avatarModelTransform.forward;

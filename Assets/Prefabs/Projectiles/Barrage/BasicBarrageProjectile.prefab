@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 568054242870121217}
   - component: {fileID: 6887810291255289954}
   - component: {fileID: 6015284511503206473}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BasicBarrageProjectile
   m_TagString: Projectile
   m_Icon: {fileID: 0}
