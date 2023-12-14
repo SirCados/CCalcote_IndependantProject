@@ -50,7 +50,7 @@ public class AvatarAspect : MonoBehaviour
     protected Animator _animator;
     protected IKControl _ikControl;
     protected Rigidbody _playerRigidBody;
-    protected Transform _currentTarget;
+    public Transform CurrentTarget;
     protected Vector3 _dashStartPosition;
     protected Vector3 _dashVector;
 
@@ -236,10 +236,10 @@ public class AvatarAspect : MonoBehaviour
 
     void RotateCharacter()
     {
-        if (_currentTarget && !(IsKnockedDown || IsGettingUp))
+        if (CurrentTarget && !(IsKnockedDown || IsGettingUp))
         {
-            _facingIndicator.transform.LookAt(_currentTarget);
-            Vector3 look = new Vector3(_currentTarget.position.x, _playerRigidBody.position.y -1, _currentTarget.position.z);
+            _facingIndicator.transform.LookAt(CurrentTarget);
+            Vector3 look = new Vector3(CurrentTarget.position.x, _playerRigidBody.position.y -1, CurrentTarget.position.z);
             _avatarModelTransform.LookAt(look);
         }
     }
@@ -301,6 +301,6 @@ public class AvatarAspect : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _ikControl = GetComponentInChildren<IKControl>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
-        _currentTarget = GetComponentInParent<IController>().Target;
+        CurrentTarget = GetComponentInParent<IController>().Target;
     }
 }

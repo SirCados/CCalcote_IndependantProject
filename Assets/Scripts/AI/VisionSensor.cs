@@ -26,7 +26,7 @@ public class VisionSensor : MonoBehaviour
     IEnumerator GetEnemyAvatar()
     {
         yield return new WaitForEndOfFrame();
-        if (CurrentTarget.GetComponentInChildren<AvatarAspect>() != null)
+        if (CurrentTarget != null && CurrentTarget.GetComponentInChildren<AvatarAspect>() != null)
             _enemyAvatar = CurrentTarget.GetComponentInChildren<AvatarAspect>();
         if (_enemyAvatar != null)
         {
@@ -51,7 +51,7 @@ public class VisionSensor : MonoBehaviour
         }
     }
 
-    bool CanSeeTarget()
+    public bool CanSeeTarget()
     {
         if (_enemyAvatar != null)
         {   

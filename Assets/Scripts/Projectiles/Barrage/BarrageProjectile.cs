@@ -44,7 +44,7 @@ public class BarrageProjectile: MonoBehaviour
 
     private void PredictTargetMovement(float leadTimePercentage)
     {
-        float predictionTime = Mathf.Lerp(0, _maxTimePrediction, leadTimePercentage);
+        float predictionTime = Mathf.Lerp(0, _maxTimePrediction, leadTimePercentage);        
         _standardPrediction = Target.position + TargetRigidBody.velocity * predictionTime;
     }
 

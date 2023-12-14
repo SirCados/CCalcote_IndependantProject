@@ -17,6 +17,9 @@ class Waypoint
 
 public class EnemyController : MonoBehaviour, IController
 {
+
+    public string CurrentState;
+
     [SerializeField] LayerMask DetectionMask = ~0;
     public VisionSensor Eyes;
     public NavMeshAgent Agent;
@@ -36,37 +39,112 @@ public class EnemyController : MonoBehaviour, IController
     public Transform CurrentTarget;
 
     public AvatarAspect ManifestedAvatar;
+    public BarrageAspect ManifestedBarrage;
+    public BlastAspect ManifestedBlast;
+
+    IState _currentState = new EmptyState();
+    ActiveState _activeState;
+    BarrageState _barrageState;
+    BlastState _blastState;
+    DashState _dashState;
+    DownState _downState;
+    GetUpState _getUpState;
+
     AvatarAspect _enemyAvatar;
 
     private Coroutine MovementCoroutine;
 
     public Vector2 InputVector;
 
-    [SerializeField] GameObject[] _WaypointObjects = new GameObject[4];
+    [SerializeField] GameObject[] _WaypointObjects = new GameObject[17];
 
-    [SerializeField] Waypoint[] _Waypoints = new Waypoint[4];
+    [SerializeField] Waypoint[] _Waypoints = new Waypoint[17];
 
     Vector3 _moveToPosition;
 
+    public float Weight = 0;
+    public float TargetProximity = 0;
     public float MyProximity = 0;
+
+    public GameObject[] Avatars;
+
+    bool _isAiming;
+    public enum AvatarType
+    {
+        BALANCED,
+        HEAVY,
+        FLOATY,
+        SWIFT
+    }
+
+    public AvatarType AvatarToManifest;
+
+    public PlayerController Player;
 
     private void Awake()
     {
-        SetUpEnemyController();
     }
 
     private void Start()
     {
         PopulateWaypoints();
+        StartCoroutine(GetTargetAvatar());
     }
 
     private void FixedUpdate()
     {
-        if(!ManifestedAvatar.IsKnockedDown && !ManifestedAvatar.IsGettingUp)
+
+        if (!ManifestedAvatar.IsGameOver)
         {
-            ManifestedAvatar.PerformMove(InputVector);
+            //change to switch?
+            if (_currentState != _downState && ManifestedAvatar.IsKnockedDown)
+            {
+                print("knocked down");
+                ChangeState(_downState);
+            }
+            else if (!ManifestedAvatar.IsInHitStun)
+            {
+                StateControllerUpdate();
+                if (MyProximity > 2f)
+                {
+                    GetInputsForMovement();
+                }
+            }
         }
     }
+
+    void GetInputsForMovement()
+    {
+        Vector2 inputs = (_currentState == _activeState && !ManifestedBarrage.IsRecovering) ? InputVector : Vector2.zero;
+        if (_currentState == _activeState)
+            _activeState.SetInputs(inputs);
+    }
+
+    public void StateControllerUpdate()
+    {
+        if (_currentState != null)
+        {
+            _currentState.OnUpdateState();
+            CurrentState = _currentState.ToString();
+        }
+
+        if (_currentState.NextState != null && _currentState.IsStateDone)
+        {
+            ChangeState(_currentState.NextState);
+        }
+    }
+
+    public void ChangeState(IState newState)
+    {
+        if (_currentState != null)
+        {
+            _currentState.OnExitState();
+        }
+
+        _currentState = newState;
+        _currentState.OnEnterState();
+    }
+
 
     private void HandleGainSight(Transform target)
     {
@@ -75,8 +153,9 @@ public class EnemyController : MonoBehaviour, IController
             StopCoroutine(MovementCoroutine);
         }
         //Get Current Target by Raycast in VisionSensor
-        CurrentTarget = target;        
-        MovementCoroutine = StartCoroutine(Hide(CurrentTarget));
+        CurrentTarget = target;
+        if (_currentState == _activeState)
+            MovementCoroutine = StartCoroutine(Hide(CurrentTarget));
     }
 
     private void HandleLoseSight(Transform target)
@@ -87,7 +166,8 @@ public class EnemyController : MonoBehaviour, IController
         }
         //Get Current Target by Raycast in VisionSensor
         CurrentTarget = target;
-        MovementCoroutine = StartCoroutine(Hide(CurrentTarget));
+        if(_currentState == _activeState)
+            MovementCoroutine = StartCoroutine(Hide(CurrentTarget));
     }
 
     IEnumerator Hide(Transform target)
@@ -137,7 +217,6 @@ public class EnemyController : MonoBehaviour, IController
                                     }
                                 }
                                 Vector3 direction = (path.corners[cornersTouched] - ManifestedAvatar.transform.position).normalized;
-                                print(direction);
                                 Vector2 input = new Vector2(direction.x, direction.z);
                                 InputVector = input;
                             }
@@ -154,14 +233,44 @@ public class EnemyController : MonoBehaviour, IController
         }
     }
 
+    IEnumerator AttackPlayer()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(_LookTime * 5);
+            if (Eyes.CanSeeTarget() && !ManifestedBarrage.IsBarraging)
+            {
+                Barrage();
+            }
+        }
+    }
+
+    void Barrage()
+    {
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering)
+        {
+            ChangeState(_barrageState);
+            ManifestedAvatar.StopJumpVelocity();
+        }
+    }
+
+    void Blast()
+    {
+        if (_currentState == _activeState && !ManifestedBarrage.IsRecovering && !ManifestedBlast.IsProjectileActive && !ManifestedAvatar.IsDashing)
+        {
+            _isAiming = true;
+            ChangeState(_blastState);
+            ManifestedAvatar.StopJumpVelocity();
+            ManifestedAvatar.SlowMoveVelocity();
+        }
+    }
+
     void PopulateWaypoints()
     {
         for(int i = 0; i < _WaypointObjects.Length; i++)
         {   
             _Waypoints[i] = new Waypoint(_WaypointObjects[i].transform.position);
         }
-
-        //StartCoroutine(CalculateDistances());
     }
 
     void CalculateDistances()
@@ -171,14 +280,32 @@ public class EnemyController : MonoBehaviour, IController
         {
             _Waypoints[i].MyProximity = Vector3.Distance(ManifestedAvatar.transform.position, _Waypoints[i].Location);
             _Waypoints[i].TargetProximity = Vector3.Distance(CurrentTarget.transform.position, _Waypoints[i].Location);
-            _Waypoints[i].Weight = _Waypoints[i].TargetProximity - _Waypoints[i].MyProximity;//Chase
-            //_Waypoints[i].Weight = _Waypoints[i].MyProximity - _Waypoints[i].TargetProximity;
-            if (i > 0 && _Waypoints[i].Weight < closest.Weight)
+
+            //Chase
+            //_Waypoints[i].Weight = _Waypoints[i].TargetProximity - _Waypoints[i].MyProximity;
+            //if (i > 0 && _Waypoints[i].Weight < closest.Weight)
+            //{
+            //    closest = _Waypoints[i];
+            //}
+
+            //Semi-evasive
+            _Waypoints[i].Weight = _Waypoints[i].TargetProximity + _Waypoints[i].MyProximity;
+            if (i > 0 && _Waypoints[i].Weight > closest.Weight && _Waypoints[i].MyProximity < _Waypoints[i].TargetProximity)
             {
                 closest = _Waypoints[i];
             }
+
+            //less evasive, but seeks closest better
+            //_Waypoints[i].Weight = _Waypoints[i].TargetProximity / _Waypoints[i].MyProximity;
+            //if (i > 0 && _Waypoints[i].Weight > closest.Weight)
+            //{
+            //    closest = _Waypoints[i];
+            //}
+
         }
+        Weight = closest.Weight;
         MyProximity = closest.MyProximity;
+        TargetProximity = closest.TargetProximity;
 
         _moveToPosition = closest.Location;
     }
@@ -209,23 +336,76 @@ public class EnemyController : MonoBehaviour, IController
         set => CurrentTarget = value;
     }
 
-    private void OnEnable()
+    //private void OnDisable()
+    //{
+    //    Eyes.OnGainSight -= HandleGainSight;
+    //    Eyes.OnLoseSight -= HandleLoseSight;
+    //}
+
+    GameObject ManifestAvatar()
     {
-        Eyes.OnGainSight += HandleGainSight;
-        Eyes.OnLoseSight += HandleLoseSight;
+        AvatarType avatar = AvatarToManifest;
+        GameObject manifestedAvatar;
+        switch (avatar)
+        {
+            case AvatarType.BALANCED:
+                manifestedAvatar = Instantiate(Avatars[0], transform);
+                return manifestedAvatar;
+            case AvatarType.HEAVY:
+                manifestedAvatar = Instantiate(Avatars[1], transform);
+                return manifestedAvatar;
+            case AvatarType.FLOATY:
+                manifestedAvatar = Instantiate(Avatars[2], transform);
+                return manifestedAvatar;
+            case AvatarType.SWIFT:
+                manifestedAvatar = Instantiate(Avatars[3], transform);
+                return manifestedAvatar;
+        }
+        return null;
     }
 
-    private void OnDisable()
+    IEnumerator GetTargetAvatar()
     {
-        Eyes.OnGainSight -= HandleGainSight;
-        Eyes.OnLoseSight -= HandleLoseSight;
+        ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
+        yield return new WaitForEndOfFrame();
+        if (Player.GetComponentInChildren<AvatarAspect>() != null)
+            CurrentTarget = Player.GetComponentInChildren<AvatarAspect>().transform;
+        if (CurrentTarget != null)
+        {
+            SetUpEnemyController();
+            StopCoroutine(GetTargetAvatar());
+        }
+        else
+            StartCoroutine(GetTargetAvatar());
     }
 
     void SetUpEnemyController()
-    {
-        ManifestedAvatar = GetComponentInChildren<AvatarAspect>();        
+    {        
+        ManifestedBarrage = ManifestedAvatar.GetComponentInChildren<BarrageAspect>();
+        ManifestedBlast = ManifestedAvatar.GetComponentInChildren<BlastAspect>();
+        CurrentTarget = Player.GetComponentInChildren<AvatarAspect>().transform;
+        ManifestedAvatar.CurrentTarget = CurrentTarget;
+        ManifestedBarrage.CurrentTarget = CurrentTarget;
+        ManifestedBlast.CurrentTarget = CurrentTarget;
+
+        Eyes = ManifestedAvatar.GetComponentInChildren<VisionSensor>();
+        Eyes.CurrentTarget = CurrentTarget;
+
+        _activeState = new ActiveState(ManifestedAvatar);
+        ChangeState(_activeState);
+        _barrageState = new BarrageState(_activeState, ManifestedBarrage);
+        _blastState = new BlastState(_activeState, ManifestedAvatar, ManifestedBlast);
+        _dashState = new DashState(_activeState, ManifestedAvatar);
+        _getUpState = new GetUpState(_activeState, ManifestedAvatar);
+        _downState = new DownState(_getUpState, ManifestedAvatar);
+        
         Agent = ManifestedAvatar.GetComponent<NavMeshAgent>();
         Agent.enabled = true;
+
+        Eyes.OnGainSight += HandleGainSight;
+        Eyes.OnLoseSight += HandleLoseSight;
+
+        StartCoroutine(AttackPlayer());
     }
 }
 
