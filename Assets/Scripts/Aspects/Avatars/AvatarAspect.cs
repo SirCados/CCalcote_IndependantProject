@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class AvatarAspect : MonoBehaviour
@@ -12,6 +13,9 @@ public class AvatarAspect : MonoBehaviour
     public bool IsInHitStun = false;
     public bool IsInvulnerable = false;
     public bool IsSturdy = false;
+
+    public Slider HealthStatus;
+    public Slider StabilityStatus;
 
     [Header("PUBLIC AVATAR STATS")]
     public int CurrentHealth;
@@ -140,25 +144,37 @@ public class AvatarAspect : MonoBehaviour
             StopCoroutine(RegainStability());
             int damageToTake = incomingDamage - _defense;
             CurrentHealth -= (damageToTake > 1) ? damageToTake : 1;
-            IsInHitStun = true;
-            _animator.SetBool("IsInHitStun", true);
-            if (!IsSturdy)
+            HealthStatus.value = CurrentHealth;
+            if(CurrentHealth < 1)
             {
-                int stabilityToLose = (incomingStabilityLoss - Mathf.CeilToInt(_defense / 2));
-                CurrentStability -= (stabilityToLose > 1) ? stabilityToLose : 1;
-                if (CurrentStability <= 0)
-                {
-                    CurrentStability = 0;
-                    IsKnockedDown = true;
-                    _animator.SetBool("IsKnockedDown", true);
-                    _ikControl.IsIKActive = false;
-                }
+                IsKnockedDown = true;
+                _animator.SetBool("IsKnockedDown", true);
+                _ikControl.IsIKActive = false;
+                IsGameOver = true;
             }
-            IsDashing = false;
-            yield return new WaitForSeconds(.1f);
-            IsInHitStun = false;
-            _animator.SetBool("IsInHitStun", false);
-            StartCoroutine(RegainStability());
+            else
+            {
+                IsInHitStun = true;
+                _animator.SetBool("IsInHitStun", true);
+                if (!IsSturdy)
+                {
+                    int stabilityToLose = (incomingStabilityLoss - Mathf.CeilToInt(_defense / 2));
+                    CurrentStability -= (stabilityToLose > 1) ? stabilityToLose : 1;
+                    StabilityStatus.value = CurrentStability;
+                    if (CurrentStability <= 0)
+                    {
+                        CurrentStability = 0;
+                        IsKnockedDown = true;
+                        _animator.SetBool("IsKnockedDown", true);
+                        _ikControl.IsIKActive = false;
+                    }
+                }
+                IsDashing = false;
+                yield return new WaitForSeconds(.1f);
+                IsInHitStun = false;
+                _animator.SetBool("IsInHitStun", false);
+                StartCoroutine(RegainStability());
+            }
         }        
     }
 
@@ -173,6 +189,7 @@ public class AvatarAspect : MonoBehaviour
         while (CurrentStability < _maximumStability && !IsKnockedDown)
         {
             CurrentStability += 1;
+            StabilityStatus.value = CurrentStability;
             yield return new WaitForSeconds(1f);
         }
     }
@@ -186,6 +203,7 @@ public class AvatarAspect : MonoBehaviour
         StartCoroutine(Invulerability());
         StartCoroutine(GetUpAnimation());
         CurrentStability = _maximumStability;
+        StabilityStatus.value = CurrentStability;
     }
 
     IEnumerator Invulerability()
@@ -297,6 +315,10 @@ public class AvatarAspect : MonoBehaviour
     {
         CurrentHealth = _maximumHealth;
         CurrentStability = _maximumStability;
+        HealthStatus.maxValue = _maximumHealth;
+        HealthStatus.value = CurrentHealth;
+        StabilityStatus.maxValue = _maximumStability;
+        StabilityStatus.value = CurrentStability;
         ResetAirDashes();
         _animator = GetComponentInChildren<Animator>();
         _ikControl = GetComponentInChildren<IKControl>();
