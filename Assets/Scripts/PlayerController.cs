@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +10,10 @@ public class PlayerController : MonoBehaviour, IController
     public AvatarAspect ManifestedAvatar;
     public BarrageAspect ManifestedBarrage;
     public BlastAspect ManifestedBlast;
+    public EnemyController Enemy;
     public Transform CurrentTarget;
+
+    [SerializeField][Range(0, 1)] float _TimeScale = 1;
         
     InputAction _jumpAction;
     InputAction _moveAction;
@@ -18,16 +22,18 @@ public class PlayerController : MonoBehaviour, IController
     InputAction _aimXAction;
     InputAction _aimYAction;
     PlayerInput _playerInput;
-    AimingRing _aimingRing;
 
-    IState _currentState;
+    IState _currentState = new EmptyState();
     ActiveState _activeState;
     BarrageState _barrageState;
     BlastState _blastState;
     DashState _dashState;
     DownState _downState;
+    GetUpState _getUpState;
 
     bool _isAiming = false;
+
+    AvatarSelect _avatarSelect;
 
     public enum AvatarType
     {
@@ -41,25 +47,25 @@ public class PlayerController : MonoBehaviour, IController
 
     private void Awake()
     {
-        SetupCharacterController();
+        AvatarToManifest = (AvatarType)GameObject.Find("AvatarSelect").GetComponent<AvatarSelect>().SelectedAvatar;
+        StartCoroutine(GetTargetAvatar());        
+        Time.timeScale = _TimeScale;
     }
 
-    private void OnEnable()
-    {
-        SubscribeToEvents();        
-    }
 
     private void OnDisable()
     {
-        UnsubscribeToEvents();
+        //UnsubscribeToEvents();
     }
 
     private void FixedUpdate()
     {
         if (!ManifestedAvatar.IsGameOver)
         {
-            if (ManifestedAvatar.IsKnockedDown)
+            //change to switch?
+            if (_currentState != _downState && ManifestedAvatar.IsKnockedDown)
             {
+                print("knocked down");
                 ChangeState(_downState);
             }
             else if (!ManifestedAvatar.IsInHitStun)
@@ -72,6 +78,21 @@ public class PlayerController : MonoBehaviour, IController
                 }
             }
         }
+    }
+
+    IEnumerator GetTargetAvatar()
+    {
+        ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
+        yield return new WaitForEndOfFrame();
+        if (Enemy.GetComponentInChildren<AvatarAspect>() != null)
+            CurrentTarget = Enemy.GetComponentInChildren<AvatarAspect>().transform;
+        if (CurrentTarget != null)
+        {
+            SetupCharacterController();
+            StopCoroutine(GetTargetAvatar());
+        }
+        else
+            StartCoroutine(GetTargetAvatar());
     }
 
     public void StateControllerUpdate()
@@ -102,7 +123,8 @@ public class PlayerController : MonoBehaviour, IController
     void GetInputsForMovement()
     {
         Vector2 inputs = (_currentState == _activeState && !ManifestedBarrage.IsRecovering) ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
-        _activeState.SetInputs(inputs);
+        if(_currentState == _activeState)
+            _activeState.SetInputs(inputs);
     }
 
     void GetInputsForAiming()
@@ -150,7 +172,6 @@ public class PlayerController : MonoBehaviour, IController
         {
             _isAiming = false;
             ChangeState(_activeState);
-            //spamming dash and blast causes player to get stuck floating in air
         }
     }
 
@@ -229,10 +250,12 @@ public class PlayerController : MonoBehaviour, IController
     }
 
     void SetupCharacterController()
-    {
-        ManifestedAvatar = ManifestAvatar().GetComponent<AvatarAspect>();
+    {        
         ManifestedBarrage = ManifestedAvatar.GetComponentInChildren<BarrageAspect>();
         ManifestedBlast = ManifestedAvatar.GetComponentInChildren<BlastAspect>();
+        CurrentTarget = Enemy.GetComponentInChildren<AvatarAspect>().transform;
+        ManifestedAvatar.CurrentTarget = CurrentTarget;
+        ManifestedBarrage.CurrentTarget = CurrentTarget;
         ManifestedBlast.CurrentTarget = CurrentTarget;
         _playerInput = GetComponent<PlayerInput>();
 
@@ -249,6 +272,10 @@ public class PlayerController : MonoBehaviour, IController
         _barrageState = new BarrageState(_activeState, ManifestedBarrage);
         _blastState = new BlastState(_activeState, ManifestedAvatar, ManifestedBlast);
         _dashState = new DashState(_activeState, ManifestedAvatar);
-        _downState = new DownState(_activeState, ManifestedAvatar);
+        _getUpState = new GetUpState(_activeState, ManifestedAvatar);
+        _downState = new DownState(_getUpState, ManifestedAvatar);
+
+        SubscribeToEvents();
+        
     }
 }
