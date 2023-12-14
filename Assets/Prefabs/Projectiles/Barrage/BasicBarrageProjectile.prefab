@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 568054242870121217}
   - component: {fileID: 6887810291255289954}
   - component: {fileID: 6015284511503206473}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BasicBarrageProjectile
   m_TagString: Projectile
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ MonoBehaviour:
   _projectileSpeed: 30
   _projectileAgility: 45
   _maxDistancePrediction: 100
-  _minDistancePrediction: 5
+  _minDistancePrediction: 50
   _maxTimePrediction: 5
   _hitParticles: {fileID: 4122821944592492203, guid: 210e466c6c5211f45a7890f13a3a59f1, type: 3}
 --- !u!33 &3789571327221194297

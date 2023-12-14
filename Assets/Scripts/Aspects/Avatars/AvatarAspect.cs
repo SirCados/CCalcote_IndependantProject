@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class AvatarAspect : MonoBehaviour
@@ -12,6 +13,9 @@ public class AvatarAspect : MonoBehaviour
     public bool IsInHitStun = false;
     public bool IsInvulnerable = false;
     public bool IsSturdy = false;
+
+    public Slider HealthStatus;
+    public Slider StabilityStatus;
 
     [Header("PUBLIC AVATAR STATS")]
     public int CurrentHealth;
@@ -50,7 +54,7 @@ public class AvatarAspect : MonoBehaviour
     protected Animator _animator;
     protected IKControl _ikControl;
     protected Rigidbody _playerRigidBody;
-    protected Transform _currentTarget;
+    public Transform CurrentTarget;
     protected Vector3 _dashStartPosition;
     protected Vector3 _dashVector;
 
@@ -69,6 +73,7 @@ public class AvatarAspect : MonoBehaviour
 
     public void PerformMove(Vector2 inputVector)
     {
+        //print(inputVector);
         //calculate the inputs for animation controller
         Vector3 vectorToRotate = new Vector3(inputVector.x, 0, inputVector.y);
         Vector3 forwardProduct = vectorToRotate.z * -_avatarModelTransform.forward;
@@ -139,24 +144,37 @@ public class AvatarAspect : MonoBehaviour
             StopCoroutine(RegainStability());
             int damageToTake = incomingDamage - _defense;
             CurrentHealth -= (damageToTake > 1) ? damageToTake : 1;
-            IsInHitStun = true;
-            _animator.SetBool("IsInHitStun", true);
-            if (!IsSturdy)
+            HealthStatus.value = CurrentHealth;
+            if(CurrentHealth < 1)
             {
-                int stabilityToLose = (incomingStabilityLoss - Mathf.CeilToInt(_defense / 2));
-                CurrentStability -= (stabilityToLose > 1) ? stabilityToLose : 1;
-                if (CurrentStability <= 0)
-                {
-                    CurrentStability = 0;
-                    IsKnockedDown = true;
-                    _animator.SetBool("IsKnockedDown", true);
-                }
+                IsKnockedDown = true;
+                _animator.SetBool("IsKnockedDown", true);
+                _ikControl.IsIKActive = false;
+                IsGameOver = true;
             }
-            IsDashing = false;
-            yield return new WaitForSeconds(.1f);
-            IsInHitStun = false;
-            _animator.SetBool("IsInHitStun", false);
-            StartCoroutine(RegainStability());
+            else
+            {
+                IsInHitStun = true;
+                _animator.SetBool("IsInHitStun", true);
+                if (!IsSturdy)
+                {
+                    int stabilityToLose = (incomingStabilityLoss - Mathf.CeilToInt(_defense / 2));
+                    CurrentStability -= (stabilityToLose > 1) ? stabilityToLose : 1;
+                    StabilityStatus.value = CurrentStability;
+                    if (CurrentStability <= 0)
+                    {
+                        CurrentStability = 0;
+                        IsKnockedDown = true;
+                        _animator.SetBool("IsKnockedDown", true);
+                        _ikControl.IsIKActive = false;
+                    }
+                }
+                IsDashing = false;
+                yield return new WaitForSeconds(.1f);
+                IsInHitStun = false;
+                _animator.SetBool("IsInHitStun", false);
+                StartCoroutine(RegainStability());
+            }
         }        
     }
 
@@ -171,6 +189,7 @@ public class AvatarAspect : MonoBehaviour
         while (CurrentStability < _maximumStability && !IsKnockedDown)
         {
             CurrentStability += 1;
+            StabilityStatus.value = CurrentStability;
             yield return new WaitForSeconds(1f);
         }
     }
@@ -184,6 +203,7 @@ public class AvatarAspect : MonoBehaviour
         StartCoroutine(Invulerability());
         StartCoroutine(GetUpAnimation());
         CurrentStability = _maximumStability;
+        StabilityStatus.value = CurrentStability;
     }
 
     IEnumerator Invulerability()
@@ -200,6 +220,7 @@ public class AvatarAspect : MonoBehaviour
     {
         yield return new WaitWhile(() => _animator.GetBool("IsGettingUp"));
         IsGettingUp = false;
+        _ikControl.IsIKActive = true;
     }
 
     public void StopJumpVelocity()
@@ -233,10 +254,10 @@ public class AvatarAspect : MonoBehaviour
 
     void RotateCharacter()
     {
-        if (_currentTarget && !(IsKnockedDown || IsGettingUp))
+        if (CurrentTarget && !(IsKnockedDown || IsGettingUp))
         {
-            _facingIndicator.transform.LookAt(_currentTarget);
-            Vector3 look = new Vector3(_currentTarget.position.x, _playerRigidBody.position.y -1, _currentTarget.position.z);
+            _facingIndicator.transform.LookAt(CurrentTarget);
+            Vector3 look = new Vector3(CurrentTarget.position.x, _playerRigidBody.position.y -1, CurrentTarget.position.z);
             _avatarModelTransform.LookAt(look);
         }
     }
@@ -294,10 +315,14 @@ public class AvatarAspect : MonoBehaviour
     {
         CurrentHealth = _maximumHealth;
         CurrentStability = _maximumStability;
+        HealthStatus.maxValue = _maximumHealth;
+        HealthStatus.value = CurrentHealth;
+        StabilityStatus.maxValue = _maximumStability;
+        StabilityStatus.value = CurrentStability;
         ResetAirDashes();
         _animator = GetComponentInChildren<Animator>();
         _ikControl = GetComponentInChildren<IKControl>();
         _playerRigidBody = GetComponentInParent<Rigidbody>();
-        _currentTarget = GetComponentInParent<IController>().Target;
+        CurrentTarget = GetComponentInParent<IController>().Target;
     }
 }

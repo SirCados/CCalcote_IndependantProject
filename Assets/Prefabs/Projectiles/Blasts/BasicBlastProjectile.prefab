@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6369581019843467344}
   - component: {fileID: 4080576109848201345}
   - component: {fileID: 5765808410101466107}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3206476468495635449}
   - component: {fileID: 2243754138472702556}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 7189560985171660920}
   - component: {fileID: 5398684833566722453}
   - component: {fileID: 1999578878885800416}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BasicBlastProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,7 +413,7 @@ GameObject:
   - component: {fileID: 6761298612550900558}
   - component: {fileID: 1142175219219301237}
   - component: {fileID: 1033187170490863278}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}

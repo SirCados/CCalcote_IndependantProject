@@ -61,9 +61,8 @@ public class IKControl : MonoBehaviour
 
     void DoneGettingUp()
     {
-        //Unsure how to handle this better. This is outside of this scripts concerns, but works for the moment
-        print("done getting up");
-        //IsGettingUp = false;
+        //Unsure how to handle this in a better way right now. This is outside of this scripts concerns, but works for the moment
+        //This method is called at the end of the animation.
         _animator.SetBool("IsGettingUp", false);
     }
 

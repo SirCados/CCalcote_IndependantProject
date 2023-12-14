@@ -22,13 +22,16 @@ public class TenaciousAvatar : AvatarAspect
         while (CurrentStability < _maximumStability && !IsKnockedDown)
         {
             CurrentStability += 1;
+            StabilityStatus.value = CurrentStability;
             if (CurrentHealth < _maximumHealth)
             {
                 CurrentHealth += 2;
-                if(CurrentHealth > _maximumHealth)
+                if (CurrentHealth > _maximumHealth)
                 {
                     CurrentHealth = _maximumHealth;
                 }
+
+                HealthStatus.value = CurrentHealth;
             }
             yield return new WaitForSecondsRealtime(1f);
         }
