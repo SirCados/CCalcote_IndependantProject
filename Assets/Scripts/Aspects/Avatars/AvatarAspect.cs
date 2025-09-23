@@ -4,6 +4,7 @@ using System.Collections;
 
 public class AvatarAspect : MonoBehaviour
 {
+    //Example
     public bool IsBlasting = false;
     public bool IsDashing = false;
     public bool IsGameOver = false;
